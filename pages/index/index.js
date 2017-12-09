@@ -2,13 +2,13 @@ var app = getApp();
 
 Page({
   data: {
-    imgUrls: [],
+    imgUrls: [],  //首页广告图
     indicatorDots: true,
     autoplay: true,
     interval: 5000,
     duration: 1000,
     circular: true,
-    productData: [],
+    productData: [],  //产品数据
     proCat:[],
     page: 2,
     index: 2,
@@ -21,7 +21,7 @@ Page({
   },
 //跳转商品列表页   
 listdetail:function(e){
-    console.log(e.currentTarget.dataset.title)
+    //console.log(e.currentTarget.dataset.title)
     wx.navigateTo({
       url: '../listdetail/listdetail?title='+e.currentTarget.dataset.title,
       success: function(res){
@@ -178,6 +178,7 @@ getMore:function(e){
         var prolist = res.data.prolist;
         var brand = res.data.brand;
         var course = res.data.course;
+        //console.log(res.data);
         //that.initProductData(data);
         that.setData({
           imgUrls:ggtop,
