@@ -12,7 +12,7 @@ Page({
     var that = this;
     // 页面初始化 options为页面跳转所带来的参数
     var cartId = options.cartId;
-    console.log(app.d.userId);
+    //console.log(app.d.userId);
     wx.request({
       url: app.d.ceshiUrl + '/Api/Address/index',
       data: {
@@ -26,7 +26,7 @@ Page({
       success: function (res) {
         // success
         var address = res.data.adds;
-        console.log(address);
+        //console.log(address);
         if (address == '') {
           var address = []
         }
