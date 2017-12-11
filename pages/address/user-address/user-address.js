@@ -11,6 +11,7 @@ Page({
   onLoad: function (options) {
     var that = this;
     // 页面初始化 options为页面跳转所带来的参数
+    console.log(options);
     var cartId = options.cartId;
     wx.request({
       url: app.d.ceshiUrl + '/Api/Address/index',
@@ -63,11 +64,11 @@ Page({
       },
       
       success: function (res) {
-        // success
+        // success //这里有问题
         var status = res.data.status;
         var cartId = that.data.cartId;
         if(status==1){
-          if (cartId == true) {
+          if (cartId != '') {
             wx.redirectTo({
               url: '../../order/pay?cartId=' + cartId,
             });
