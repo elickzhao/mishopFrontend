@@ -5,7 +5,8 @@ Page({
     page: 1,
     minusStatuses: ['disabled', 'disabled', 'normal', 'normal', 'disabled'],
     total: 0,
-    carts: []
+    carts: [],
+    selectedAllStatus: true
   },
 
   bindMinus: function (e) {
@@ -195,17 +196,20 @@ Page({
   },
 
   onLoad: function (options) {
-    this.loadProductData();
-    this.sum();
+    // this.loadProductData();
+    // this.sum();
   },
-
   onShow: function () {
     this.loadProductData();
+    this.sum();
+    this.setData({
+      selectedAllStatus: true
+    });
   },
 
   removeShopCard: function (e) {
     var that = this;
-    var cardId = (e==0)?e:e.currentTarget.dataset.cartid;
+    var cardId = (e == 0) ? e : e.currentTarget.dataset.cartid;
     wx.showModal({
       title: '提示',
       content: '你确认移除吗',
@@ -258,13 +262,21 @@ Page({
       },
       success: function (res) {
         //--init data
-        var cart = res.data.cart;
-        that.setData({
-          carts: cart,
+        //this.cart = res.data.cart;
+        wx.setStorage({
+          key: "cart",
+          data: res.data.cart
         });
+
         //endInitData
       },
     });
+
+    this.setData({
+      carts: wx.getStorageSync('cart'),
+    });
+
+
   },
 
 })
