@@ -385,7 +385,6 @@ Page({
       }
     });
   },
-
   addShopCart:function(e){ //添加到购物车
     var that = this;
     wx.request({
