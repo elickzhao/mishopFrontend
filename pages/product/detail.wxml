@@ -6,7 +6,7 @@
 <view class="cont">
   <!--<image class="tp_image" src="{{itemData.photo_d}}"></image>-->
   <swiper style="height:375px" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-    <block wx:for="{{bannerItem}}">
+    <block wx:for="{{bannerItem}}" wx:key="banner">
       <swiper-item>
         <image src="{{item}}" class="slide-image" />
       </swiper-item>

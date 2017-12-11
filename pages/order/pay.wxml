@@ -1,6 +1,6 @@
 <!--pay.wxml-->
 <view class="w100">
-		<view class="p_all bg_white df item" wx:for="{{productData}}">
+		<view class="p_all bg_white df item" wx:for="{{productData}}" wx:key="product">
 			<view class="cp_photo">			
 				<image src="{{item.photo_x}}"></image>
 			</view>
