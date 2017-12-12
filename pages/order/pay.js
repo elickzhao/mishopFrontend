@@ -104,6 +104,22 @@ Page({
     this.setData({
       btnDisabled:false,
     })
+    
+    console.log(this.data.addrId);
+    if (this.data.addrId == 0){
+      wx.showModal({
+        title: '提示',
+        content: '请添加收货地址!',
+        success: function (res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+      return false;
+    }
 
     //创建订单
     var that = this;
@@ -156,6 +172,7 @@ Page({
   
   //调起微信支付
   wxpay: function(order){
+      console.log(order);
       wx.request({
         url: app.d.ceshiUrl + '/Api/Wxpay/wxpay',
         data: {
@@ -168,6 +185,7 @@ Page({
           'Content-Type':  'application/x-www-form-urlencoded'
         }, // 设置请求的 header
         success: function(res){
+          console.log(res.data+"<-----");
           if(res.data.status==1){
             var order=res.data.arr;
             wx.requestPayment({
