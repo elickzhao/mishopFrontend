@@ -180,18 +180,49 @@ Page({
   },
 
   sum: function () {
-    var carts = this.data.carts;
-    // 计算总金额
-    var total = 0;
-    for (var i = 0; i < carts.length; i++) {
-      if (carts[i].selected) {
-        total += carts[i].num * carts[i].price;
-      }
-    }
-    // 写回经点击修改后的数组
-    this.setData({
-      carts: carts,
-      total: '¥ ' + total
+    // var carts = this.data.carts;
+    // console.log(carts);
+    // // 计算总金额
+    // var total = 0;
+    // for (var i = 0; i < carts.length; i++) {
+    //   if (carts[i].selected) {
+    //     total += carts[i].num * carts[i].price;
+    //   }
+    // }
+    // // 写回经点击修改后的数组
+    // this.setData({
+    //   carts: carts,
+    //   total: '¥ ' + total
+    // });
+
+    var that = this;
+    wx.request({
+      url: app.d.ceshiUrl + '/Api/Shopping/index',
+      method: 'post',
+      data: {
+        user_id: app.d.userId
+      },
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+
+        var carts =[];
+        carts = res.data.cart;
+        // 计算总金额
+        var total = 0;
+        for (var i = 0; i < carts.length; i++) {
+          if (carts[i].selected) {
+            total += carts[i].num * carts[i].price;
+          }
+        }
+        // 写回经点击修改后的数组
+        that.setData({
+          carts: carts,
+          total: '¥ ' + total
+        });
+
+      },
     });
   },
 
@@ -229,6 +260,7 @@ Page({
             if (data.status == 1) {
               //that.data.productData.length =0;
               that.loadProductData();
+              that.sum();
             } else {
               wx.showToast({
                 title: '操作失败！',
@@ -262,21 +294,13 @@ Page({
       },
       success: function (res) {
         //--init data
-        //this.cart = res.data.cart;
-        wx.setStorage({
-          key: "cart",
-          data: res.data.cart
+        var cart = res.data.cart;
+        that.setData({
+          carts: cart,
         });
-
         //endInitData
       },
     });
-
-    this.setData({
-      carts: wx.getStorageSync('cart'),
-    });
-
-
   },
 
 })
