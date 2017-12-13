@@ -3,66 +3,66 @@
 //获取应用实例  
 var app = getApp();
 var common = require("../../utils/common.js");
-Page({  
-  data: {  
-    winWidth: 0,  
-    winHeight: 0,  
+Page({
+  data: {
+    winWidth: 0,
+    winHeight: 0,
     // tab切换  
-    currentTab: 0,  
-    isStatus:'pay',//10待付款，20待发货，30待收货 40、50已完成
-    page:0,
-    refundpage:0,
-    orderList0:[],
-    orderList1:[],
-    orderList2:[],
-    orderList3:[],
-    orderList4:[],
-  },  
-  onLoad: function(options) {  
+    currentTab: 0,
+    isStatus: 'pay',//10待付款，20待发货，30待收货 40、50已完成
+    page: 0,
+    refundpage: 0,
+    orderList0: [],
+    orderList1: [],
+    orderList2: [],
+    orderList3: [],
+    orderList4: [],
+  },
+  onLoad: function (options) {
     this.initSystemInfo();
     this.setData({
       currentTab: parseInt(options.currentTab),
-      isStatus:options.otype
+      isStatus: options.otype
     });
 
-    if(this.data.currentTab == 4){
+    if (this.data.currentTab == 4) {
       this.loadReturnOrderList();
-    }else{
+    } else {
       this.loadOrderList();
     }
-  },  
-  getOrderStatus:function(){
-    return this.data.currentTab == 0 ? 1 : this.data.currentTab == 2 ?2 :this.data.currentTab == 3 ? 3:0;
+  },
+  getOrderStatus: function () {
+    return this.data.currentTab == 0 ? 1 : this.data.currentTab == 2 ? 2 : this.data.currentTab == 3 ? 3 : 0;
   },
 
-//取消订单
-removeOrder:function(e){
+  //取消订单
+  removeOrder: function (e) {
     var that = this;
     var orderId = e.currentTarget.dataset.orderId;
     wx.showModal({
       title: '提示',
       content: '你确定要取消订单吗？',
-      success: function(res) {
+      success: function (res) {
         res.confirm && wx.request({
           url: app.d.ceshiUrl + '/Api/Order/orders_edit',
-          method:'post',
+          method: 'post',
           data: {
             id: orderId,
-            type:'cancel',
+            type: 'cancel',
           },
           header: {
-            'Content-Type':  'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
           success: function (res) {
             //--init data
             var status = res.data.status;
-            if(status == 1){
+            if (status == 1) {
               wx.showToast({
                 title: '操作成功！',
                 duration: 2000
               });
               that.loadOrderList();
-            }else{
+            } else {
               wx.showToast({
                 title: res.data.err,
                 duration: 2000
@@ -83,33 +83,33 @@ removeOrder:function(e){
   },
 
   //确认收货
-recOrder:function(e){
+  recOrder: function (e) {
     var that = this;
     var orderId = e.currentTarget.dataset.orderId;
     wx.showModal({
       title: '提示',
       content: '你确定已收到宝贝吗？',
-      success: function(res) {
+      success: function (res) {
         res.confirm && wx.request({
           url: app.d.ceshiUrl + '/Api/Order/orders_edit',
-          method:'post',
+          method: 'post',
           data: {
             id: orderId,
-            type:'receive',
+            type: 'receive',
           },
           header: {
-            'Content-Type':  'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
           success: function (res) {
             //--init data
             var status = res.data.status;
-            if(status == 1){
+            if (status == 1) {
               wx.showToast({
                 title: '操作成功！',
                 duration: 2000
               });
               that.loadOrderList();
-            }else{
+            } else {
               wx.showToast({
                 title: res.data.err,
                 duration: 2000
@@ -129,24 +129,24 @@ recOrder:function(e){
     });
   },
 
-  loadOrderList: function(){
+  loadOrderList: function () {
     var that = this;
     wx.request({
       url: app.d.ceshiUrl + '/Api/Order/index',
-      method:'post',
+      method: 'post',
       data: {
-        uid:app.d.userId,
-        order_type:that.data.isStatus,
-        page:that.data.page,
+        uid: app.d.userId,
+        order_type: that.data.isStatus,
+        page: that.data.page,
       },
       header: {
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         //--init data        
         var status = res.data.status;
         var list = res.data.ord;
-        switch(that.data.currentTab){
+        switch (that.data.currentTab) {
           case 0:
             that.setData({
               orderList0: list,
@@ -156,7 +156,7 @@ recOrder:function(e){
             that.setData({
               orderList1: list,
             });
-            break;  
+            break;
           case 2:
             that.setData({
               orderList2: list,
@@ -171,7 +171,7 @@ recOrder:function(e){
             that.setData({
               orderList4: list,
             });
-            break;  
+            break;
         }
       },
       fail: function () {
@@ -184,27 +184,27 @@ recOrder:function(e){
     });
   },
 
-loadReturnOrderList:function(){
+  loadReturnOrderList: function () {
     var that = this;
     wx.request({
       url: app.d.ceshiUrl + '/Api/Order/order_refund',
-      method:'post',
+      method: 'post',
       data: {
-        uid:app.d.userId,
-        page:that.data.refundpage,
+        uid: app.d.userId,
+        page: that.data.refundpage,
       },
       header: {
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         //--init data        
         var data = res.data.ord;
         var status = res.data.status;
-        if(status==1){
+        if (status == 1) {
           that.setData({
             orderList4: that.data.orderList4.concat(data),
           });
-        }else{
+        } else {
           wx.showToast({
             title: res.data.err,
             duration: 2000
@@ -220,30 +220,30 @@ loadReturnOrderList:function(){
       }
     });
   },
-  
+
   // returnProduct:function(){
   // },
-  initSystemInfo:function(){
-    var that = this;  
-  
-    wx.getSystemInfo( {
-      success: function( res ) {  
-        that.setData( {  
-          winWidth: res.windowWidth,  
-          winHeight: res.windowHeight  
-        });  
-      }    
-    });  
+  initSystemInfo: function () {
+    var that = this;
+
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({
+          winWidth: res.windowWidth,
+          winHeight: res.windowHeight
+        });
+      }
+    });
   },
-  bindChange: function(e) {  
-    var that = this;  
-    that.setData( { currentTab: e.detail.current });  
-  },  
-  swichNav: function(e) {  
-    var that = this;  
-    if( that.data.currentTab === e.target.dataset.current ) {  
-      return false;  
-    } else { 
+  bindChange: function (e) {
+    var that = this;
+    that.setData({ currentTab: e.detail.current });
+  },
+  swichNav: function (e) {
+    var that = this;
+    if (that.data.currentTab === e.target.dataset.current) {
+      return false;
+    } else {
       var current = e.target.dataset.current;
       that.setData({
         currentTab: parseInt(current),
@@ -251,24 +251,24 @@ loadReturnOrderList:function(){
       });
 
       //没有数据就进行加载
-      switch(that.data.currentTab){
-          case 0:
-            !that.data.orderList0.length && that.loadOrderList();
-            break;
-          case 1:
-            !that.data.orderList1.length && that.loadOrderList();
-            break;  
-          case 2:
-            !that.data.orderList2.length && that.loadOrderList();
-            break;
-          case 3:
-            !that.data.orderList3.length && that.loadOrderList();
-            break;
-          case 4:
-            that.data.orderList4.length = 0;
-            that.loadReturnOrderList();
-            break;
-        }
+      switch (that.data.currentTab) {
+        case 0:
+          !that.data.orderList0.length && that.loadOrderList();
+          break;
+        case 1:
+          !that.data.orderList1.length && that.loadOrderList();
+          break;
+        case 2:
+          !that.data.orderList2.length && that.loadOrderList();
+          break;
+        case 3:
+          !that.data.orderList3.length && that.loadOrderList();
+          break;
+        case 4:
+          that.data.orderList4.length = 0;
+          that.loadReturnOrderList();
+          break;
+      }
     };
   },
   /**
@@ -286,7 +286,7 @@ loadReturnOrderList:function(){
   payOrderByWechat: function (e) {
     var order_id = e.currentTarget.dataset.orderId;
     var order_sn = e.currentTarget.dataset.ordersn;
-    if(!order_sn){
+    if (!order_sn) {
       wx.showToast({
         title: "订单异常!",
         duration: 2000,
@@ -319,10 +319,10 @@ loadReturnOrderList:function(){
                 duration: 2000,
               });
               setTimeout(function () {
-                wx.navigateTo({
+                wx.redirectTo({
                   url: '../user/dingdan?currentTab=1&otype=deliver',
                 });
-              }, 3000);
+              }, 2500);
             },
             fail: function (res) {
               wx.showToast({
@@ -351,17 +351,17 @@ loadReturnOrderList:function(){
   /**
    * 调用服务器微信统一下单接口创建一笔微信预订单
    */
-//   prePayWechatOrder: function(orderId){
-//     var uri = "/ztb/userZBT/GetWxOrder";
-//     var method = "post";
-//     var dataMap = {
-//       SessionId: app.globalData.userInfo.sessionId,
-//       OrderNo: orderId
-//     }
-//     console.log(dataMap);
-//     var successCallback = function (response) {
-//       console.log(response);
-//     };
-//     common.sentHttpRequestToServer(uri, dataMap, method, successCallback);
-//   }
+  //   prePayWechatOrder: function(orderId){
+  //     var uri = "/ztb/userZBT/GetWxOrder";
+  //     var method = "post";
+  //     var dataMap = {
+  //       SessionId: app.globalData.userInfo.sessionId,
+  //       OrderNo: orderId
+  //     }
+  //     console.log(dataMap);
+  //     var successCallback = function (response) {
+  //       console.log(response);
+  //     };
+  //     common.sentHttpRequestToServer(uri, dataMap, method, successCallback);
+  //   }
 })

@@ -105,7 +105,7 @@ Page({
       btnDisabled:false,
     })
     
-    console.log(this.data.addrId);
+    //console.log(this.data.addrId);
     if (this.data.addrId == 0){
       wx.showModal({
         title: '提示',
@@ -172,7 +172,7 @@ Page({
   
   //调起微信支付
   wxpay: function(order){
-      console.log(order);
+      //console.log(order);
       wx.request({
         url: app.d.ceshiUrl + '/Api/Wxpay/wxpay',
         data: {
@@ -185,7 +185,6 @@ Page({
           'Content-Type':  'application/x-www-form-urlencoded'
         }, // 设置请求的 header
         success: function(res){
-          console.log(res.data+"<-----");
           if(res.data.status==1){
             var order=res.data.arr;
             wx.requestPayment({
@@ -200,16 +199,21 @@ Page({
                   duration:2000,
                 });
                 setTimeout(function(){
-                  wx.navigateTo({
+                  wx.redirectTo({
                     url: '../user/dingdan?currentTab=1&otype=deliver',
                   });
                 },2500);
               },
               fail: function(res) {
                 wx.showToast({
-                  title:res,
+                  title:'支付失败!',
                   duration:3000
-                })
+                });
+                setTimeout(function () {
+                  wx.redirectTo({
+                    url: '../user/dingdan?currentTab=0&otype=pay',
+                  });
+                }, 3200);
               }
             })
           }else{

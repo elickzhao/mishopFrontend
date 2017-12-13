@@ -52,9 +52,9 @@ Page({
             title: '您的申请已提交审核！',
             duration: 2000
           });
-          // wx.navigateTo({
-          //   url: '/pages/user/dingdan?currentTab=4',
-          // });
+          wx.redirectTo({
+            url: '/pages/user/dingdan?currentTab=4',
+          });
         }else{
           wx.showToast({
             title: res.data.err,
