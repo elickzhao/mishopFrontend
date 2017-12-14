@@ -6,7 +6,7 @@
   position: relative;
   width: 750rpx;
   height: 320rpx;
-  background: #008842;
+  background: #FF8140;
   color: #fff;
   display: flex;
   flex-direction: column;
