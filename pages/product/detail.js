@@ -24,7 +24,8 @@ Page({
     //准备数据
     //数据结构：以一组一组来进行设定
      commodityAttr:[],
-     attrValueList: []
+     attrValueList: [],
+     imgUrl: app.d.ceshiUrl
   },
 
   // 弹窗

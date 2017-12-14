@@ -2,7 +2,7 @@
 App({
   d: {
     hostUrl: 'https://small.huanqiujishi.com/index.php',
-    hostImg: 'http://img.ynjmzb.net',
+    hostImg: 'https://small.huanqiujishi.com/',
     hostVideo: 'http://zhubaotong-file.oss-cn-beijing.aliyuncs.com',
     userId: 1,
     appId:"",
