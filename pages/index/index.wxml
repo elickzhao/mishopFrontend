@@ -4,7 +4,7 @@
     <block wx:for="{{imgUrls}}" wx:key='img'>
       <swiper-item>
       <navigator url="{{item.link}}">
-        <image src="{{item.photo}}" class="slide-image" width="100%" height="200"  />
+        <image src="{{item.photo}}" class="slide-image" width="100%" height="175"  />
         </navigator>
       </swiper-item>
     </block>

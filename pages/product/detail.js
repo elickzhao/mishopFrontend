@@ -9,7 +9,7 @@ Page({
     bannerApp:true,
     winWidth: 0,
     winHeight: 0,
-    currentTab: 0, //tab切换  
+    currentTab: 1, //tab切换  
     productId:0,
     itemData:{},
     bannerItem:[],

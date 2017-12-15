@@ -7,7 +7,7 @@
               <text class="type">{{item.name}}</text>
             </view>
               <view class="act-item ellipsis" >
-                <text class="kkk">{{item.intro}}</text>
+                <!-- <text class="kkk">{{item.intro}}</text> -->
             </view>
             <view class="act-item ellipsis" >
                 <text style="color:red">¥ {{item.price_yh}}</text>

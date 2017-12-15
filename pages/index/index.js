@@ -126,7 +126,6 @@ getMore:function(e){
           });
           return false;
         }
-        //that.initProductData(data);
         that.setData({
           page: page+1,
           productData:that.data.productData.concat(prolist)

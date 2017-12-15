@@ -113,7 +113,8 @@ text-align: center
 .swiper-tab-list{  
   font-size: 29rpx;  
     display: inline-block;  
-    width: 49.5%;  
+    /* width: 49.5%;   这是在有商品详情页的宽度*/
+    width: 100%; 
     color: #333; 
     
 

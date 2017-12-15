@@ -213,13 +213,13 @@ Page({
         var total = 0;
         for (var i = 0; i < carts.length; i++) {
           if (carts[i].selected) {
-            total += carts[i].num * carts[i].price;
+            total += parseInt(carts[i].num) * parseFloat(carts[i].price);
           }
         }
         // 写回经点击修改后的数组
         that.setData({
           carts: carts,
-          total: '¥ ' + total
+          total: '¥ ' + total.toFixed(2)
         });
 
       },
