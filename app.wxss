@@ -1,3 +1,6 @@
+@import "dist/index.wxss";
+
+
 /**app.wxss**/
 page{ 
    background: #fff;  font-family: '微软雅黑'

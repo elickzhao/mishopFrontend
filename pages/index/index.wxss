@@ -443,3 +443,17 @@ opacity: 0;
   opacity: 0;
 }
 
+/* zanui  */
+
+.zanui-photo{
+  height:245rpx;
+  width:245rpx;
+}
+
+.zan-panel-bottom {
+border-bottom: 0;
+}
+
+.zan-panel-top{
+border-top: 0;
+}
