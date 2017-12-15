@@ -384,9 +384,10 @@ border-radius:29rpx;
 .btn:first-child {
   margin-top: 0;
 }
+/*因为去掉了商品详情页 所以高度从2000 减到1000  */
 swiper{
   width: 100%; 
-  height: 2000rpx;
+  height: 1000rpx;
 }
 .swiper-item{
   display: block;
