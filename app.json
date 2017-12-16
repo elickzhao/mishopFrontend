@@ -30,31 +30,31 @@
   },
    "tabBar": {
     "color": "#858585",
-    "selectedColor": "#008842",
+    "selectedColor": "#FF8140",
     "borderStyle": "white",
     "backgroundColor": "#ffffff",
     "list": [{
       "pagePath": "pages/index/index",
-      "iconPath":"images/icons/btn-tabs_01.png",
-      "selectedIconPath":"images/icons/btn-tabs_07.png",
+      "iconPath":"images/icons/a.png",
+      "selectedIconPath":"images/icons/aa.png",
       "text": "首页"
     }, 
         {
       "pagePath": "pages/category/index",
-      "iconPath":"images/icons/btn-tabs_03.png",
-      "selectedIconPath":"images/icons/btn-tabs_08.png",
+      "iconPath":"images/icons/b.png",
+      "selectedIconPath":"images/icons/bb.png",
       "text": "分类"
     },
        {
       "pagePath": "pages/cart/cart",
-      "iconPath":"images/icons/btn-tabs_05.png",
-      "selectedIconPath":"images/icons/btn-tabs_09.png",
-      "text": "购物车"
+      "iconPath":"images/icons/c.png",
+      "selectedIconPath":"images/icons/cc.png",
+      "text": "  购物车"
     },
     {
       "pagePath": "pages/user/user",
-      "iconPath":"images/icons/btn-tabs_06.png",
-      "selectedIconPath":"images/icons/btn-tabs_10.png",
+      "iconPath":"images/icons/d.png",
+      "selectedIconPath":"images/icons/dd.png",
       "text": "我的"
     }]
   }
