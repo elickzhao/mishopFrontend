@@ -3,6 +3,8 @@
 .page {
   font-family: '微软雅黑';
   background-color: #fff;
+  font-weight: bold;
+  color:  #333;
 }
 
 .swiper-item {
@@ -455,11 +457,11 @@ icon {
 /* zanui  */
 
 .zanui-photo {
-  height: 200rpx;
+  height: 182rpx;
   width: 100%;
   display:  inline-block;
   overflow:  hidden;
-  margin: 15rpx 0rpx ;
+  margin: 10rpx 0rpx;
 }
 
 .zan-panel-bottom {
@@ -472,5 +474,5 @@ icon {
 
 .zan-rx {
   border-right: 1rpx solid #e5e5e5;
-  padding: 5rpx;
+  padding: 2rpx;
 }
