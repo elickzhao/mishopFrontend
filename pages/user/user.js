@@ -86,7 +86,7 @@ Page( {
   },
   onShareAppMessage: function () {
     return {
-      title: '宠物美容学校',
+      title: '环球集市',
       path: '/pages/index/index',
       success: function (res) {
         // 分享成功

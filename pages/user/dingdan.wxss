@@ -1,4 +1,6 @@
 /* pages/user/dingdan.wxss */
+@import "../../dist/weui-tabbar.wxss";
+
 .swiper-tab{  
     width: 100%;  
     border-bottom: 1px solid #eee;  
