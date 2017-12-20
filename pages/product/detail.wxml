@@ -121,16 +121,22 @@
 <view class="footfixed tc">
   <view class="fl_l w60 font_12 hui03 df">
     <view class="df_1 l_h15 pt5 bre">
-      <contact-button  size="25" type="default-light" session-from="productId_{{itemData.id}}" class="ke">
-         <contact-button class="pos"></contact-button> 
+      <contact-button size="25" type="default-light" session-from="productId_{{itemData.id}}" class="ke">
+        <contact-button class="pos"></contact-button>
         <image class="icon_kf" src="/images/kefu.png" style="margin-right:20px;"></image>
         <view class="dbtext" style="line;margin-top:5px">客服</view>
       </contact-button>
     </view>
     <view class="df_1 l_h15 pt5 bre">
       <navigator url="../cart/cart" open-type='switchTab'>
+
+        <!-- <view class="demo__icon zan-badge" style='right:20px'>
+          <view class="zan-badge__count">{{carNum}}</view>
+        </view> -->
+
         <image class="icon_kf" src="/images/gi.png"></image>
-        <view  class="dbtext">购物车</view>
+        <view class="dbtext">购物车</view>
+
       </navigator>
     </view>
     <view class="df_1 l_h15 pt5">

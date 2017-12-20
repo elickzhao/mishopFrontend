@@ -37,9 +37,7 @@
       </view>
     </view>
 
-    <!-- <include  src="../../wxParse/tabbar.wxml" /> //这个不好使 好怪-->
-    <import src="../template/tabbar.wxml" />
-    <template is="tabbar" />
+    <include src="/pages/template/tabbar.wxml" />
   </swiper-item>
 
   <!-- 待发货 -->
@@ -65,8 +63,7 @@
       </view>
     </view>
 
-    <import src="../template/tabbar.wxml" />
-    <template is="tabbar" />
+    <include src="/pages/template/tabbar.wxml" />
   </swiper-item>
 
   <!-- 待收货 -->
@@ -93,8 +90,7 @@
       </view>
     </view>
 
-    <import src="../template/tabbar.wxml" />
-    <template is="tabbar" />
+    <include src="/pages/template/tabbar.wxml" />
   </swiper-item>
 
   <!-- 已完成-->
@@ -119,8 +115,7 @@
       </view>
     </view>
 
-    <import src="../template/tabbar.wxml" />
-    <template is="tabbar" />
+    <include src="/pages/template/tabbar.wxml" />
   </swiper-item>
 
   <!-- 退款/售后 -->
@@ -147,7 +142,6 @@
       </view>
     </view>
 
-    <import src="../template/tabbar.wxml" />
-    <template is="tabbar" />
+    <include src="/pages/template/tabbar.wxml" />
   </swiper-item>
 </swiper>

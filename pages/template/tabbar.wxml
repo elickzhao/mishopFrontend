@@ -1,4 +1,3 @@
-<template name="tabbar">
   <view class="weui-tabbars">
     <navigator url="/pages/index/index" open-type='switchTab' class="weui-tabbar">
       <image class="weui-tabbar__icon" src="../../images/icons/a.png" />
@@ -17,4 +16,3 @@
       <view class="weui-tabbar__label" style='color: #FF8140'>我的</view>
     </navigator>
   </view>
-</template>
