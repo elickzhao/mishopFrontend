@@ -130,9 +130,9 @@
     <view class="df_1 l_h15 pt5 bre">
       <navigator url="../cart/cart" open-type='switchTab'>
 
-        <!-- <view class="demo__icon zan-badge" style='right:20px'>
+        <view class="demo__icon zan-badge" style='right:20px'>
           <view class="zan-badge__count">{{carNum}}</view>
-        </view> -->
+        </view>
 
         <image class="icon_kf" src="/images/gi.png"></image>
         <view class="dbtext">购物车</view>

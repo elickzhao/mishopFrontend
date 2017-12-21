@@ -4,6 +4,7 @@
     "pages/product/detail",
     "pages/search/search",
     "pages/user/user",
+    "pages/user/test",
   
     "pages/user/dingdan",
     "pages/user/tuihuo",

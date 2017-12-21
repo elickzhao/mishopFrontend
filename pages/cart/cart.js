@@ -1,5 +1,6 @@
 var app = getApp();
 // pages/cart/cart.js
+var shopcar = require('../../utils/shopcar.js');
 Page({
   data: {
     page: 1,
@@ -43,6 +44,8 @@ Page({
             that.setData({
               minusStatuses: minusStatuses
             });
+            //减少购物车数量
+            shopcar.shopCarDel(1);
             that.sum();
           } else {
             wx.showToast({
@@ -98,6 +101,8 @@ Page({
           that.setData({
             minusStatuses: minusStatuses
           });
+          //增加购物车数量
+          shopcar.shopCarAdd(that);
           that.sum();
         } else {
           wx.showToast({
@@ -241,6 +246,9 @@ Page({
   removeShopCard: function (e) {
     var that = this;
     var cardId = (e == 0) ? e : e.currentTarget.dataset.cartid;
+    var num = e.currentTarget.dataset.num;
+    //console.log(e.currentTarget.dataset.num);
+
     wx.showModal({
       title: '提示',
       content: '你确认移除吗',
@@ -255,6 +263,8 @@ Page({
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           success: function (res) {
+            //清除购物车
+            shopcar.shopCarDel(num);
             //--init data
             var data = res.data;
             if (data.status == 1) {

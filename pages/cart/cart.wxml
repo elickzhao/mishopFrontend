@@ -1,6 +1,6 @@
 <!--pages/cart/cart.wxml-->
 <view class="page">
-  <view class="shop df" wx:for="{{productData}}" wx:key="product">
+  <!-- <view class="shop df" wx:for="{{productData}}" wx:key="product">
     <image class="sh_slt" src="{{item.ImgUrl}}"></image>
     <view class="df_1">
       <view class="sp_text">
@@ -9,11 +9,11 @@
         </navigator>
         <view class="sp_neb">数量：×{{item.BuyCount}}</view>
         <view class="sp_jg">¥：{{item.Price}}</view>
-        <button class="dle" data-card-id="{{item.CartID}}" bindtap="removeShopCard">删除</button>
+        <button class="dle" data-card-id="{{item.CartID}}"  bindtap="removeShopCard">删除</button>
         <navigator class="dle" url="../order/pay?productId={{item.ProID}}&cartId={{item.CartID}}&buyCount={{item.BuyCount}}">下单</navigator>
       </view>
     </view>
-  </view>
+  </view> -->
   <!--样式-->
   <view class="container carts-list" wx:if="{{carts==''}}">
     <view class="pp">
@@ -39,7 +39,7 @@
       </view>
       <!--右边-->
       <view class="title">
-        <text bindtap="removeShopCard" data-cartid="{{item.id}}" class="modal-close">x</text>
+        <text bindtap="removeShopCard" data-cartid="{{item.id}}" data-num="{{item.num}}" class="modal-close">x</text>
         <view class="stepper">
           <!-- 减号 -->
           <text class="{{minusStatuses[index]}}" data-index="{{index}}" bindtap="bindMinus" data-cartid="{{item.id}}">-</text>
