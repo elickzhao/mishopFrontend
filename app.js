@@ -1,4 +1,5 @@
 // app.js
+var shopcar = require('./utils/shopcar.js');
 App({
   d: {
     hostUrl: 'https://small.huanqiujishi.com/index.php',
@@ -116,6 +117,9 @@ App({
           return false;
         }
         that.d.userId = userId;
+        
+        //检查购物车 原本打算放在onLoad里 不过那时userId还没有 所以放在这里了
+        shopcar.shopCarCheck(that.d);
       },
       fail:function(e){
         wx.showToast({
