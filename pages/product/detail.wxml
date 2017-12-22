@@ -141,8 +141,14 @@
     </view>
     <view class="df_1 l_h15 pt5">
       <view bindtap="addFavorites">
-        <image class="icon_kf" src="/images/shc.png"></image>
-        <view bindtap="addFavorites" class="dbtext">收藏</view>
+        <block wx:if="{{itemData.collect}}">
+          <image class="icon_kf" src="/images/shced.png"></image>
+          <view bindtap="addFavorites" class="dbtext">已收藏</view>
+        </block>
+        <block wx:else>
+          <image class="icon_kf" src="/images/shc.png"></image>
+          <view bindtap="addFavorites" class="dbtext">收藏</view>
+        </block>
       </view>
     </view>
   </view>

@@ -112,6 +112,7 @@ Page({
       method: 'post',
       data: {
         pro_id: that.data.productId,
+        uid: app.d.userId,
       },
       header: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -381,7 +382,11 @@ Page({
             duration: 2000
           });
           //变成已收藏，但是目前小程序可能不能改变图片，只能改样式
-          that.data.itemData.isCollect = true;
+          that.data.itemData.collect = !that.data.itemData.collect;
+          that.setData({
+            itemData: that.data.itemData
+          })
+          //console.log(that.data.itemData);
         } else {
           wx.showToast({
             title: data.err,
