@@ -35,7 +35,9 @@ function shopCarDel(e) {
     key: 'carnum',
     data: value,
     success: function (res) {
-      console.log(wx.getStorageSync('carnum'));
+      //console.log(wx.getStorageSync('carnum'));
+    },fail(e){
+      console.log(e);
     }
   })
 }

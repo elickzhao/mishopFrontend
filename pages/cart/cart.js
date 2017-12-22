@@ -185,50 +185,55 @@ Page({
   },
 
   sum: function () {
-    // var carts = this.data.carts;
-    // console.log(carts);
-    // // 计算总金额
-    // var total = 0;
-    // for (var i = 0; i < carts.length; i++) {
-    //   if (carts[i].selected) {
-    //     total += carts[i].num * carts[i].price;
-    //   }
-    // }
-    // // 写回经点击修改后的数组
-    // this.setData({
-    //   carts: carts,
-    //   total: '¥ ' + total
-    // });
-
-    var that = this;
-    wx.request({
-      url: app.d.ceshiUrl + '/Api/Shopping/index',
-      method: 'post',
-      data: {
-        user_id: app.d.userId
-      },
-      header: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      success: function (res) {
-
-        var carts =[];
-        carts = res.data.cart;
-        // 计算总金额
-        var total = 0;
-        for (var i = 0; i < carts.length; i++) {
-          if (carts[i].selected) {
-            total += parseInt(carts[i].num) * parseFloat(carts[i].price);
-          }
-        }
-        // 写回经点击修改后的数组
-        that.setData({
-          carts: carts,
-          total: '¥ ' + total.toFixed(2)
-        });
-
-      },
+    var carts = this.data.carts;
+    // 计算总金额
+    var total = 0;
+    for (var i = 0; i < carts.length; i++) {
+      if (carts[i].selected) {
+        total += carts[i].num * carts[i].price;
+      }
+    }
+    // 写回经点击修改后的数组
+    this.setData({
+      carts: carts,
+      total: '¥ ' + total
     });
+
+    /**
+     * 下面这种写法 原本是打算把购物车存储到本地 但由于存储到本地 所以价格变动会有错误 于是计算总价时同步下价格
+     * 但是由于本地存储的 loadProductData() 总是有问题就放弃了
+     * 而且使用下面的方法虽然更严谨 但是呢造成了选择框的失效 因为点击取消选择 也会重新计算价格 但是请求后 选择就又会到默认了
+     * 于是 还是等下一版统一规划吧
+     */
+    // var that = this;
+    // wx.request({
+    //   url: app.d.ceshiUrl + '/Api/Shopping/index',
+    //   method: 'post',
+    //   data: {
+    //     user_id: app.d.userId
+    //   },
+    //   header: {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   success: function (res) {
+
+    //     var carts =[];
+    //     carts = res.data.cart;
+    //     // 计算总金额
+    //     var total = 0;
+    //     for (var i = 0; i < carts.length; i++) {
+    //       if (carts[i].selected) {
+    //         total += parseInt(carts[i].num) * parseFloat(carts[i].price);
+    //       }
+    //     }
+    //     // 写回经点击修改后的数组
+    //     that.setData({
+    //       carts: carts,
+    //       total: '¥ ' + total.toFixed(2)
+    //     });
+
+    //   },
+    // });
   },
 
   onLoad: function (options) {
