@@ -381,7 +381,7 @@ Page({
             title: '操作成功！',
             duration: 2000
           });
-          //变成已收藏，但是目前小程序可能不能改变图片，只能改样式
+
           that.data.itemData.collect = !that.data.itemData.collect;
           that.setData({
             itemData: that.data.itemData
