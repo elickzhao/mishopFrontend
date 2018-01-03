@@ -11,7 +11,7 @@
   </swiper>
 
 
-  
+
   <image src='/images/rxsp.jpg' style='width:100%; height:75rpx; margin-top:10rpx'></image>
 
   <view class="zan-panel zan-panel-bottom" style='margin-top:-5px'>
@@ -52,5 +52,8 @@
       </view>
     </navigator>
   </view>
-  <view class="clear mt10" bindtap="getMore">点击查看更多</view>
+  <import src="/dist/loadmore/index.wxml" />
+  <template is="zan-loadmore" data="{{...loadmore}}" />
+
+  <!-- <view class="clear mt10" bindtap="getMore">点击查看更多</view> -->
 </view>

@@ -108,10 +108,22 @@ function doMD5Encode(toEncode) {
   return MD5Encode.hexMD5(toEncode);
 }
 
+function onReachBottom () {
+  //如果有更多商品就使用加载功能,否则就不加在
+  if (this.data.more) {
+    this.getMore();
+  } else {
+    //console.log(this.data.more);
+    return;
+  }
+  //console.log("触底效果!")
+}
+
 module.exports = {
   isStringEmpty: isStringEmpty,
   sentHttpRequestToServer: sentHttpRequestToServer,
   mapToJson: mapToJson,
   toastSuccess: toastSuccess,
   doWechatPay: doWechatPay,
+  onReachBottom: onReachBottom
 }

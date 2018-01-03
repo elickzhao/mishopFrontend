@@ -1,99 +1,63 @@
+var order = ['red', 'yellow', 'blue', 'green', 'red']
 Page({
   data: {
-    // text:"这是一个页面"
-    storageContent: '',
-    storageSyncContent: ''
+    toView: 'red',
+    scrollTop: 100,
+    x: 0,
+    y: 0
   },
-  onLoad: function (options) {
-    // 页面初始化 options为页面跳转所带来的参数
+  //这个是在设置一个可移动范围的时的tap
+  // tap: function (e) {
+  //   console.log("tap");
+  //   this.setData({
+  //     x: 30,
+  //     y: 30
+  //   });
+  // },
+  upper: function (e) {
+    console.log(e)
   },
-  /**
-   * 异步存储
-   */
-  listenerStorageSave: function () {
-    //以键值对的形式存储 传进去的是个对象
-    wx.setStorage({
-      key: 'key',
-      data: '我是storeage异步存储的信息',
-      success: function (res) {
-        console.log(res)
-      }
-    })
+  lower: function (e) {
+    console.log(e)
   },
-  /**
-   * 异步取信息
-   */
-  listenerStorageGet: function () {
-    var that = this;
-    wx.getStorage({
-      //获取数据的key
-      key: 'key',
-      success: function (res) {
-        console.log(res)
-        that.setData({
-          //
-          storageContent: res.data
+  scroll: function (e) {
+    //console.log(e)
+  },
+  //这个是滚动条tap
+  //其实就是滚动到指定id位置
+  tap: function (e) {
+    for (var i = 0; i < order.length; ++i) {
+      if (order[i] === this.data.toView) {
+        this.setData({
+          toView: order[i + 1]
         })
-      },
-      /**
-       * 失败会调用
-       */
-      fail: function (res) {
-        console.log(res)
+        break
       }
-    })
+    }
   },
-
-  /**
-   * 清除数据
-   */
-  listenerStorageClear: function () {
-    var that = this;
-    wx.clearStorage({
-      success: function (res) {
-        that.setData({
-          storageContent: ''
-        })
-      }
-    })
-  },
-
-
-  /**
-   * 数据同步存储
-   */
-  listenerStorageSyncSave: function () {
-    wx.setStorageSync('key', '我是同步存储的数据')
-  },
-
-  /**
-   * 数据同步获取
-   */
-  listenerStorageSyncGet: function () {
-    // var that = this;
-    var value = wx.getStorageSync('key')
+  //滚动一点距离
+  tapMove: function (e) {
     this.setData({
-      storageSyncContent: value
+      scrollTop: this.data.scrollTop + 10
     })
   },
-
-  /**
-   * 清除同步存储数据
-   */
-  listenerStorageSyncClear: function () {
-    wx.clearStorageSync()
+  onReady() {
+    this.videoCtx = wx.createVideoContext('myVideo')
+  },
+  play() {
+    this.videoCtx.play()
+  },
+  pause() {
+    this.videoCtx.pause()
   },
 
-  onReady: function () {
-    // 页面渲染完成
+  onReachBottom: function () {
+    //有了这个根本不需要 scroll-view 就可以做上拉加载了
+    console.log("触底效果!")
   },
-  onShow: function () {
-    // 页面显示
-  },
-  onHide: function () {
-    // 页面隐藏
-  },
-  onUnload: function () {
-    // 页面关闭
+  onPullDownRefresh: function () {
+    console.log("下来刷新了");
+    //wx.stopPullDownRefresh()
   }
+
 })

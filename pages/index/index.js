@@ -1,16 +1,16 @@
 var app = getApp();
-
-Page({
+var common = require('../../utils/common.js');
+Page(Object.assign({}, common,{
   data: {
-    imgUrls: [],  //首页广告图
+    imgUrls: [], //首页广告图
     indicatorDots: true,
     autoplay: true,
     interval: 5000,
     duration: 1000,
     circular: true,
-    productData: [],  //产品数据
-    hotlist: [],  //热销产品
-    ad1:[],
+    productData: [], //产品数据
+    hotlist: [], //热销产品
+    ad1: [],
     proCat: [],
     page: 2,
     index: 2,
@@ -19,7 +19,9 @@ Page({
     imgUrl: [],
     kbs: [],
     lastcat: [],
-    course: []
+    course: [],
+    loadmore: {}, //读取更多样式
+    more: 1      //是否有更多产品
   },
   //跳转商品列表页   
   listdetail: function (e) {
@@ -110,12 +112,20 @@ Page({
   },
   //点击加载更多
   getMore: function (e) {
+    this.setData({
+      loadmore: {
+        loading: true
+      }
+    });
+
     var that = this;
     var page = that.data.page;
     wx.request({
       url: app.d.ceshiUrl + '/Api/Index/getlist',
       method: 'post',
-      data: { page: page },
+      data: {
+        page: page
+      },
       header: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
@@ -123,14 +133,21 @@ Page({
         var prolist = res.data.prolist;
         if (prolist == '') {
           wx.showToast({
-            title: '没有更多数据！',
+            title: '没有更多商品！',
             duration: 2000
+          });
+          that.setData({
+            more: 0,
+            loadmore: {
+              nomore: true
+            }
           });
           return false;
         }
         that.setData({
           page: page + 1,
-          productData: that.data.productData.concat(prolist)
+          productData: that.data.productData.concat(prolist),
+          loadmore: {}  //取消加载中的样式
         });
         //endInitData
       },
@@ -214,8 +231,5 @@ Page({
         // 分享失败
       }
     }
-  }
-
-
-
-});
+  },
+}));
