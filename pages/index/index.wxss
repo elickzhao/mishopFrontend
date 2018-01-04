@@ -128,7 +128,8 @@
 }
 
 .gmxx {
-  padding-left: 20rpx;
+  /* 下面这个 当大数字时会出框  */
+  /* padding-left: 20rpx; */
   width: 74%;
 }
 

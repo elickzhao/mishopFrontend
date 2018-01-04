@@ -15,6 +15,7 @@
   float: left;
   padding: 15rpx 10rpx;
   width: 25%;
+  height: 330rpx;
   box-sizing: border-box;
   border-right: 1rpx solid #d9d9d9;
   border-bottom: 1rpx solid #d9d9d9;
