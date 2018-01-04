@@ -38,14 +38,14 @@
     "list": [{
       "pagePath": "pages/index/index",
       "iconPath":"images/icons/a.png",
-      "selectedIconPath":"images/icons/aa.png",
-      "text": "首页"
+      "selectedIconPath":"images/icons/a.png",
+      "text": "促销"
     }, 
         {
       "pagePath": "pages/category/index",
       "iconPath":"images/icons/b.png",
       "selectedIconPath":"images/icons/bb.png",
-      "text": "分类"
+      "text": "配送到家"
     },
        {
       "pagePath": "pages/cart/cart",

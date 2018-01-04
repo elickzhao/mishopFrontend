@@ -184,8 +184,13 @@ Page({
     });
   },
 
-  sum: function () {
-    var carts = this.data.carts;
+  sum: function (e) {
+    if(e){
+      var carts = e;
+    }else{
+      var carts = this.data.carts;
+    }
+    
     // 计算总金额
     var total = 0;
     for (var i = 0; i < carts.length; i++) {
@@ -196,7 +201,7 @@ Page({
     // 写回经点击修改后的数组
     this.setData({
       carts: carts,
-      total: '¥ ' + total
+      total: '¥ ' + total.toFixed(2)
     });
 
     /**
@@ -237,17 +242,17 @@ Page({
   },
 
   onLoad: function (options) {
-    // this.loadProductData();
+    //this.loadProductData();
     // this.sum();
   },
   onShow: function () {
     this.loadProductData();
-    this.sum();
+    //this.sum();
     this.setData({
       selectedAllStatus: true
     });
   },
-
+  //删除购物车产品
   removeShopCard: function (e) {
     var that = this;
     var cardId = (e == 0) ? e : e.currentTarget.dataset.cartid;
@@ -310,9 +315,11 @@ Page({
       success: function (res) {
         //--init data
         var cart = res.data.cart;
-        that.setData({
-          carts: cart,
-        });
+        that.sum(cart);
+        //console.log(that.data);
+        // that.setData({
+        //   carts: cart,
+        // });
         //endInitData
       },
     });
