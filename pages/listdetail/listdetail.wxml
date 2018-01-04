@@ -1,4 +1,4 @@
-<view class="list">
+
   <block wx:for="{{shopList}}" wx:key="*this" data-id="{{item.id}}">
     <view class="ban">
       <navigator url="../product/detail?productId={{item.id}}" class="cover flex-wrp">
@@ -6,9 +6,10 @@
         <view class="act-item ellipsis">
           <text class="type">{{item.name}}</text>
         </view>
-        <view class="act-item ellipsis">
-          <!-- <text class="kkk">{{item.intro}}</text> -->
-        </view>
+        <!-- 这是产地  -->
+        <!-- <view class="act-item ellipsis">
+           <text class="kkk">{{item.intro}}</text> 
+        </view> -->
         <view class="act-item ellipsis">
           <text style="color:red">¥ {{item.price_yh}}</text>
         </view>
@@ -21,7 +22,7 @@
     <view animation="{{animationData}}" class="commodity_attr_box" wx:if="{{showModalStatus}}"></view>
   </block>
 
-  <import src="/dist/loadmore/index.wxml" />
-  <template is="zan-loadmore" data="{{...loadmore}}" />
-  <!-- <view class="clear mt10" bindtap="getMore">点击查看更多</view>     -->
-</view>
+<import src="/dist/loadmore/index.wxml" />
+<template is="zan-loadmore" data="{{...loadmore}}" />
+
+<!-- <view class="clear mt10" bindtap="getMore">点击查看更多</view>     -->

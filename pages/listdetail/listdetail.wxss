@@ -1,8 +1,10 @@
 page {
+  margin-top: 10rpx;
   height: 100%;
-  background: white
+  background: #f8f8f8;
 }
 
+/* 这个应该是头部选择 比如什么时间排序那个  的tab  */
 .list-tab {
   height: 106rpx;
   box-sizing: border-box;
@@ -97,11 +99,16 @@ page {
   width: 100%;
 }
 .ban{
-  width: 46%;
-  padding: 10rpx ;
-  border: 2rpx solid #ccc;
+  width: 45%;
+  padding: 10rpx;
+  /* border: 2rpx solid #ccc; */
   display: inline-block;
-  margin-left:6rpx 
+  margin: 6rpx 6rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  -moz-box-shadow: 5px 5px 10px #ccc;
+  -webkit-box-shadow: 5px 5px 10px #ccc;
+  box-shadow: 5px 5px 10px #ccc;
 }
 .ban image{
   width: 100%;
