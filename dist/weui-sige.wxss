@@ -21,9 +21,9 @@
   border-bottom: 1rpx solid #d9d9d9;
 }
 
-.weui-grid_active {
+/* .weui-grid_active {
   background-color: #ececec;
-}
+} */
 
 .weui-grid__icon {
   display: block;
