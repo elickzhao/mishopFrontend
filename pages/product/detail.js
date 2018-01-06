@@ -86,6 +86,11 @@ Page({
   },
   // 传值
   onLoad: function (option) {
+    //开启转发
+    wx.showShareMenu({
+      withShareTicket: true
+    })
+
     //this.initNavHeight();
     var that = this;
     that.setData({
@@ -95,6 +100,7 @@ Page({
 
     //读出购物车数量
     var num = wx.getStorageSync('carnum');
+    console.log(num);
 
     if (num) {
       //console.log(num);
@@ -498,6 +504,33 @@ Page({
       that.setData({
         currentTab: e.target.dataset.current
       })
+    }
+  },
+  //转发功能
+  onShareAppMessage: function () {
+    return {
+      title: this.data.itemData.name,
+      // path: '/page/user?id=123',
+      success: function (res) {
+        var shareTickets = res.shareTickets;
+        console.log(shareTickets);
+        if (shareTickets.length == 0) {
+          return false;
+        }
+        // 下面这个是获得群组gid 不过现在还没有加入解密无法获得
+        // 这个解密还必须上传服务器 只有服务端的语音才能解密 然后返回内容
+        // 目前来说还不知道这个获得群id和名称 有什么具体作用
+        // wx.getShareInfo({
+        //   shareTicket: shareTickets[0],
+        //   success: function (res) {
+        //     var encryptedData = res.encryptedData;
+        //     var iv = res.iv;
+        //   }
+        // })
+      },
+      fail: function (res) {
+        // 转发失败
+      }
     }
   }
 });

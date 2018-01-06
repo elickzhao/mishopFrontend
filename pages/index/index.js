@@ -222,7 +222,7 @@ Page(Object.assign({}, common,{
   },
   onShareAppMessage: function () {
     return {
-      title: '环球集市',
+      title: '环球集市·闪电送',
       path: '/pages/index/index',
       success: function (res) {
         // 分享成功
