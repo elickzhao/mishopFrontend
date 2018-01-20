@@ -27,7 +27,7 @@
 		<view class="p_all bg_white mt10 font_14" wx:else>
 		   <navigator url="../address/user-address/user-address?cartId={{cartId}}" open-type="redirect"	 hover-class="none">
 			<view class="df">
-				添加收货地址		
+				<b class="font_16" style="font-weight:bold;">添加收货地址</b>	
 			</view>
 			</navigator>
 		</view>
