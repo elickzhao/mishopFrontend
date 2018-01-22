@@ -2,7 +2,6 @@
 //index.js  
 //获取应用实例  
 var app = getApp();
-var common = require("../../utils/common.js");
 Page({
   data: {
     winWidth: 0,
@@ -17,6 +16,8 @@ Page({
     orderList2: [],
     orderList3: [],
     orderList4: [],
+    loadmore: {},
+    refundmore: 1
   },
   onLoad: function (options) {
     this.initSystemInfo();
@@ -129,6 +130,7 @@ Page({
     });
   },
 
+  //读取订单列表
   loadOrderList: function () {
     var that = this;
     wx.request({
@@ -184,6 +186,7 @@ Page({
     });
   },
 
+  //读取退款订单
   loadReturnOrderList: function () {
     var that = this;
     wx.request({
@@ -220,9 +223,67 @@ Page({
       }
     });
   },
+  //读取更多退款订单
+  loadMoreReturnOrderList: function () {
+    var that = this;
+    var refundpage = that.data.refundpage;
+    this.setData({
+      loadmore: {
+        loading: true
+      }
+    });
+    wx.request({
+      url: app.d.ceshiUrl + '/Api/Order/get_refund_more',
+      method: 'post',
+      data: {
+        uid: app.d.userId,
+        page: that.data.refundpage,
+      },
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        //--init data      
+        var data = res.data.ord;
+        var status = res.data.status;
+        console.log(refundpage + "底边触发了啊" + data);
+        if (status == 1) {
+
+          if (data == '') {
+            that.setData({
+              refundmore: 0,
+              loadmore: {
+                nomore: true
+              }
+            });
+            return false;
+          }
+
+          that.setData({
+            orderList4: that.data.orderList4.concat(data),
+            refundpage: refundpage + 1,
+            loadmore: {}  //取消加载中的样式
+          });
+        } else {
+          wx.showToast({
+            title: res.data.err,
+            duration: 2000
+          });
+        }
+      },
+      fail: function () {
+        // fail
+        wx.showToast({
+          title: '网络异常！',
+          duration: 2000
+        });
+      }
+    });
+  },
 
   // returnProduct:function(){
   // },
+  // 初始化屏幕信息 用于设定高度
   initSystemInfo: function () {
     var that = this;
 
@@ -235,10 +296,13 @@ Page({
       }
     });
   },
+
+  //切换订单信息
   bindChange: function (e) {
     var that = this;
     that.setData({ currentTab: e.detail.current });
   },
+  //选择当前导航
   swichNav: function (e) {
     var that = this;
     if (that.data.currentTab === e.target.dataset.current) {
@@ -267,6 +331,11 @@ Page({
         case 4:
           that.data.orderList4.length = 0;
           that.loadReturnOrderList();
+          that.setData({ 
+            refundmore:1,
+            loadmore: {},
+            refundpage: 0,
+          });
           break;
       }
     };
@@ -283,6 +352,7 @@ Page({
   //   common.doWechatPay("prepayId", successCallback);
   // },
 
+  //微信支付订单
   payOrderByWechat: function (e) {
     var order_id = e.currentTarget.dataset.orderId;
     var order_sn = e.currentTarget.dataset.ordersn;
@@ -346,6 +416,47 @@ Page({
         });
       }
     })
+  },
+
+  //触底准备做拉取更多
+  lower: function () {
+
+    // switch (that.data.currentTab) {
+    //   case 0:
+    //     that.setData({
+    //       orderList0: list,
+    //     });
+    //     break;
+    //   case 1:
+    //     that.setData({
+    //       orderList1: list,
+    //     });
+    //     break;
+    //   case 2:
+    //     that.setData({
+    //       orderList2: list,
+    //     });
+    //     break;
+    //   case 3:
+    //     that.setData({
+    //       orderList3: list,
+    //     });
+    //     break;
+    //   case 4:
+    //     that.setData({
+    //       orderList4: list,
+    //     });
+    //     break;
+    // }
+    switch (this.data.currentTab) {
+      case 4:
+        if (this.data.refundmore) {
+          this.loadMoreReturnOrderList();
+        }
+        break;
+    }
+
+    //console.log("底边触发了啊" + this.data.currentTab);
   },
 
   /**

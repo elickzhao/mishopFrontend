@@ -130,3 +130,11 @@
 .mr_5{
     margin-right: 5px;
 }
+.footer{
+    position: fixed;
+    height: 41px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+}
