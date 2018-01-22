@@ -17,7 +17,8 @@ Page({
     orderList3: [],
     orderList4: [],
     loadmore: {},
-    refundmore: 1
+    refundmore: 1,
+    more: 1,
   },
   onLoad: function (options) {
     this.initSystemInfo();
@@ -185,6 +186,81 @@ Page({
       }
     });
   },
+  //读取更多订单列表
+  loadMoreOrderList: function () {
+    this.setData({
+      loadmore: {
+        loading: true
+      }
+    });
+
+    var that = this;
+    var page = that.data.page;
+    //console.log("底边触发了啊" + page);
+    wx.request({
+      url: app.d.ceshiUrl + '/Api/Order/get_more',
+      method: 'post',
+      data: {
+        uid: app.d.userId,
+        order_type: that.data.isStatus,
+        page: page,
+      },
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        //--init data        
+        var status = res.data.status;
+        var list = res.data.ord;
+        if (list == '') {
+          that.setData({
+            more: 0,
+            loadmore: {
+              nomore: true
+            }
+          });
+          return false;
+        }
+        switch (that.data.currentTab) {
+          case 0:
+            that.setData({
+              orderList0: that.data.orderList0.concat(list),
+            });
+            break;
+          case 1:
+            that.setData({
+              orderList1: that.data.orderList1.concat(list),
+            });
+            break;
+          case 2:
+            that.setData({
+              orderList2: that.data.orderList2.concat(list),
+            });
+            break;
+          case 3:
+            that.setData({
+              orderList3: that.data.orderList3.concat(list),
+            });
+            break;
+          case 4:
+            that.setData({
+              orderList4: that.data.orderList4.concat(list),
+            });
+            break;
+        }
+        that.setData({
+          page: page + 1,
+        });
+      },
+      fail: function () {
+        // fail
+        wx.showToast({
+          title: '网络异常！',
+          duration: 2000
+        });
+      }
+    });
+  },
 
   //读取退款订单
   loadReturnOrderList: function () {
@@ -246,9 +322,8 @@ Page({
         //--init data      
         var data = res.data.ord;
         var status = res.data.status;
-        console.log(refundpage + "底边触发了啊" + data);
+        //console.log(refundpage + "底边触发了啊" + data);
         if (status == 1) {
-
           if (data == '') {
             that.setData({
               refundmore: 0,
@@ -258,11 +333,10 @@ Page({
             });
             return false;
           }
-
           that.setData({
             orderList4: that.data.orderList4.concat(data),
             refundpage: refundpage + 1,
-            loadmore: {}  //取消加载中的样式
+            //loadmore: {}  //取消加载中的样式  //根据上面的情况 不取消加载样式也没关系
           });
         } else {
           wx.showToast({
@@ -300,7 +374,12 @@ Page({
   //切换订单信息
   bindChange: function (e) {
     var that = this;
-    that.setData({ currentTab: e.detail.current });
+    that.setData({
+      currentTab: e.detail.current,
+      loadmore: {},
+      page: 0,
+      more: 1,
+    });
   },
   //选择当前导航
   swichNav: function (e) {
@@ -331,9 +410,8 @@ Page({
         case 4:
           that.data.orderList4.length = 0;
           that.loadReturnOrderList();
-          that.setData({ 
-            refundmore:1,
-            loadmore: {},
+          that.setData({
+            refundmore: 1,
             refundpage: 0,
           });
           break;
@@ -420,35 +498,12 @@ Page({
 
   //触底准备做拉取更多
   lower: function () {
-
-    // switch (that.data.currentTab) {
-    //   case 0:
-    //     that.setData({
-    //       orderList0: list,
-    //     });
-    //     break;
-    //   case 1:
-    //     that.setData({
-    //       orderList1: list,
-    //     });
-    //     break;
-    //   case 2:
-    //     that.setData({
-    //       orderList2: list,
-    //     });
-    //     break;
-    //   case 3:
-    //     that.setData({
-    //       orderList3: list,
-    //     });
-    //     break;
-    //   case 4:
-    //     that.setData({
-    //       orderList4: list,
-    //     });
-    //     break;
-    // }
     switch (this.data.currentTab) {
+      default:
+        if (this.data.more) {
+          this.loadMoreOrderList();
+        }
+        break;
       case 4:
         if (this.data.refundmore) {
           this.loadMoreReturnOrderList();
