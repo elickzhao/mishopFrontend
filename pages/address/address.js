@@ -11,11 +11,11 @@ Page({
     shiIndex: 0,
     quIndex: 0,
     mid: 0,
-    sheng:0,
-    city:0,
-    area:0,
-    code:0,
-    cartId:0
+    sheng: 0,
+    city: 0,
+    area: 0,
+    code: 0,
+    cartId: 0
   },
   formSubmit: function (e) {
     var adds = e.detail.value;
@@ -23,7 +23,7 @@ Page({
     wx.request({
       url: app.d.ceshiUrl + '/Api/Address/add_adds',
       data: {
-        user_id:app.d.userId,
+        user_id: app.d.userId,
         receiver: adds.name,
         tel: adds.phone,
         sheng: this.data.sheng,
@@ -34,25 +34,25 @@ Page({
       },
       method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       header: {// 设置请求的 header
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         // success
         var status = res.data.status;
-        if(status==1){
+        if (status == 1) {
           wx.showToast({
             title: '保存成功！',
             duration: 2000
           });
-        }else{
+          wx.redirectTo({
+            url: 'user-address/user-address?cartId=' + cartId
+          });
+        } else {
           wx.showToast({
             title: res.data.err,
             duration: 2000
           });
         }
-        wx.redirectTo({
-          url: 'user-address/user-address?cartId=' + cartId
-        });
       },
       fail: function () {
         // fail
@@ -109,16 +109,16 @@ Page({
       shengIndex: e.detail.value,
       shiArr: [],
       shiId: [],
-      quArr:[],
+      quArr: [],
       quiId: []
     });
     var that = this;
     wx.request({
       url: app.d.ceshiUrl + '/Api/Address/get_city',
-      data: {sheng:e.detail.value},
+      data: { sheng: e.detail.value },
       method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       header: {// 设置请求的 header
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         // success
@@ -134,7 +134,7 @@ Page({
           hId.push(city[i].id);
         }
         that.setData({
-          sheng:res.data.sheng,
+          sheng: res.data.sheng,
           shiArr: hArr,
           shiId: hId
         })
@@ -152,19 +152,19 @@ Page({
   bindPickerChangeshiArr: function (e) {
     this.setData({
       shiIndex: e.detail.value,
-      quArr:[],
+      quArr: [],
       quiId: []
     })
     var that = this;
     wx.request({
       url: app.d.ceshiUrl + '/Api/Address/get_area',
       data: {
-        city:e.detail.value,
-        sheng:this.data.sheng
+        city: e.detail.value,
+        sheng: this.data.sheng
       },
       method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       header: {// 设置请求的 header
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         var status = res.data.status;
@@ -179,7 +179,7 @@ Page({
           qId.push(area[i].id)
         }
         that.setData({
-          city:res.data.city,
+          city: res.data.city,
           quArr: qArr,
           quiId: qId
         })
@@ -202,17 +202,17 @@ Page({
     wx.request({
       url: app.d.ceshiUrl + '/Api/Address/get_code',
       data: {
-        quyu:e.detail.value,
-        city:this.data.city
+        quyu: e.detail.value,
+        city: this.data.city
       },
       method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
       header: {// 设置请求的 header
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         that.setData({
-          area:res.data.area,
-          code:res.data.code
+          area: res.data.area,
+          code: res.data.code
         })
       },
       fail: function () {

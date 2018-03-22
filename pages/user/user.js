@@ -4,7 +4,6 @@ Page( {
   data: {
     userInfo: {},
     orderInfo:{},
-    projectSource: 'https://github.com/liuxuanqiang/wechat-weapp-mall',
     userListInfo: [ {
         icon: '../../images/iconfont-dingdan.png',
         text: '我的订单',
