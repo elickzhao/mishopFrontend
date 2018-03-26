@@ -219,6 +219,9 @@ Page(Object.assign({}, common,{
       },
     })
 
+  }, onPullDownRefresh: function () {
+    this.onLoad();
+    wx.stopPullDownRefresh()
   },
   onShareAppMessage: function () {
     return {

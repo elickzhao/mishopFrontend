@@ -1,4 +1,6 @@
 {
-   "navigationBarTitleText": "环球集市·闪电送",
-   "onReachBottomDistance": 60
+  "navigationBarTitleText": "环球集市·闪电送",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#eeeeee",
+  "onReachBottomDistance": 60
 }
