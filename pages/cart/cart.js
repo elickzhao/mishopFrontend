@@ -190,7 +190,6 @@ Page({
     }else{
       var carts = this.data.carts;
     }
-    
     // 计算总金额
     var total = 0;
     for (var i = 0; i < carts.length; i++) {
@@ -315,8 +314,23 @@ Page({
       success: function (res) {
         //--init data
         var cart = res.data.cart;
-        that.sum(cart);
-        //console.log(that.data);
+        //console.log(cart);
+        if(res.data.status == 3){
+          wx.showModal({
+            title: '库存不足!',
+            content: '已经帮你移除被抢光的商品,请重新提交!',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                that.sum(cart);
+              }
+            }
+          });
+        }else{
+          that.sum(cart);
+        }
+
+        //console.log(res.data);
         // that.setData({
         //   carts: cart,
         // });
@@ -324,5 +338,4 @@ Page({
       },
     });
   },
-
 })

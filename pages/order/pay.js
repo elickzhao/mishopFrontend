@@ -37,7 +37,7 @@ Page({
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
-        console.log(res.data);
+        //console.log(res.data);
         that.setData({
           'shops': res.data.data,
         });
@@ -70,7 +70,7 @@ Page({
         that.setData({
           addemt: res.data.addemt,
           productData: res.data.pro,
-          total: res.data.price,
+          total: (res.data.price).toFixed(2),
           vprice: res.data.price,
           vou: res.data.vou,
         });
@@ -151,7 +151,7 @@ Page({
     // return false;
     //创建订单
     var that = this;
-    console.log(that.data.address);
+    //console.log(that.data.address);
     wx.request({
       url: app.d.ceshiUrl + '/Api/Payment/payment',
       method: 'post',
@@ -189,6 +189,22 @@ Page({
             //微信支付
             that.wxpay(data.arr);
           }
+        } else if (data.status == 3) {
+          //console.log(data.data);
+          wx.showModal({
+            title: '库存不足!',
+            content: '订单内有商品已被抢光,请去除后重新下单!',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                wx.switchTab({
+                  url: '../cart/cart'
+                })
+                console.log('用户点击确定')
+              }
+            }
+          });
+          return false;
         } else {
           wx.showToast({
             title: "下单失败!",
@@ -212,7 +228,7 @@ Page({
       content: '请添加收货地址!',
       success: function (res) {
         if (res.confirm) {
-          console.log('用户点击确定');
+          //console.log('用户点击确定');
           wx.chooseAddress({
             success: function (res) {
               wx.request({
