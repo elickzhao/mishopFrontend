@@ -1,15 +1,18 @@
 var app = getApp();
 // pages/search/search.js
-Page({
+var common = require('../../utils/common.js');
+Page(Object.assign({}, common, {
   data: {
     focus: true,
     hotKeyShow: true,
     historyKeyShow: true,
     searchValue: '',
-    page: 0,
+    page: 2,
     productData: [],
     historyKeyList: [],
-    hotKeyList: []
+    hotKeyList: [],
+    loadmore: {}, //读取更多样式
+    more: 1      //是否有更多产品
   },
   onLoad: function (options) {
     var that = this;
@@ -23,7 +26,6 @@ Page({
       success: function (res) {
         var remen = res.data.remen;
         var history = res.data.history;
-
         that.setData({
           historyKeyList: history,
           hotKeyList: remen,
@@ -37,14 +39,109 @@ Page({
       },
     })
   },
-  onReachBottom: function () {
-    //下拉加载更多多...
-    this.setData({
-      page: (this.data.page + 10)
-    })
 
-    this.searchProductData();
+  //点击加载更多
+  getMore: function (e) {
+    this.setData({
+      loadmore: {
+        loading: true
+      }
+    });
+
+    var that = this;
+    var page = that.data.page;
+    wx.request({
+      url: app.d.ceshiUrl + '/Api/Search/searches',
+      method: 'post',
+      data: {
+        keyword: that.data.searchValue,
+        uid: app.d.userId,
+        page: that.data.page,
+      },
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        var prolist = res.data.pro;
+        if (prolist == '') {
+          wx.showToast({
+            title: '没有更多数据！',
+            duration: 2000
+          });
+          that.setData({
+            more: 0,
+            loadmore: {
+              nomore: true
+            }
+          });
+          return false;
+        }
+        //that.initProductData(data);
+        that.setData({
+          page: page + 1,
+          productData: that.data.productData.concat(prolist),
+          loadmore: {}  //取消加载中的样式
+        });
+        //endInitData
+      },
+      fail: function (e) {
+        wx.showToast({
+          title: '网络异常！',
+          duration: 2000
+        });
+      }
+    })
   },
+
+  // 显示遮罩层
+  showModal: function () {
+    var animation = wx.createAnimation({
+      duration: 200,
+      timingFunction: "linear",
+      delay: 0
+    })
+    this.animation = animation
+    animation.translateY(300).step()
+    this.setData({
+      animationData: animation.export(),
+      showModalStatus: true
+    })
+    setTimeout(function () {
+      animation.translateY(0).step()
+      this.setData({
+        animationData: animation.export()
+      })
+    }.bind(this), 200)
+  },
+  // 隐藏遮罩层
+  hideModal: function () {
+    var animation = wx.createAnimation({
+      duration: 200,
+      timingFunction: "linear",
+      delay: 0
+    })
+    this.animation = animation
+    animation.translateY(300).step()
+    this.setData({
+      animationData: animation.export(),
+    })
+    setTimeout(function () {
+      animation.translateY(0).step()
+      this.setData({
+        animationData: animation.export(),
+        showModalStatus: false
+      })
+    }.bind(this), 200)
+  },
+
+  // onReachBottom: function () {
+  //   //下拉加载更多多...
+  //   this.setData({
+  //     page: (this.data.page + 10)
+  //   })
+
+  //   this.searchProductData();
+  // },
   doKeySearch: function (e) {
     var key = e.currentTarget.dataset.key;
     this.setData({
@@ -63,6 +160,7 @@ Page({
         focus: true,
         hotKeyShow: true,
         historyKeyShow: true,
+        productData: [],
       });
       return;
     };
@@ -70,6 +168,8 @@ Page({
     this.setData({
       hotKeyShow: false,
       historyKeyShow: false,
+      more: 1,
+      page: 2 
     })
 
     this.data.productData.length = 0;
@@ -121,7 +221,6 @@ Page({
       data: {
         keyword: that.data.searchValue,
         uid: app.d.userId,
-        page: that.data.page,
       },
       header: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -143,8 +242,49 @@ Page({
 
   clearInput: function () {
     this.setData({
-      searchValue: ""
+      searchValue: "",
+      hotKeyShow: true,
+      productData: [],
+      more: 1,
+      page:2 
     });
   },
 
-});
+  clearHistory:function(){
+    let that = this;
+    wx.request({
+      url: app.d.ceshiUrl + '/Api/Search/delHistory',
+      method: 'post',
+      data: { uid: app.d.userId },
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        let e = res.data;
+        //console.log(res);
+        if(e.code){
+            wx.showModal({
+              title: '清除历史出错!',
+              content: e.msg,
+              showCancel: false,
+              success: function (res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                }
+              }
+            });
+        }
+        that.setData({
+          historyKeyList: [],
+        });
+      },
+      fail: function (e) {
+        wx.showToast({
+          title: '网络异常！',
+          duration: 2000
+        });
+      },
+    })
+  }
+
+}));
