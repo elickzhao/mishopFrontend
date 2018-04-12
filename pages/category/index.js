@@ -90,6 +90,11 @@ Page({
       }
     });
   },
+  search:function () {
+    wx.navigateTo({
+      url: '../search/search'
+    })
+  },
   // 加载品牌、二级类目数据
   getTypeTree(currType) {
     const me = this, _data = me.data;

@@ -111,6 +111,12 @@
       <span class="font_14 c3">test</span>
       <span class="fl_r c9 font_12 l_h20" hover-class="none"> ></span>
     </navigator>
+  </view>  -->
+  <!-- <view class="qbdd mt10">
+    <navigator url="../mianmo/index">
+      <span class="font_14 c3">面膜</span>
+      <span class="fl_r c9 font_12 l_h20" hover-class="none"> ></span>
+    </navigator>
   </view> -->
 
 </view>

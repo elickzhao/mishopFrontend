@@ -1,81 +1,113 @@
 // pages/user/user.js
 var app = getApp()
-Page( {
+Page({
   data: {
     userInfo: {},
-    orderInfo:{},
-    userListInfo: [ {
-        icon: '../../images/iconfont-dingdan.png',
-        text: '我的订单',
-        isunread: true,
-        unreadNum: 2
-      }, {
-        icon: '../../images/iconfont-card.png',
-        text: '我的代金券',
-        isunread: false,
-        unreadNum: 2
-      }, {
-        icon: '../../images/iconfont-icontuan.png',
-        text: '我的拼团',
-        isunread: true,
-        unreadNum: 1
-      }, {
-        icon: '../../images/iconfont-shouhuodizhi.png',
-        text: '收货地址管理'
-      }, {
-        icon: '../../images/iconfont-kefu.png',
-        text: '联系客服'
-      }, {
-        icon: '../../images/iconfont-help.png',
-        text: '常见问题'
-      }],
-       loadingText: '加载中...',
-       loadingHidden: false,
+    orderInfo: {},
+    userListInfo: [{
+      icon: '../../images/iconfont-dingdan.png',
+      text: '我的订单',
+      isunread: true,
+      unreadNum: 2
+    }, {
+      icon: '../../images/iconfont-card.png',
+      text: '我的代金券',
+      isunread: false,
+      unreadNum: 2
+    }, {
+      icon: '../../images/iconfont-icontuan.png',
+      text: '我的拼团',
+      isunread: true,
+      unreadNum: 1
+    }, {
+      icon: '../../images/iconfont-shouhuodizhi.png',
+      text: '收货地址管理'
+    }, {
+      icon: '../../images/iconfont-kefu.png',
+      text: '联系客服'
+    }, {
+      icon: '../../images/iconfont-help.png',
+      text: '常见问题'
+    }],
+    loadingText: '加载中...',
+    loadingHidden: false,
   },
   onLoad: function () {
-      var that = this
-      //调用应用实例的方法获取全局数据
-      app.getUserInfo(function(userInfo){
-        //更新数据
-        that.setData({
-          userInfo:userInfo,
-          loadingHidden: true
-        })
-      });
+    var that = this
 
-      this.loadOrderStatus();
-  },
-  onShow:function(){
+    //调用应用实例的方法获取全局数据
+    app.getUserInfo(function (userInfo) {
+      //更新数据
+      that.setData({
+        userInfo: userInfo,
+        loadingHidden: true
+      })
+    });
+
     this.loadOrderStatus();
   },
-  loadOrderStatus:function(){
+  onShow: function () {
+    this.loadOrderStatus();
+
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userInfo']) {
+          wx.authorize({
+            scope: 'scope.userInfo',
+            success() {
+              // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+              wx.login({
+                success: function (res) {
+                  var code = res.code;
+                  //get wx user simple info
+                  console.log(res);
+                  if (code) {
+                    wx.getUserInfo({
+                      success: function (res) {
+                        console.log(res);
+                      }
+                    });
+                  } else {
+                    console.log('登录失败！' + res.errMsg)
+                  }
+                }
+              });
+            }
+          })
+        }
+      }
+    })
+
+
+  },
+  loadOrderStatus: function () {
     //获取用户订单数据
     var that = this;
     wx.request({
       url: app.d.ceshiUrl + '/Api/User/getorder',
-      method:'post',
+      method: 'post',
       data: {
-        userId:app.d.userId,
+        userId: app.d.userId,
       },
       header: {
-        'Content-Type':  'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       success: function (res) {
         //--init data        
         var status = res.data.status;
-        if(status==1){
+        if (status == 1) {
           var orderInfo = res.data.orderInfo;
           that.setData({
             orderInfo: orderInfo
           });
-        }else{
+        } else {
           wx.showToast({
             title: '非法操作.',
             duration: 2000
           });
         }
       },
-      error:function(e){
+      error: function (e) {
         wx.showToast({
           title: '网络异常！',
           duration: 2000
