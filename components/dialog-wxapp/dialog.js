@@ -31,6 +31,15 @@ Component({
       type: String,
       value: ''
     },
+    confirmText: {
+      type: String,
+      value: '确定'
+    },
+    cancelText: {
+      type: String,
+      value: '取消'
+    },
+    
     showClose: {
       type: Boolean,
       value: true

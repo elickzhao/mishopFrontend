@@ -113,8 +113,8 @@ text-align: center
 .swiper-tab-list{  
   font-size: 29rpx;  
     display: inline-block;  
-    /* width: 49.5%;   这是在有商品详情页的宽度*/
-    width: 100%; 
+     width: 49.5%;  /* 这是在有商品详情页的宽度*/
+    /* width: 100%;  这是隐藏图文详情时用的 */
     color: #333; 
     
 
@@ -122,9 +122,9 @@ text-align: center
 .swiper-box{
   background: #fff;
   display: block; 
-  /*heigaqht: 100%;. */
+  /* height: 100%; 一加这个页面固定不动了*/
   width: 100%; 
-  /*overflow: hidden;*/
+  overflow: hidden;
 } 
 .on{ 
   color: #dd2727;  

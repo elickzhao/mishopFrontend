@@ -112,17 +112,17 @@
       <span class="fl_r c9 font_12 l_h20" hover-class="none"> ></span>
     </navigator>
   </view>  -->
-   <!-- <view class="qbdd mt10">
+  <!-- <view class="qbdd mt10">
     <navigator url="../mianmo/index">
       <span class="font_14 c3">面膜</span>
       <span class="fl_r c9 font_12 l_h20" hover-class="none"> ></span>
     </navigator>
   </view>  -->
   <!-- 提示对话框  -->
-  <dialog data-model="dialogvisible" visible="{{dialogvisible}}" position="{{position}}" title="{{title}}" fullscreen="{{options.fullscreen}}" opacity="{{opacity}}" show-close="{{options.showclose}}" show-footer="{{options.showfooter}}" width="{{width}}"
-    close-on-click-modal="{{options.closeonclickmodal}}" bindclose="handleClose" bindopen="handleOpen" bindconfirm="handleConfirm">
-    <view style='height:15vh; color: #888;'>
-拒绝授权, 将会影响购物流程和用户登录, 请确定重新授权!
+  <dialog data-model="dialogvisible" visible="{{dialogvisible}}" position="{{position}}" title="{{title}}" confirmText="{{confirmText}}" fullscreen="{{options.fullscreen}}" opacity="{{opacity}}" show-close="{{options.showclose}}" show-footer="{{options.showfooter}}"
+    width="{{width}}" close-on-click-modal="{{options.closeonclickmodal}}" bindclose="handleClose"  bindconfirm="handleConfirm">
+    <view style='height:15vh; color: #888;font-size:11pt'>
+      拒绝授权, 将会影响购物流程和用户登录, 请确定重新授权!
     </view>
   </dialog>
 </view>

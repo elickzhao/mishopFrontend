@@ -67,10 +67,10 @@
     <view class="button" bindtap='bindCheckout'>立即结算 </view>
   </view>
 </view>
-  <!-- 提示对话框  -->
-  <dialog data-model="dialogvisible" visible="{{dialogvisible}}" position="{{position}}" title="{{title}}" fullscreen="{{options.fullscreen}}" opacity="{{opacity}}" show-close="{{options.showclose}}" show-footer="{{options.showfooter}}" width="{{width}}"
-    close-on-click-modal="{{options.closeonclickmodal}}" bindclose="handleClose" bindopen="handleOpen" bindconfirm="handleConfirm">
-    <view style='height:15vh; color: #888;'>
-拒绝授权, 将会影响购物流程和用户登录, 请确定重新授权!
-    </view>
-  </dialog>
+<!-- 提示对话框  -->
+<dialog data-model="dialogvisible" visible="{{dialogvisible}}" position="{{position}}" title="{{title}}" confirmText="{{confirmText}}" fullscreen="{{options.fullscreen}}" opacity="{{opacity}}" show-close="{{options.showclose}}" show-footer="{{options.showfooter}}"
+  width="{{width}}" close-on-click-modal="{{options.closeonclickmodal}}" bindclose="handleClose" bindopen="handleOpen" bindconfirm="handleConfirm">
+  <view style='height:15vh; color: #888;'>
+    拒绝授权, 将会影响购物流程和用户登录, 请确定重新授权!
+  </view>
+</dialog>

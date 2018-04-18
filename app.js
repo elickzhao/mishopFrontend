@@ -5,7 +5,7 @@ App({
     hostUrl: 'https://small.huanqiujishi.com/index.php',
     hostImg: 'https://small.huanqiujishi.com/',
     hostVideo: 'http://zhubaotong-file.oss-cn-beijing.aliyuncs.com',
-    userId: 1,
+    userId: 0,
     appId: "",
     appKey: "",
     ceshiUrl: 'https://small.huanqiujishi.com/index.php',

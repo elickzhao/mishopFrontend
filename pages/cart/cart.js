@@ -11,6 +11,7 @@ Page({
       fullscreen: false
     },
     title: '温馨提示',
+    confirmText: '去设置',
     opacity: '0.4',
     width: '85',
     position: 'center',
@@ -254,7 +255,6 @@ Page({
   onLoad: function (options) {
     //this.loadProductData();
     // this.sum();
-    this.checkUserInfo();
   },
   onShow: function () {
     this.checkUserInfo();
