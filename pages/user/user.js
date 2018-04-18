@@ -2,6 +2,17 @@
 var app = getApp()
 Page({
   data: {
+    dialogvisible: false,
+    options: {
+      showclose: false,
+      showfooter: true,
+      closeonclickmodal: true,
+      fullscreen: false
+    },
+    title: '温馨提示',
+    opacity: '0.4',
+    width: '85',
+    position: 'center',
     userInfo: {},
     orderInfo: {},
     userListInfo: [{
@@ -47,38 +58,54 @@ Page({
     this.loadOrderStatus();
   },
   onShow: function () {
+    let that = this;
     this.loadOrderStatus();
-
+    this.checkUserInfo();
+  },
+  //检查是否有用户昵称权限
+  checkUserInfo: function () {
+    let that = this;
     wx.getSetting({
       success(res) {
+        //console.log(res);
         if (!res.authSetting['scope.userInfo']) {
-          wx.authorize({
-            scope: 'scope.userInfo',
-            success() {
-              // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
-              wx.login({
-                success: function (res) {
-                  var code = res.code;
-                  //get wx user simple info
-                  console.log(res);
-                  if (code) {
-                    wx.getUserInfo({
-                      success: function (res) {
-                        console.log(res);
-                      }
-                    });
-                  } else {
-                    console.log('登录失败！' + res.errMsg)
-                  }
-                }
-              });
-            }
-          })
+          that.showDialog();
         }
       }
     })
-
-
+  },
+  // 弹出对话框
+  showDialog: function () {
+    this.setData({
+      dialogvisible: true
+    })
+  },
+  //点击取消
+  handleClose: function () {
+    this.checkUserInfo();
+  },
+  //点击确定
+  handleConfirm: function () {
+    let that = this;
+    wx.openSetting({
+      success: (res) => {
+        /*
+         * res.authSetting = {
+         *   "scope.userInfo": true,
+         *   "scope.userLocation": true
+         * }
+         */
+        // app.getUserInfo();
+        //调用应用实例的方法获取全局数据
+        app.getUserInfo(function (userInfo) {
+          //更新数据
+          that.setData({
+            userInfo: userInfo,
+            loadingHidden: true
+          })
+        });
+      }
+    })
   },
   loadOrderStatus: function () {
     //获取用户订单数据

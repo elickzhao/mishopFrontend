@@ -7,6 +7,17 @@ var shopcar = require('../../utils/shopcar.js');
 Page({
   firstIndex: -1,
   data: {
+    dialogvisible: false,
+    options: {
+      showclose: false,
+      showfooter: true,
+      closeonclickmodal: true,
+      fullscreen: false
+    },
+    title: '温馨提示',
+    opacity: '0.4',
+    width: '85',
+    position: 'center',
     bannerApp: true,
     winWidth: 0,
     winHeight: 0,
@@ -154,6 +165,7 @@ Page({
   },
   // 属性选择
   onShow: function () {
+    this.checkUserInfo();
     this.setData({
       includeGroup: this.data.commodityAttr
     });
@@ -168,6 +180,51 @@ Page({
         attrValueList: this.data.attrValueList
       });
     }
+  },
+  //检查是否有用户昵称权限
+  checkUserInfo: function () {
+    let that = this;
+    wx.getSetting({
+      success(res) {
+        //console.log(res);
+        if (!res.authSetting['scope.userInfo']) {
+          that.showDialog();
+        }
+      }
+    })
+  },
+  // 弹出对话框
+  showDialog: function () {
+    this.setData({
+      dialogvisible: true
+    })
+  },
+  //点击取消
+  handleClose: function () {
+    this.checkUserInfo();
+  },
+  //点击确定
+  handleConfirm: function () {
+    let that = this;
+    wx.openSetting({
+      success: (res) => {
+        /*
+         * res.authSetting = {
+         *   "scope.userInfo": true,
+         *   "scope.userLocation": true
+         * }
+         */
+        // app.getUserInfo();
+        //调用应用实例的方法获取全局数据
+        app.getUserInfo(function (userInfo) {
+          //更新数据
+          that.setData({
+            userInfo: userInfo,
+            loadingHidden: true
+          })
+        });
+      }
+    })
   },
   /* 获取数据 */
   distachAttrValue: function (commodityAttr) {

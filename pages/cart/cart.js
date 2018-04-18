@@ -3,6 +3,17 @@ var app = getApp();
 var shopcar = require('../../utils/shopcar.js');
 Page({
   data: {
+    dialogvisible: false,
+    options: {
+      showclose: false,
+      showfooter: true,
+      closeonclickmodal: true,
+      fullscreen: false
+    },
+    title: '温馨提示',
+    opacity: '0.4',
+    width: '85',
+    position: 'center',
     page: 1,
     minusStatuses: ['disabled', 'disabled', 'normal', 'normal', 'disabled'],
     total: 0,
@@ -185,9 +196,9 @@ Page({
   },
 
   sum: function (e) {
-    if(e){
+    if (e) {
       var carts = e;
-    }else{
+    } else {
       var carts = this.data.carts;
     }
     // 计算总金额
@@ -243,14 +254,62 @@ Page({
   onLoad: function (options) {
     //this.loadProductData();
     // this.sum();
+    this.checkUserInfo();
   },
   onShow: function () {
+    this.checkUserInfo();
     this.loadProductData();
     //this.sum();
     this.setData({
       selectedAllStatus: true
     });
   },
+  //检查是否有用户昵称权限
+  checkUserInfo: function () {
+    let that = this;
+    wx.getSetting({
+      success(res) {
+        //console.log(res);
+        if (!res.authSetting['scope.userInfo']) {
+          that.showDialog();
+        }
+      }
+    })
+  },
+  // 弹出对话框
+  showDialog: function () {
+    this.setData({
+      dialogvisible: true
+    })
+  },
+  //点击取消
+  handleClose: function () {
+    this.checkUserInfo();
+  },
+  //点击确定
+  handleConfirm: function () {
+    let that = this;
+    wx.openSetting({
+      success: (res) => {
+        /*
+         * res.authSetting = {
+         *   "scope.userInfo": true,
+         *   "scope.userLocation": true
+         * }
+         */
+        // app.getUserInfo();
+        //调用应用实例的方法获取全局数据
+        app.getUserInfo(function (userInfo) {
+          //更新数据
+          that.setData({
+            userInfo: userInfo,
+            loadingHidden: true
+          })
+        });
+      }
+    })
+  },
+
   //删除购物车产品
   removeShopCard: function (e) {
     var that = this;
@@ -315,7 +374,7 @@ Page({
         //--init data
         var cart = res.data.cart;
         //console.log(cart);
-        if(res.data.status == 3){
+        if (res.data.status == 3) {
           wx.showModal({
             title: '库存不足!',
             content: '已经帮你移除被抢光的商品,请重新提交!',
@@ -326,7 +385,7 @@ Page({
               }
             }
           });
-        }else{
+        } else {
           that.sum(cart);
         }
 
