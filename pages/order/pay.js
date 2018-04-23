@@ -106,7 +106,7 @@ Page({
     this.createProductOrder();
   },
 
-  //线下支付
+  //线下支付 => 改成店内自提
   createProductOrderByXX: function (e) {
     this.setData({
       paytype: 'cash',
@@ -173,22 +173,27 @@ Page({
         var data = res.data;
         if (data.status == 1) {
           //创建订单成功
-          if (data.arr.pay_type == 'cash') {
-            wx.showToast({
-              title: "请自行联系商家进行发货!",
-              duration: 3000
-            });
-            setTimeout(function () {
-              wx.redirectTo({
-                url: '../user/dingdan?currentTab=0&otype=pay',
-              });
-            }, 2500);
-            return false;
-          }
-          if (data.arr.pay_type == 'weixin') {
-            //微信支付
-            that.wxpay(data.arr);
-          }
+          //这里是原来的 现金支付
+          // if (data.arr.pay_type == 'cash') {
+          //   wx.showToast({
+          //     title: "请自行联系商家进行发货!",
+          //     duration: 3000
+          //   });
+          //   setTimeout(function () {
+          //     wx.redirectTo({
+          //       url: '../user/dingdan?currentTab=0&otype=pay',
+          //     });
+          //   }, 2500);
+          //   return false;
+          // }
+          // if (data.arr.pay_type == 'weixin') {
+          //   //微信支付
+          //   that.wxpay(data.arr);
+          // }
+          //console.log(data);
+          //统统改用微信支付
+          that.wxpay(data.arr);
+
         } else if (data.status == 3) {
           //console.log(data.data);
           wx.showModal({
@@ -286,6 +291,12 @@ Page({
   //调起微信支付
   wxpay: function (order) {
     //console.log(order);
+    let url;
+    if (order.pay_type == 'weixin') {
+      url = '../user/dingdan?currentTab=1&otype=deliver';
+    }else{
+      url = '../user/dingdan?currentTab=2&otype=receive';
+    }
     wx.request({
       url: app.d.ceshiUrl + '/Api/Wxpay/wxpay',
       data: {
@@ -312,8 +323,9 @@ Page({
                 duration: 2000,
               });
               setTimeout(function () {
+                //这里改写下 改成自提跳转到已经发货的页面
                 wx.redirectTo({
-                  url: '../user/dingdan?currentTab=1&otype=deliver',
+                  url: url, //'../user/dingdan?currentTab=1&otype=deliver',
                 });
               }, 2500);
             },

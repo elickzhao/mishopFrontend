@@ -23,7 +23,7 @@
           <image class="sh_slt" src="{{item.photo_x}}"></image>
           <view class="df_1">
             <view class="sp_text">
-              <navigator url="../index/detail?productId={{item.pid}}" hover-class="changestyle">
+              <navigator url="../product/detail?productId={{item.pid}}" hover-class="changestyle">
                 <view class="sp_tit ovh1">{{item.name}}</view>
               </navigator>
               <view class="sp_neb">单价：¥ {{item.price_yh}} 数量：×{{item.product_num}} 产品：×{{item.pro_count}}</view>
@@ -55,7 +55,7 @@
           <image class="sh_slt" src="{{item.photo_x}}"></image>
           <view class="df_1">
             <view class="sp_text">
-              <navigator url="../index/detail?productId={{item.pid}}" hover-class="changestyle">
+              <navigator url="../product/detail?productId={{item.pid}}" hover-class="changestyle">
                 <view class="sp_tit ovh1">{{item.name}}</view>
               </navigator>
               <view class="sp_neb">单价：¥ {{item.price_yh}} 数量：×{{item.product_num}} 产品：×{{item.pro_count}}</view>
@@ -83,7 +83,7 @@
           <image class="sh_slt" src="{{item.photo_x}}"></image>
           <view class="df_1">
             <view class="sp_text">
-              <navigator url="../index/detail?productId={{item.pid}}" hover-class="changestyle">
+              <navigator url="../product/detail?productId={{item.pid}}" hover-class="changestyle">
                 <view class="sp_tit ovh1">{{item.name}}</view>
               </navigator>
               <view class="sp_neb">单价：¥ {{item.price_yh}} 数量：×{{item.product_num}} 产品：×{{item.pro_count}}</view>
@@ -112,7 +112,7 @@
           <image class="sh_slt" src="{{item.photo_x}}"></image>
           <view class="df_1">
             <view class="sp_text">
-              <navigator url="../index/detail?productId={{item.pid}}" hover-class="changestyle">
+              <navigator url="../product/detail?productId={{item.pid}}" hover-class="changestyle">
                 <view class="sp_tit ovh1">{{item.name}}</view>
               </navigator>
               <view class="sp_neb">单价：¥ {{item.price_yh}} 数量：×{{item.product_num}} 产品：×{{item.pro_count}}</view>
@@ -140,7 +140,7 @@
           <image class="sh_slt" src="{{item.photo_x}}"></image>
           <view class="df_1">
             <view class="sp_text">
-              <navigator url="../index/detail?productId={{item.pid}}" hover-class="changestyle">
+              <navigator url="../product/detail?productId={{item.pid}}" hover-class="changestyle">
                 <view class="sp_tit ovh1">{{item.name}}</view>
               </navigator>
               <view class="sp_neb">单价：¥ {{item.price_yh}} 数量：×{{item.product_num}} 产品：×{{item.pro_count}}</view>

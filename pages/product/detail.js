@@ -112,7 +112,7 @@ Page({
 
     //读出购物车数量
     var num = wx.getStorageSync('carnum');
-    console.log(num);
+    //console.log(num);
 
     if (num) {
       //console.log(num);
@@ -152,7 +152,11 @@ Page({
         } else {
           wx.showToast({
             title: res.data.err,
-            duration: 2000,
+            duration: 1000,
+            success: function () {
+              //跳转首页
+              setTimeout(function () { wx.switchTab({url: '/pages/index/index'})}, 1200)
+            }
           });
         }
       },
