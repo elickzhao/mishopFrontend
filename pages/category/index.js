@@ -28,6 +28,8 @@ Page({
         if (status == 1) {
           var list = res.data.list;
           var catList = res.data.catList;
+          var sql = res.data.sql;
+          var currType = res.data.currType;
           that.setData({
             types: list,
             typeTree: catList,
@@ -39,9 +41,11 @@ Page({
           });
         }
         that.setData({
-          currType: 2
+          currType: currType
         });
-        console.log(list)
+        // console.log(list)
+        // console.log(catList)
+        //console.log(sql)
 
       },
       error: function (e) {
@@ -60,7 +64,7 @@ Page({
     that.setData({
       currType: currType
     });
-    console.log(currType);
+    //console.log(currType);
     wx.request({
       url: app.d.ceshiUrl + '/Api/Category/getcat',
       method: 'post',

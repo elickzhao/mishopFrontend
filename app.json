@@ -37,13 +37,13 @@
         "pagePath": "pages/index/index",
         "iconPath": "images/icons/a.png",
         "selectedIconPath": "images/icons/a.png",
-        "text": "促销"
+        "text": "首页"
       },
       {
         "pagePath": "pages/category/index",
         "iconPath": "images/icons/b.png",
         "selectedIconPath": "images/icons/bb.png",
-        "text": "配送到家"
+        "text": "分类"
       },
       {
         "pagePath": "pages/cart/cart",
