@@ -8,7 +8,9 @@ Page({
       showclose: false,
       showfooter: true,
       closeonclickmodal: true,
-      fullscreen: false
+      fullscreen: false,
+      minimum: 0,       //最低起送价格
+      express: false,  //判断是否达到起送费 然后配送
     },
     title: '温馨提示',
     confirmText: '去设置',
@@ -209,10 +211,12 @@ Page({
         total += carts[i].num * carts[i].price;
       }
     }
+    let express = (total < app.d.minimum) ? false : true;
     // 写回经点击修改后的数组
     this.setData({
       carts: carts,
-      total: '¥ ' + total.toFixed(2)
+      total: '¥ ' + total.toFixed(2),
+      express: express
     });
 
     /**
@@ -255,6 +259,9 @@ Page({
   onLoad: function (options) {
     //this.loadProductData();
     // this.sum();
+    this.setData({
+      minimum: app.d.minimum
+    });
   },
   onShow: function () {
     this.checkUserInfo();

@@ -9,6 +9,7 @@ App({
     appId: "",
     appKey: "",
     ceshiUrl: 'https://small.huanqiujishi.com/index.php',
+    minimum: "",
   },
   onLaunch: function () {
     //调用API从本地缓存中获取数据
@@ -17,6 +18,7 @@ App({
     wx.setStorageSync('logs', logs);
     //login
     this.getUserInfo();
+    this.sysConfig();
   },
   getUserInfo: function (cb) {
     var that = this
@@ -148,6 +150,26 @@ App({
 
   onPullDownRefresh: function () {
     wx.stopPullDownRefresh();
+  },
+  sysConfig: function () {
+    let that = this;
+    wx.request({
+      url: that.d.ceshiUrl + '/Api/Index/sysConfig',
+      method: 'post',
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      success: function (res) {
+        that.d.minimum = res.data.minimum;
+        //that.d.freight = res.data.freight;
+      },
+      fail: function (e) {
+        wx.showToast({
+          title: '网络异常！err:authlogin',
+          duration: 2000
+        });
+      },
+    });
   }
 
 });

@@ -64,7 +64,9 @@
       <text>全选</text>
       <text class="reds">{{total}}</text>
     </view>
-    <view class="button" bindtap='bindCheckout'>立即结算 </view>
+    <view wx:if="{{express}}" class="button" bindtap='bindCheckout'>立即结算</view>
+    <view wx:else class="button" style='background-color:#ccc'>满{{minimum}}元起送</view>
+    <!-- <view class="button" bindtap='bindCheckout'>立即结算 </view> -->
   </view>
 </view>
 <!-- 提示对话框  -->

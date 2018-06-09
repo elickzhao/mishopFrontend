@@ -141,6 +141,7 @@ Page({
         if (status == 1) {
           var pro = res.data.pro;
           var content = pro.content;
+          //console.log(content);
           //that.initProductData(data);
           WxParse.wxParse('content', 'html', content, that, 3);
           that.setData({

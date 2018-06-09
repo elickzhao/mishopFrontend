@@ -209,6 +209,7 @@ Page(Object.assign({}, common,{
           hotlist: hotlist,
           ad1: ad1
         });
+        //console.log(prolist);
         //endInitData
       },
       fail: function (e) {
