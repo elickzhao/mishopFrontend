@@ -1,0 +1,285 @@
+view {
+  font-size: 30rpx;
+  /** color: #666; */
+  .nav_text{
+      color: #666;
+  }
+}
+
+page {
+  background: #f5f5f5;
+}
+
+.titleFont{
+  font-size: 40rpx;
+  color: #353535;
+  font-weight:bold;
+}
+
+.Shadow{
+  -moz-box-shadow:2px 2px 5px #999999; -webkit-box-shadow:2px 2px 5px #999999; box-shadow:2px 2px 5px #999999;
+}
+
+.subFont{
+    color: #e5e5e5;
+    font-size: 20rpx;
+}
+
+.container {
+  position: relative;
+  background: #ffffff;
+}
+
+.no_data {
+  font-size: 40rpx;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  color: #8b8b8b;
+  padding-top: 20rpx;
+  .iconfont {
+    font-size: 40rpx;
+  }
+}
+
+.loadMoreGif {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 15rpx auto;
+  width: 220rpx;
+  text {
+    font-size: 30rpx;
+    color: #999;
+    margin-left: 10rpx;
+  }
+  image {
+    width: 30rpx;
+    height: 30rpx;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.mt10{
+  margin-top:10rpx;
+}
+.mt100{
+  margin-top:100rpx;
+}
+
+.bottom-1px{
+  .mix-1px(0, 0, 1, 0, #ddd);
+}
+
+.left-1px{
+  .mix-1px(0, 0, 0, 1, #ddd);
+}
+
+.tc {
+  text-align: center;
+}
+
+.tl {
+  text-align: left;
+}
+
+.tr {
+  text-align: right;
+}
+
+.cmain{
+  color: #FF0077;
+}
+.c666 {
+  color: #666;
+}
+
+.c333 {
+  color: #333;
+}
+
+.c000 {
+  color: #000;
+}
+
+.c999 {
+  color: #999;
+}
+
+.cfff {
+  color: #ffffff;
+}
+
+.fz24 {
+  font-size: 24rpx;
+}
+
+.fz25 {
+  font-size: 25rpx;
+}
+
+.fz26 {
+  font-size: 26rpx;
+}
+
+.fz27 {
+  font-size: 27rpx;
+}
+
+.fz28 {
+  font-size: 28rpx;
+}
+
+.fz29 {
+  font-size: 29rpx;
+}
+
+.fz30 {
+  font-size: 30rpx;
+}
+
+.fz31 {
+  font-size: 31rpx;
+}
+
+.fz32 {
+  font-size: 32rpx;
+}
+
+.type_red {
+  background: #ea4a3a;
+  color: #fff;
+}
+
+.type_yellow {
+  background: #ff6a3c;
+  color: #fff;
+}
+
+.type_green {
+  background: #09bb07;
+  color: #fff;
+}
+
+.type_pick {
+  background: #ff4856;
+  color: #fff;
+  border: 1px solid #ff4856;
+}
+
+.type_empity {
+  color: #333;
+  border: 1px solid #cccccc;
+}
+
+.button {
+  font-size: 36rpx;
+  height: 95rpx;
+  line-height: 95rpx;
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+  -moz-border-radius: 10rpx;
+  /* Firefox */
+  -webkit-border-radius: 10rpx;
+  /* Safari 和 Chrome */
+  border-radius: 10rpx;
+  /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+}
+
+/* 1px解决方案 */
+.mix-1px (@top, @right, @bottom, @left, @color) {
+  position: relative;
+
+  @scale: 2;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% * @scale;
+    height: 100% * @scale;
+    border: 0 @color solid;
+    box-sizing: border-box;
+    transform-origin: 0 0;
+    transform: scale(1 / @scale);
+    pointer-events: none;
+    z-index: 0;
+
+    & when (@top > 0) {
+      border-top-width: 1px;
+    }
+
+    & when (@right > 0) {
+      border-right-width: 1px;
+    }
+
+    & when (@bottom > 0) {
+      border-bottom-width: 1px;
+    }
+
+    & when (@left > 0) {
+      border-left-width: 1px;
+    }
+  }
+}
+
+/* 清除1px */
+.mix-1px-clear () {
+  &:before {
+    display: none;
+  }
+}
+
+
+/*
+ * 清除浮动
+ */
+ .mix-clearfix () {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+/* 垂直居中 */
+.mix-flex-y-center () {
+  display: flex;
+  align-items: center;
+}
+
+/* 水平居中 */
+.mix-flex-x-center () {
+  display: flex;
+  justify-content: center;
+}
+
+/* 水平垂直居中 */
+.mix-flex-center () {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 超出部分出省略号 */
+.mix-text-overflow () {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+/* 多行文本超出部分省略号 */
+.ellipsis-line(@line:2) {
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: @line;
+  box-orient: vertical;
+}

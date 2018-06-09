@@ -1,0 +1,133 @@
+<style lang="less">
+	.wrap {
+		display: block;
+		padding: 10rpx;
+		background: #696969;
+	}
+	.item {
+		min-width: 32%;
+		min-height: 400rpx;
+		font-size: 22rpx;
+		text-align: center;
+	}
+	.item:nth-of-type(odd) {
+		.scroll-list {
+			margin-left: 15rpx;
+			background: #afdde3;
+		}
+	}
+	.item:nth-of-type(2n) {
+		.scroll-list {
+			margin-left: 15rpx;
+			background: #8FABFF;
+		}
+	}
+	.item:last-of-type {
+		.scroll-list {
+			margin-left: 10rpx;
+			margin-right: 10rpx;
+			background: #FFF;
+		}
+	}
+	/**
+	.scroll-list:nth-child(odd) {
+		margin-left: 10rpx;
+	}
+	**/
+	.scroll-list {
+		background: #fff;
+		.image_box {
+			image {
+				width: 100%;
+				height: 300rpx;
+				background: #666;
+			}
+		}
+		.product_name {
+			display: flex;
+			margin-top: 5rpx;
+			color: #E5E5E5;
+			font-size: 20rpx;
+			overflow: hidden;
+		}
+		.price {
+			color: #FFF;
+			font-size: 28rpx;
+			font-weight: 600;
+		}
+		.cost_price {
+			color: #666666;
+			font-size: 24rpx;
+			text-decoration: line-through;
+			font-weight: 600;
+		}
+		.sale_num {
+			color: #666666;
+			font-size: 22rpx;
+		}
+		.goods {
+			padding: 10rpx 12rpx;
+		}
+		.product_info {
+			display: flex;
+			align-items: flex-end;
+		}
+		.cost_price {
+			padding-left: 20rpx;
+		}
+		.sale_num {
+			padding-left: 20rpx;
+		}
+	}
+</style>
+
+<template lang="wxml">
+	<!--水平滚动-->
+	<scroll-view scroll-x="true" style=" white-space: nowrap; display: flex;margin-bottom: 15rpx;">
+		<!--  display: inline-block-->
+		<wxc-flex>
+			<block wx:for="{{list}}" wx:key="item">
+				<view class="item">
+					<navigator class="scroll-list Shadow" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
+						<view class="image_box">
+							<image src="{{imgUrl}}{{item.photo_x}}"></image>
+						</view>
+						<view class="goods">
+							<view class="product_info">
+								<wxc-label class="label" type="fill">惊喜价</wxc-label>
+								<!-- <wxc-price class="price-demo" value="39.00" decimal="small"></wxc-price> -->
+								<view class="price">￥{{item.price_yh}}</view>
+							</view>
+							<view class="product_name">特价秒杀中</view>
+						</view>
+					</navigator>
+				</view>
+			</block>
+			<view class="item" style="background: #fff;">
+				<navigator class="scroll-list" url="/pages/wholesale">
+					<view class="image_box">
+						<image style="height: 400rpx;" src="../images/more.png"></image>
+					</view>
+				</navigator>
+			</view>
+		</wxc-flex>
+	</scroll-view>
+</template>
+
+<script>
+	import wepy from 'wepy'
+	export default class scrollXList extends wepy.component {
+		props = {
+			imgUrl: String,
+			list: [],
+		};
+		// 事件处理函数（集中保存在 methods 对象中）
+		methods = {}
+		// 声明组件之间的事件处理函数
+		events = {}
+		// 声明页面中将要使用到的组件，或声明组件中所引用的子组件
+		components = {}
+		// 在 Page 和 Component 共用的生命周期函数
+		onLoad() {}
+	}
+</script>
