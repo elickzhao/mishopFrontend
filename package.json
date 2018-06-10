@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "wepy build --watch",
     "build": "cross-env NODE_ENV=production wepy build --no-cache",
+    "dev:web": "wepy build --output web",
+    "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,6 +19,7 @@
     "@minui/wxc-icon": "^1.0.9",
     "@minui/wxc-input": "^1.0.1",
     "@minui/wxc-label": "^1.0.5",
+    "@minui/wxc-loading": "^1.0.8",
     "@minui/wxc-loadmore": "^1.0.5",
     "@minui/wxc-panel": "^1.0.1",
     "@minui/wxc-price": "^1.0.8",

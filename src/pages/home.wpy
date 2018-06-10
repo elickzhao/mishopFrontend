@@ -119,29 +119,29 @@
       tps: 0,
       is_show_alert: true
     }
-    async getDiscoverList(currentPage, size) {
-      let that = this;
-      const json = await api.getHomeDisvocerList({
-        query: {
-          page: currentPage || 1,
-          size: size || 10
-        }
-      });
-      if (json.data.code == 0) {
-        that.discoverList = [...that.discoverList, ...json.data.list];
-        if (json.data.page_total) { // 后台的数据不再返回page_total
-          that.page_total = json.data.page_total
-        };
-        if (json.data.page_total == 0) {
-          //暂无数据
-          that.is_empty = true;
-        }
-        that.$apply();
-      } else {
-        tip.error(json.data.msg);
-      }
-      that.showLoading = false;
-    }
+    // async getDiscoverList(currentPage, size) {
+    //   let that = this;
+    //   const json = await api.getHomeDisvocerList({
+    //     query: {
+    //       page: currentPage || 1,
+    //       size: size || 10
+    //     }
+    //   });
+    //   if (json.data.code == 0) {
+    //     that.discoverList = [...that.discoverList, ...json.data.list];
+    //     if (json.data.page_total) { // 后台的数据不再返回page_total
+    //       that.page_total = json.data.page_total
+    //     };
+    //     if (json.data.page_total == 0) {
+    //       //暂无数据
+    //       that.is_empty = true;
+    //     }
+    //     that.$apply();
+    //   } else {
+    //     tip.error(json.data.msg);
+    //   }
+    //   that.showLoading = false;
+    // }
     async getAdList() {
       const json = await api.getAdList({
         query: {}
@@ -197,7 +197,7 @@
       this.appName = this.$parent.globalData.appName;
       this.imgUrl = this.$parent.globalData.imgUrl;
       this.discoverList = [];
-      that.getDiscoverList();
+      //that.getDiscoverList();
       this.getAdList();
       that.getHotList();
       this.getGoodList();
