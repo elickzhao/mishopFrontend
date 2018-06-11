@@ -72,7 +72,19 @@
           if (rlt.data.openid != "") {
             let data = rlt.data;
             if (data.openid) {
-              wepy.setStorageSync(USER_SPECICAL_INFO, data);
+              let userInfo = e.detail.userInfo
+              userInfo.openid = data.openid
+              //console.log(userInfo);
+              
+              let json = await api.user2session({
+                query:{
+                  openId:data.openid,
+                  NickName:userInfo.NickName,
+                  avatarUrl:userInfo.avatarUrl,
+                  gender:userInfo.gender,
+                }
+              })
+              wepy.setStorageSync(USER_SPECICAL_INFO, json.data.data);
               wepy.switchTab({
                 url: "/pages/home"
               });

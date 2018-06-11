@@ -18,6 +18,7 @@ const jishi = 'https://small.huanqiujishi.com/index.php'
 //const wxJsCode2Session = (params) => wxRequest(params, apiMall + "/api/wechat/jscode2session");
 //const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 const wxJsCode2Session = (params) => wxRequest(params, jishi + "/api/news/getsessionkey");
+const user2session = (params) => wxRequest(params, jishi + "/api/news/user2session");
 
 //商品接口---begin
 //首页发现商品接口
@@ -34,10 +35,14 @@ const getGoodsList = (params) => wxRequest(params, jishi + '/api/news/searchGood
 //查询商品详情信息
 ////const goodsDetail = (params) => wxRequest(params, apiMall + '/api/mall/goods');
 const goodsDetail = (params) => wxRequest(params, jishi + '/api/news/goods');
+//获取起送费用
+const getMiniNum = (params) => wxRequest(params, jishi + '/api/news/miniNum');
 //商品加入购物车
 //const addCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/add');
+const addCart = (params) => wxRequest(params, jishi + '/api/news/goodsCartAdd');
 //用户的购物车商品列表
 //const cartList = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/list');
+const cartList = (params) => wxRequest(params, jishi + '/api/news/goodsCartList');
 //购物车的商品选中状态
 //const cartCheck = (params) => wxRequest(params, apiMall + '/api/mall/goodsCart/check');
 //购物车的商品选中状态(全选)
@@ -57,12 +62,15 @@ const goodsDetail = (params) => wxRequest(params, jishi + '/api/news/goods');
 
 //商品收藏
 //const goodsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/add');
+const goodsFavorite = (params) => wxRequest(params, jishi + '/api/news/goodsFavoriteAdd');
 
 //商品收藏删除
 //const goodsUnFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/delete');
+const goodsUnFavorite = (params) => wxRequest(params, jishi + '/api/news/goodsFavoriteDelete');
 
 //商品是否已收藏
 //const goodsIsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/goodsIsFavorite');
+const goodsIsFavorite = (params) => wxRequest(params, jishi + '/api/news/goodsIsFavorite');
 
 //商品接口---end
 
@@ -160,11 +168,8 @@ const childGoodsCatetoryList = (params) => wxRequest(params, jishi + '/api/news/
 // const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
 const getAdList = (params) => wxRequest(params, jishi  + '/api/Index/ggtop');
 
-//获取平台起送费
-const getMiniNum = (params) => wxRequest(params, jishi  + '/api/Index/sysConfig');
-
 module.exports = {
-getMiniNum,getAdList,childGoodsCatetoryList,rootCtegoryList,searchHotKeyList,getSignDate,doSign,userSginInfo,goodsDetail,getGoodsList,discountGoodsList,wxJsCode2Session
+getMiniNum,getAdList,childGoodsCatetoryList,rootCtegoryList,searchHotKeyList,getSignDate,doSign,userSginInfo,goodsDetail,getGoodsList,discountGoodsList,wxJsCode2Session,goodsIsFavorite,goodsFavorite,goodsUnFavorite,addCart,user2session,cartList
 }
 
 // module.exports = {

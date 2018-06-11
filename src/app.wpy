@@ -1,102 +1,116 @@
 <style lang="less">
-@import "./styles/base";
-@import "./styles/icon";
-@import "./styles/style";
-
+  @import "./styles/base";
+  @import "./styles/icon";
+  @import "./styles/style";
 </style>
 <script>
-import wepy from 'wepy';
-import 'wepy-async-function'
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/authorize',
-      'pages/home',
-      'pages/home_detail',
-      'pages/classify',
-      'pages/shop_cart',
-      'pages/info',
-      'pages/search',
-      'pages/test',
-      'pages/sign_in',
-      'pages/exchange_goods',
-      'pages/wholesale',
-      'pages/replenishment_goods',
-      'pages/register',
-      'pages/order',
-      'pages/reorder',
-      'pages/pay_success',
-      'pages/points',
-      'pages/points_more',
-      'pages/points_rule',
-      'pages/collection',
-      'pages/messages',
-      'pages/setting',
-      'pages/goods_detail',
-      'pages/comfire_order',
-      'pages/address',
-      'pages/order_detail',
-      'pages/filter',
-      'pages/logistics',
-      'pages/comment',
-      'pages/comment_add'
-    ],
-    window: {
-      backgroundTextStyle: "light",
-      navigationBarBackgroundColor: "#FF0077",
-      navigationBarTitleText: "环球集市",
-      navigationBarTextStyle: "light",
-      enablePullDownRefresh: false,
-      backgroundColor: "#FFF"
-    },
-    tabBar: {
-      color: "#999999",
-      selectedColor: "#FF0077",
-      backgroundColor: "#ffffff",
-      borderStyle: "black",
-      list: [
-        {
-          pagePath: "pages/home",
-          text: "首页",
-          iconPath: "images/souu.png",
-          selectedIconPath: "images/shou.png"
-        },
-        {
-          pagePath: "pages/classify",
-          text: "分类",
-          iconPath: "images/fei.png",
-          selectedIconPath: "images/feii.png"
-        },
-        {
-          pagePath: "pages/shop_cart",
-          text: "购物车",
-          iconPath: "images/ggg.png",
-          selectedIconPath: "images/gi.png"
-        },
-        {
-          pagePath: "pages/info",
-          text: "我",
-          iconPath: "images/hui.png",
-          selectedIconPath: "images/huiyuan.png"
+  import wepy from "wepy";
+  import "wepy-async-function";
+  import {
+    SYSTEM_INFO
+  } from "./utils/constant";
+  import api from "./api/api";
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        "pages/authorize",
+        "pages/home",
+        "pages/home_detail",
+        "pages/classify",
+        "pages/shop_cart",
+        "pages/info",
+        "pages/search",
+        "pages/test",
+        "pages/sign_in",
+        "pages/exchange_goods",
+        "pages/wholesale",
+        "pages/replenishment_goods",
+        "pages/register",
+        "pages/order",
+        "pages/reorder",
+        "pages/pay_success",
+        "pages/points",
+        "pages/points_more",
+        "pages/points_rule",
+        "pages/collection",
+        "pages/messages",
+        "pages/setting",
+        "pages/goods_detail",
+        "pages/comfire_order",
+        "pages/address",
+        "pages/order_detail",
+        "pages/filter",
+        "pages/logistics",
+        "pages/comment",
+        "pages/comment_add"
+      ],
+      window: {
+        backgroundTextStyle: "light",
+        navigationBarBackgroundColor: "#FF0077",
+        navigationBarTitleText: "环球集市",
+        navigationBarTextStyle: "light",
+        enablePullDownRefresh: false,
+        backgroundColor: "#FFF"
+      },
+      tabBar: {
+        color: "#999999",
+        selectedColor: "#FF0077",
+        backgroundColor: "#ffffff",
+        borderStyle: "black",
+        list: [{
+            pagePath: "pages/home",
+            text: "首页",
+            iconPath: "images/souu.png",
+            selectedIconPath: "images/shou.png"
+          },
+          {
+            pagePath: "pages/classify",
+            text: "分类",
+            iconPath: "images/fei.png",
+            selectedIconPath: "images/feii.png"
+          },
+          {
+            pagePath: "pages/shop_cart",
+            text: "购物车",
+            iconPath: "images/ggg.png",
+            selectedIconPath: "images/gi.png"
+          },
+          {
+            pagePath: "pages/info",
+            text: "我",
+            iconPath: "images/hui.png",
+            selectedIconPath: "images/huiyuan.png"
+          }
+        ]
+      }
+    };
+    globalData = {
+      imgUrl: "https://small.huanqiujishi.com/Data/",
+      miniNum: "68"
+    };
+    constructor() {
+      super();
+      this.use("requestfix");
+      this.use("promisify");
+    }
+    async onLaunch(option) {
+      //暂时还是放到这里 因为起送费随时可变 授权页只有按按钮才会执行
+      // 用这个不用globalData的原因是不用每次启动都请求了
+      // globalData适合写死的数据
+      let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
+      if (!systemInfo.miniNum) {
+        let json = await api.getMiniNum({
+          query: {}
+        });
+        if (json.data.code == 0) {
+          systemInfo.miniNum = json.data.data.minimum; //XXX  注意这里曾经的拼写错误 因为老版还在用暂时没改
+          this.miniNum = json.data.data.minimum;
+          wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+          //console.log(systemInfo)
+        } else {
+          console.log(json.data.msg);
         }
-      ]
+      }
     }
   }
-
-  globalData = {
-    imgUrl: "https://small.huanqiujishi.com/Data/"
-  }
-
-  constructor() {
-    super()
-    this.use('requestfix')
-    this.use('promisify');
-
-  }
-
-  async onLaunch(option) {
-
-  }
-}
-
 </script>

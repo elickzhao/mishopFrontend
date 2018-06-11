@@ -78,10 +78,10 @@
     async getCartList() {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      let uid = userSpecialInfo.ID;
       const json = await api.cartList({
         query: {
-          openId: openId
+          uid: uid
         }
       });
       if (json.data.code == 0) {
@@ -510,7 +510,7 @@
         /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
       }
       .get_store {
-        background: #ed601b;
+        background: #FF0077;
         color: #fff;
         margin-left: 1rpx;
       }
