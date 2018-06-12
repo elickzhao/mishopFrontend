@@ -243,7 +243,7 @@
       });
       let time = {};
       //XXXX 记得删除
-      console.log(json.data.data);
+      //console.log(json.data.data);
       if (json.data.code == 0) {
         let data = json.data.data;
         that.detail = data;
