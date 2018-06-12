@@ -13,8 +13,8 @@
       </view>
       <!-- <view class="weui-search-bar__cancel-btn" bindtap="hideInput">搜索</view> -->
       <button size='mini' id="searchBtn" bindtap="doSearch">
-                  搜索
-                </button>
+                    搜索
+                  </button>
     </view>
     <view class="{{show?'mt100':''}}">
       <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
@@ -81,7 +81,7 @@
       placeholder: Placeholder
     };
     data = {
-      historyKeyList: '',
+      historyKeyList: [],
       hotKeyList: ['面膜', '牙膏'],
       imgUrl: "",
       list: [],
@@ -107,14 +107,14 @@
     };
     async getKeyWordHisList() {
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      let uid = userSpecialInfo.ID;
       const json = await api.searchKeywordList({
         query: {
-          openId: openId
+          uid: uid
         }
       });
       if (json.data.code == 0) {
-        this.keywordhisList = json.data.list;
+        this.historyKeyList = json.data.list;
       }
       this.$apply();
     }
@@ -140,8 +140,11 @@
     }
     async doSearchGoods(keyword, currentPage, size) {
       let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
       const json = await api.getGoodsList({
         query: {
+          uid: uid,
           page: currentPage || 1,
           size: size || 10,
           searchKeyWords: this.keyword,
@@ -162,27 +165,27 @@
       }
       that.showLoading = false;
       that.$apply();
-      if (keyword.length > 0) {
-        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-        let openId = userSpecialInfo.openid;
-        const resultJson = await api.addSearchKeyword({
-          query: {
-            openId: openId,
-            keyword: keyword
-          }
-        });
-      }
+      // if (keyword.length > 0) {
+      //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      //   let openId = userSpecialInfo.openid;
+      //   const resultJson = await api.addSearchKeyword({
+      //     query: {
+      //       openId: openId,
+      //       keyword: keyword
+      //     }
+      //   });
+      // }
     }
     async clearUserKeywords() {
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      let uid = userSpecialInfo.ID;
       const json = await api.clearSearchKeyword({
         query: {
-          openId: openId
+          uid: uid
         }
       });
       if (json.data.code == 0) {
-        this.keywordhisList = [];
+        this.historyKeyList = [];
       } else {
         tip.error(json.data.msg);
       }
@@ -236,8 +239,10 @@
         this.is_empty = false;
         //tip.success("搜索：" + val);
         this.showLoading = true;
-        this.keyword = val;
-        //console.log(this.keyword)
+        if(typeof(val) == "string"){
+          this.keyword = val;
+        }
+        //console.log(typeof(val))
         this.doSearchGoods(this.keyword);
         //this.list = bb.result.products;
         //this.$apply();
@@ -284,7 +289,7 @@
           this.doSearchGoods(hisKeyword);
         }
       },
-      clearHis() {
+      clearHistory() {
         this.clearUserKeywords();
       },
       onShareAppMessage: function(res) {

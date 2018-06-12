@@ -68,12 +68,10 @@ const goodsIsFavorite = (params) => wxRequest(params, jishi + '/api/news/goodsIs
 
 //用户相关信息--begin
 //用户的当天签到信息
-////const userSginInfo = (params) => wxRequest(params, apiMall + '/api/userSign/signInfo');
 const userSginInfo = (params) => wxRequest(params, jishi + '/api/news/signInfo');
 
 const doSign = (params) => wxRequest(params, jishi + '/api/news/doSign');
 //获取最近七天签到情况
-////const getSignDate = (params) => wxRequest(params, apiMall + '/api/userSign/getSignDate');
 const getSignDate = (params) => wxRequest(params, jishi + '/api/news/getSignDate');
 
 //用户积分信息
@@ -115,11 +113,11 @@ const getSignDate = (params) => wxRequest(params, jishi + '/api/news/getSignDate
 //查询关键字保存
 //const addSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/add');
 //查询关键字列表
-//const searchKeywordList = (params) => wxRequest(params, apiMall + '/api/searchkeyword/list');
+const searchKeywordList = (params) => wxRequest(params, jishi + '/api/news/historyKeyList');
 //查询热门关键字列表
 const searchHotKeyList = (params) => wxRequest(params, jishi + '/api/news/searchHotKey');
 //查询关键字清除
-//const clearSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/clear');
+const clearSearchKeyword = (params) => wxRequest(params, jishi + '/api/news/delHistory');
 
 //查询我的订单
 //const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
@@ -183,6 +181,8 @@ module.exports = {
   cartCheckAll,
   cartUpdateNum,
   cartDel,
+  searchKeywordList,
+  clearSearchKeyword,
 }
 
 // module.exports = {

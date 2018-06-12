@@ -76,10 +76,10 @@
     async getUserSign() {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      let uid = userSpecialInfo.ID;
       const json = await api.userSginInfo({
         query: {
-          openId: openId
+          uid: uid
         }
       });
       if (json.data.code == 0) {
@@ -100,13 +100,13 @@
       if (that.signing) {
         return;
       }
-      //XXX 因为没有换小程序 所以现在的openId并不是环球集市的所以 这个等做完了再改一下 小程序id 再测试
+
       that.signing = true;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      let uid = userSpecialInfo.ID;
       const json = await api.doSign({
         query: {
-          openId: openId
+          uid: uid
         }
       });
       if (json.data.code == 0) {
@@ -118,7 +118,7 @@
         this.$invoke("wepySignTime", "refreshList", "");
         that.$apply();
       } else {
-        console.log("-----")
+        //console.log("-----")
         wepy.showToast({
           title: json.data.msg,
           image: '../images/error.png',
@@ -130,7 +130,7 @@
       let that = this;
       this.appName = this.$parent.globalData.appName;
       let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
-      console.log("." + systemInfo.windowHeight);
+      //console.log("." + systemInfo.windowHeight);
       that.winHeight = systemInfo.windowHeight;
       that.getUserSign();
       that.$apply();

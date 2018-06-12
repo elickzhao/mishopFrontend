@@ -36,10 +36,10 @@ import api from '../../api/api';
       console.log("getSignDate");
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
+      let uid = userSpecialInfo.ID;
       const json = await api.getSignDate({
         query: {
-          openId: openId
+          uid: uid
         }
       });
       if (json.data.code == 0) {
@@ -70,7 +70,7 @@ import api from '../../api/api';
     methods = {
       refreshList(val){
         if (val==undefined) return;
-        console.log("val.....",val);
+        //console.log("val.....",val);
         this.list[this.list.length-1].signed = true;
         this.$apply();
       },
