@@ -3,14 +3,14 @@
 <view class="order_item">
 <repeat for="{{orderList}}">
   <view class="list" wx:key="index">
-    <navigator class="item_content" url="/pages/order_detail?orderNo={{item.orderNo}}">
+    <navigator class="item_content" url="/pages/order_detail?orderNo={{item.id}}">
       <view class="order_list_top">
         <view class="left">
           <view class="title">订单号：
-            <text class="order_doc">{{item.orderNo}}</text>
+            <text class="order_doc">{{item.order_sn}}</text>
           </view>
           <view class="title mt10">提交时间：
-            <text class="order_doc">{{item.createTime}}</text>
+            <text class="order_doc">{{item.addtime}}</text>
           </view>
         </view>
 
@@ -35,21 +35,21 @@
   </navigator>
   <view class="order_list_footer">
     <view class="reveiveMoney c333">应付款：
-      <text class="num">{{item.goodsPrices}}</text>
+      <text class="num">{{item.price}}</text>
     </view>
 
     <view class="order_state" wx:if="{{item.auditStatus==5}}">
     </view>
     <view wx:elif="{{item.auditStatus==-1}}">
       <view class="btn_group">
-        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}">删除订单</view>
+        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}">取消订单</view>
       </view>
     </view>
     <view wx:else>
       <view class="btn_group">
-        <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}" wx:if="{{item.status==0 || item.status==4}}">删除订单</view>
-        <view class="btn btn_pay" @tap="payMoney" data-id="{{item.orderNo}}" data-tradeno="{{item.payTradeNo}}" wx:if="{{item.status==0}}">立即付款</view>
-        <view class="btn btn_pay" @tap="completion" data-id="{{item.orderNo}}" wx:if="{{item.status==2 || item.status==1}}">确认收货</view>
+        <view class="btn btn_del" @tap="delOrder" data-id="{{item.id}}" wx:if="{{item.status==10 || item.status==4}}">取消订单</view>
+        <view class="btn btn_pay" @tap="payMoney" data-id="{{item.orderNo}}" data-tradeno="{{item.payTradeNo}}" wx:if="{{item.status==10}}">立即付款</view>
+        <view class="btn btn_pay" @tap="completion" data-id="{{item.orderNo}}" wx:if="{{item.status==30 }}">确认收货</view>
       </view>
     </view>
   </view>
@@ -79,20 +79,21 @@ export default class orderItem extends wepy.component {
   }
 
   async editOrderInfo(orderNo,flag) {
-    console.log("调用方法");
+    //console.log("调用方法");
     let that = this;
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let uid = userSpecialInfo.ID;
     const json = await api.editOrderInfo({
       query: {
-        orderNo: orderNo,
-        flag:flag
+        id: orderNo,
+        flag:flag,
+        uid:uid
       }
     });
     if (json.data.code == 0) {
-
       this.$emit('refreshOrderList', that.flag);
     } else {
-      tip.error(json.data.errerTips)
+      tip.error(json.data.msg)
     }
     that.$apply();
   }
@@ -106,12 +107,12 @@ export default class orderItem extends wepy.component {
 
   methods = {
     async delOrder(e) {
-      this.flag=2;
+      this.flag= 'cancel';
       this.orderNo = e.currentTarget.dataset.id;
-      await tip.confirm('是否删除订单');
+      await tip.confirm('是否取消订单');
       console.log(this.flag);
       this.editOrderInfo(this.orderNo,this.flag);
-      console.log("删除成功")
+      console.log("取消成功")
 
     },
       async completion(e) {

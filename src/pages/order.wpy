@@ -35,7 +35,8 @@ export default class Order extends wepy.page {
   data = {
     winHeight: 0,
     totalCount: 0,
-    tabList: ["全部订单", "待支付", "待收货", "已完成"],
+    //tabList: [ "待支付", "待发货","待收货", "已完成","退款/售后"],
+    tabList: [ "待支付", "待发货","待收货", "已完成"],
     orderList: [],
     currentPage: 1,
     is_empty: false,
@@ -63,15 +64,12 @@ export default class Order extends wepy.page {
     console.log("orderStatus值");
     console.log("orderStatus值" + that.orderStatus);
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
+    let uid = userSpecialInfo.ID;
     const json = await api.getMyOrderList({
       query: {
-        openId: openId,
-        orderStatus: that.orderStatus,
-        receiveFlg : that.receiveFlg,
+        uid: uid,
+        order_type: that.orderStatus,
         page: currentPage || 1,
-        size: size || 10,
-        type: 1 //正常单
       }
     });
     if (json.data.code == 0) {
@@ -91,7 +89,7 @@ export default class Order extends wepy.page {
       } else {
         that.is_empty = false;
       }
-      that.getMyOrderSize();
+      //that.getMyOrderSize();
       console.log("list返回数据");
       console.log(that.orderList);
     } else {
@@ -132,6 +130,7 @@ export default class Order extends wepy.page {
     let title = "";
     that.orderList = [];
     that.currentTab = opts.type;
+    //console.log(opts.type+"+++++++")
     that.getMyOrder();
     //设置滚动高度
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
@@ -152,23 +151,23 @@ export default class Order extends wepy.page {
       console.log("cur");
       console.log(cur);
       if (cur == 0) {
-        console.log("所有订单类型");
-        that.orderStatus = "";
+        console.log("待付款");
+        that.orderStatus = 10;
         that.getMyOrder();
       } else if (cur == 1) {
-        console.log("未付款订单类型");
-        that.orderStatus = 0;
+        console.log("待发货");
+        that.orderStatus = 20;
         that.getMyOrder();
       } else if (cur == 2) {
-        console.log("待收货订单类型");
-        that.orderStatus = 2;
-        that.receiveFlg=2;
+        console.log("待收货");
+        that.orderStatus = 30;
+        //that.receiveFlg=2;
         that.getMyOrder();
       } else if (cur == 3) {
 
         console.log("已完成订单类型");
-        that.orderStatus = 4;
-        that.receiveFlg=4;
+        that.orderStatus = 50;
+        //that.receiveFlg=4;
         that.getMyOrder();
       }
       that.$apply();

@@ -79,7 +79,12 @@ import {
 } from '../utils/constant';
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: '我',
+    navigationBarTitleText: '个人中心',
+    //     backgroundTextStyle: "black",
+    // navigationBarBackgroundColor: "#FFF",
+    // navigationBarTextStyle: "black",
+    // enablePullDownRefresh: false,
+    // backgroundColor: "#EFEFEF",
   }
   components = {
 
@@ -90,28 +95,28 @@ export default class Index extends wepy.page {
     nickName: "",
     bShowBind:false
   }
-  async getUserInfo(phone,code) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.getUserInfo({
-      query: {
-        openId: openId
-      }
-    });
+  // async getUserInfo(phone,code) {
+  //   let that = this;
+  //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+  //   let openId = userSpecialInfo.openid;
+  //   const json = await api.getUserInfo({
+  //     query: {
+  //       openId: openId
+  //     }
+  //   });
 
-    if (json.data.code == 0) {
-      if (json.data.user.mobile.length>0) {
-        this.bShowBind=false;
-      } else {
-        this.bShowBind = true;
-      }
-      that.$apply();
-    } else {
-      tip.error(json.data.msg)
-    }
-    that.showLoading = false;
-  }
+  //   if (json.data.code == 0) {
+  //     if (json.data.user.mobile.length>0) {
+  //       this.bShowBind=false;
+  //     } else {
+  //       this.bShowBind = true;
+  //     }
+  //     that.$apply();
+  //   } else {
+  //     tip.error(json.data.msg)
+  //   }
+  //   that.showLoading = false;
+  // }
 
   onLoad() {
     let that = this;
@@ -121,7 +126,7 @@ export default class Index extends wepy.page {
   }
   onShow(){
     let that = this;
-    this.getUserInfo();
+    //this.getUserInfo();
   }
   computed = {
 
@@ -137,7 +142,8 @@ export default class Index extends wepy.page {
 </script>
 <style lang="less">
 .header {
-  background: #ff6a3c;
+  //background: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/user_info.jpg);
+  background: linear-gradient(to bottom, rgba(255, 0, 119, 100), rgba(255, 0, 119,5));
   height: 260rpx;
   width: 100%;
 }
@@ -195,6 +201,17 @@ export default class Index extends wepy.page {
     margin-top: 20rpx;
     margin-left: 60rpx;
   }
+}
+
+.blur {	
+    filter: url(blur.svg#blur); /* FireFox, Chrome, Opera */
+    
+    -webkit-filter: blur(10px); /* Chrome, Opera */
+       -moz-filter: blur(10px);
+        -ms-filter: blur(10px);    
+            filter: blur(10px);
+    
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=10, MakeShadow=false); /* IE6~IE9 */
 }
 
 </style>

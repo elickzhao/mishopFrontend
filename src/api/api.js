@@ -120,19 +120,19 @@ const searchHotKeyList = (params) => wxRequest(params, jishi + '/api/news/search
 const clearSearchKeyword = (params) => wxRequest(params, jishi + '/api/news/delHistory');
 
 //查询我的订单
-//const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
+const getMyOrderList = (params) => wxRequest(params, jishi + '/api/news/getMyOrderList');
 
 //查询我的订单数量
 //const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderSize');
 
 //根据订单号查询详情
-//const getOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getOrderDetail');
+const getOrderInfo = (params) => wxRequest(params, jishi + '/api/news/getOrderDetail');
 
 //根据订单号查询详情
 //const getPayOrderDetail = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getPayOrderDetail');
 
-//根据订单号查询详情
-//const editOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/opt');
+//根据订单号编辑订单
+const editOrderInfo = (params) => wxRequest(params, jishi + '/api/news/ordersEdit');
 
 //根据订单号查询物流
 //const orderExpressInfo = (params) => wxRequest(params, apiMall + '/api/orderExpress/orderExpressInfo');
@@ -183,6 +183,9 @@ module.exports = {
   cartDel,
   searchKeywordList,
   clearSearchKeyword,
+  getMyOrderList,
+  getOrderInfo,
+  editOrderInfo,
 }
 
 // module.exports = {
