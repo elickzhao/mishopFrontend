@@ -85,7 +85,7 @@ const getSignDate = (params) => wxRequest(params, jishi + '/api/news/getSignDate
 //const delUserBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/delete');
 
 //用户收藏的商品
-//const favoriteInfo = (params) => wxRequest(params, apiMall + '/api/goodsFavorite/favoriteInfo');
+const favoriteInfo = (params) => wxRequest(params, jishi + '/api/news/favoriteInfo');
 
 //用户消息
 //const messageInfo = (params) => wxRequest(params, apiMall + '/api/systemMessage/messageInfo');
@@ -99,16 +99,16 @@ const getSignDate = (params) => wxRequest(params, jishi + '/api/news/getSignDate
 //const getUserInfo = (params) => wxRequest(params, apiMall + '/api/userCenter/getUserInfo');
 
 //用户收货地址
-//const getUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/list');
+const getUserAddress = (params) => wxRequest(params, jishi + '/api/news/getUserAddress');
 
 //保存用户收货地址
-//const saveAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/saveOrUpdate');
+const saveAddress = (params) => wxRequest(params, jishi + '/api/news/saveAddress');
 
 //用户收货地址根据id查询
-//const receiverInfoById = (params) => wxRequest(params, apiMall + '/api/receiverInfo/receiverInfoById');
+const receiverInfoById = (params) => wxRequest(params, jishi + '/api/news/receiverInfoById');
 
 //根据Id删除收货地址
-//const delUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/operation');
+const delUserAddress = (params) => wxRequest(params, jishi + '/api/news/delUserAddress');
 
 //查询关键字保存
 //const addSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/add');
@@ -186,6 +186,11 @@ module.exports = {
   getMyOrderList,
   getOrderInfo,
   editOrderInfo,
+  favoriteInfo,
+  getUserAddress,
+  saveAddress,
+  receiverInfoById,
+  delUserAddress,
 }
 
 // module.exports = {

@@ -17,7 +17,7 @@
     </view>
     <view class="jf_detai">
       <view class="left">积分明细</view>
-      <view class="right" @tap="more">查看更多</view>
+      <!-- <view class="right" @tap="more">查看更多</view> -->
     </view>
     <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight-165}}px">
       <!-- 积分记录 -->
@@ -53,17 +53,17 @@ export default class Points extends wepy.page {
   async getUserPoint() {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
-      const json = await api.pointInfo({
+      let uid = userSpecialInfo.ID;
+      const json = await api.userSginInfo({
         query: {
-          openId: openId,
-          page:"1",
-          size:"10"
+          uid: uid,
+          // page:"1",
+          // size:"10"
         }
       });
       if (json.data.code == 0) {
         that.list = json.data.list;
-        this.userPoint = json.data.userPoint;
+        this.userPoint = json.data.score;
         that.$apply();
       } else {
         tip.error(json.data.msg)

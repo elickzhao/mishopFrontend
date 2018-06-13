@@ -54,6 +54,12 @@
         </view>
       </view>
       <view class="list_item">
+        <view class="title">邮编:</view>
+        <view class="input">
+          <input type="text" name="code"/>
+        </view>
+      </view>
+      <view class="list_item">
         <view class="title">设置默认地址:</view>
         <view class="input tr" @tap="changeCheckBoxState">
           <icon type="success" size="20" color="{{isDefult? 'red':'#999'}}" />
@@ -98,17 +104,21 @@ export default class AddressAdd extends wepy.component {
     if (this.isDefult) {
       isDefult = 1;
     }
-    let openId = userSpecialInfo.openid;
+    let uid = userSpecialInfo.ID;
     console.log("address:");
-    console.log(address);
+    console.log(address);    
+
     const json = await api.saveAddress({
       query: {
-        openId: openId,
-        address: address,
+        uid: uid,
+        receiver:address.receiverName,
+        tel:address.mobile,
+        adds:address.addressDetail,
+        code:address.code,
         isDef: isDefult,
-        province:that.provinceCode,
-        city:that.cityCode,
-        area:that.areaCode
+        sheng:that.province.name,
+        city:that.city.name,
+        quyu:that.area.name
       }
     });
     if (json.data.code == 0) {

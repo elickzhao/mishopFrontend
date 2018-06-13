@@ -31,13 +31,13 @@
       <view class="list_item">
         <view class="title">收货人姓名:</view>
         <view class="input">
-          <input type="text" name="receiverName" value="{{editInfo.receiverName}}" />
+          <input type="text" name="receiverName" value="{{editInfo.name}}" />
         </view>
       </view>
       <view class="list_item">
         <view class="title">联系电话:</view>
         <view class="input">
-          <input type="text" name="mobile" value="{{editInfo.mobile}}"/>
+          <input type="text" name="mobile" value="{{editInfo.tel}}"/>
         </view>
       </view>
       <view class="list_item">
@@ -50,7 +50,7 @@
       <view class="list_item">
         <view class="title">详细地址:</view>
         <view class="input">
-          <input type="text" name="addressDetail" value="{{editInfo.addressDetail}}" />
+          <input type="text" name="addressDetail" value="{{editInfo.addr_xq}}" />
         </view>
       </view>
       <view class="list_item">
@@ -102,18 +102,21 @@ export default class AddressEdit extends wepy.component {
     if (this.isDefult) {
       isDefult = 1;
     }
-    let openId = userSpecialInfo.openid;
+    let uid = userSpecialInfo.ID;
     console.log("address:");
     console.log(this.id);
     const json = await api.saveAddress({
       query: {
-        openId: openId,
+        uid: uid,
         id: this.id,
-        address: address,
+        receiver:address.receiverName,
+        tel:address.mobile,
+        adds:address.addressDetail,
+        code:address.code,
         isDef: isDefult,
-        province:that.provinceCode,
-        city:that.cityCode,
-        area:that.areaCode
+        sheng:that.province.name,
+        city:that.city.name,
+        quyu:that.area.name
       }
     });
     if (json.data.code == 0) {
@@ -166,9 +169,8 @@ export default class AddressEdit extends wepy.component {
       console.log("==========ee=========");
       console.log(this.isDefult);
       this.province = { code: this.editInfo.provinceCode, name: this.editInfo.provinceName };
-      this.city = { code: this.editInfo.areaCode, name:this.editInfo.areaName };
-      this.area = { code: this.editInfo.cityCode, name: this.editInfo.cityName };
-
+      this.city = { code: this.editInfo.areaCode, name:this.editInfo.cityName};
+      this.area = { code: this.editInfo.cityCode, name: this.editInfo.areaName };
       this.$apply();
     },
     openAddressPicker() {

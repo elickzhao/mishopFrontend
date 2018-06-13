@@ -36,13 +36,13 @@ export default class Address extends wepy.page {
   async getUserAddress(phone,code) {
     let that = this;
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
+    let uid = userSpecialInfo.ID;
     const json = await api.getUserAddress({
       query: {
-        openId: openId
+        uid: uid
       }
     });
-
+    console.log(json)
     if (json.data.code == 0) {
       this.addressList=json.data.list;
       this.$invoke("addressList","refreshList", this.addressList);
