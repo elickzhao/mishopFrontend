@@ -50,11 +50,11 @@ export default class paySuccess extends wepy.page {
     let that = this;
     const json = await api.getPayOrderDetail({
       query: {
-        tradeNo: this.orderNo
+        oid: this.orderNo
       }
     });
     if (json.data.code == 0) {
-      this.totalFee = json.data.order.totalFee;
+      this.totalFee = json.data.order;
     } else {
       tip.error(json.data.msg)
     }
@@ -111,7 +111,7 @@ export default class paySuccess extends wepy.page {
     align-items: center;
   }
   .icon-success {
-    color: #ea4a3a;
+    color: #09bb07;
     font-size: 150rpx;
   }
 
@@ -119,7 +119,7 @@ export default class paySuccess extends wepy.page {
     color: #1a1a1a;
   }
   .type {
-    color: #ea4a3a;
+    color: #09bb07;
     margin-left: 20rpx;
   }
   .pay_type {
@@ -150,7 +150,7 @@ export default class paySuccess extends wepy.page {
       border: 1px solid #ccc;
     }
     .get_store {
-      background: #ed601b;
+      background: #09bb07;
       color: #fff;
       margin-left: 85rpx;
     }

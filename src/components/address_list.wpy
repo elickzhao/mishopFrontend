@@ -107,7 +107,7 @@
         var id = e.currentTarget.dataset.id;
         console.log("id==" + id);
         wepy.setStorageSync(ADDRESS_ID, id);
-        wepy.redirectTo({
+        wepy.navigateBack({
           url: "/pages/comfire_order?from=selAdd"
         })
       }

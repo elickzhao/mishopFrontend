@@ -47,13 +47,13 @@ const cartDel = (params) => wxRequest(params, jishi + '/api/news/goodsCartDelete
 //购物车的商品数量更新
 const cartUpdateNum = (params) => wxRequest(params, jishi + '/api/news/cartUpdateNum');
 //直接购买商品
-//const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
+const preOrder = (params) => wxRequest(params, jishi + '/api/news/buyCart');
 
 //支付前生成订单
-//const saveByCart = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/saveByCart');
+const saveByCart = (params) => wxRequest(params, jishi + '/api/news/payment');
 
 //支付统一下单
-//const toPay = (params) => wxRequest(params, apiMall + '/wepay/toPay');
+const toPay = (params) => wxRequest(params, jishi + '/Api/Wxpay/wxpay');
 
 //商品收藏
 const goodsFavorite = (params) => wxRequest(params, jishi + '/api/news/goodsFavoriteAdd');
@@ -129,7 +129,7 @@ const getMyOrderList = (params) => wxRequest(params, jishi + '/api/news/getMyOrd
 const getOrderInfo = (params) => wxRequest(params, jishi + '/api/news/getOrderDetail');
 
 //根据订单号查询详情
-//const getPayOrderDetail = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getPayOrderDetail');
+const getPayOrderDetail = (params) => wxRequest(params, jishi + '/api/news/getPayOrderDetail');
 
 //根据订单号编辑订单
 const editOrderInfo = (params) => wxRequest(params, jishi + '/api/news/ordersEdit');
@@ -191,6 +191,10 @@ module.exports = {
   saveAddress,
   receiverInfoById,
   delUserAddress,
+  preOrder,
+  saveByCart,
+  toPay,
+  getPayOrderDetail,
 }
 
 // module.exports = {

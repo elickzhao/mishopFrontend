@@ -59,7 +59,7 @@
 import wepy from "wepy";
 import api from "../api/api";
 import tip from "../utils/tip";
-import { USER_SPECICAL_INFO,SYSTEM_INFO } from "../utils/constant";
+import { USER_SPECICAL_INFO, SYSTEM_INFO } from "../utils/constant";
 import swipeDelete from "./common/wepy-swipe-delete";
 export default class shopCart extends wepy.component {
   components = {
@@ -70,7 +70,7 @@ export default class shopCart extends wepy.component {
     noSelect: false,
     saveHidden: true,
     operating: false,
-    allChecked: true,
+    allChecked: true
   };
   //获取购物车商品列表
   async getCartList() {
@@ -107,7 +107,7 @@ export default class shopCart extends wepy.component {
   }
   computed = {
     totalPrice() {
-      let all = 0; 
+      let all = 0;
       for (var i = 0; i < this.list.length; i++) {
         if (this.list[i].selected) {
           all += this.list[i].price * this.list[i].num;
@@ -277,20 +277,28 @@ export default class shopCart extends wepy.component {
     },
     toPayOrder() {
       let purType = 1,
-        prePurType = 1;
+        prePurType = 1; //这里应该是加入购物车或者是立即购买
       let bOneType = true;
       let index = 0;
+      //XXX 这里应该把id组成字符串 传给pay页面吧 跟老的一样  这个是没法穿对象的
+      // for (var i = 0; i < this.list.length; i++) {
+      //   if (this.list[i].selected) {
+      //     purType = this.list[i].type;
+      //     if (index > 0) {
+      //       if (purType != prePurType) {
+      //         bOneType = false;
+      //         break;
+      //       }
+      //     }
+      //     prePurType = purType;
+      //     index++;
+      //   }
+      // }
+      let toastStr =""
       for (var i = 0; i < this.list.length; i++) {
-        if (this.list[i].ischecked) {
-          purType = this.list[i].type;
-          if (index > 0) {
-            if (purType != prePurType) {
-              bOneType = false;
-              break;
-            }
-          }
-          prePurType = purType;
-          index++;
+        if (this.list[i].selected) {
+          toastStr += this.list[i].id;
+          toastStr += ",";
         }
       }
       if (!bOneType) {
@@ -298,7 +306,7 @@ export default class shopCart extends wepy.component {
         return;
       }
       wepy.navigateTo({
-        url: "/pages/comfire_order?purchasetype=" + purType
+        url: "/pages/comfire_order?purchasetype=" + purType+"&ids="+toastStr
       });
     },
     goIndex() {
@@ -449,7 +457,7 @@ export default class shopCart extends wepy.component {
   width: 240rpx;
   text-align: center;
   line-height: 100rpx;
-  background-color: #FF0077;
+  background-color: #ff0077;
   font-size: 32rpx;
   color: #ffffff;
 }

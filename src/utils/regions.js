@@ -2,11 +2,11 @@ const regions =
   [
     {
       code: "110000",
-      name: "北京市",
+      name: "北京",
       cities: [
         {
           code: "110100",
-          name: "北京市",
+          name: "北京",
           areas: [
             {
               code: "110101",
@@ -78,11 +78,11 @@ const regions =
     },
     {
       code: "120000",
-      name: "天津市",
+      name: "天津",
       cities: [
         {
           code: "120100",
-          name: "天津市",
+          name: "天津",
           areas: [
             {
               code: "120101",
