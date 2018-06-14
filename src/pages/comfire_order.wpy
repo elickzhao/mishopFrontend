@@ -34,10 +34,10 @@
                 <view class="goods-label">数量: x {{item.num}}</view>
                 <view class="goods-price">¥ {{item.price_yh}}</view>
                 <!-- <view class="buy-num">
-                    <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-                    <input type="number" value="{{item.num}}" disabled/>
-                    <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
-                  </view> -->
+                              <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
+                              <input type="number" value="{{item.num}}" disabled/>
+                              <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
+                            </view> -->
               </view>
             </view>
           </swipeDelete>
@@ -57,10 +57,10 @@
         </view>
       </view>
       <!-- <view class="spacing"></view>
-            <view class="block">
-              <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
-              <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
-            </view> -->
+                      <view class="block">
+                        <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
+                        <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
+                      </view> -->
       <view class="spacing"></view>
       <view class="block">
         <view class="left tongji">商品金额</view>
@@ -71,9 +71,16 @@
       </view>
     </view>
     <view class="pay_box">
-      <form report-submit bindsubmit="goPay">
-        <button form-type="submit" class="button type_green">配送到家</button>
-      </form>
+      <block wx:if="{{totalPrice > miniNum}}">
+        <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
+      </block>
+      <block wx:else>
+        <button form-type="submit" class="button">满 {{miniNum}} 元起送</button>
+      </block>
+      <br/>
+      <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
+        <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
+      </picker>
     </view>
   </view>
 </template>
@@ -96,6 +103,9 @@
       swipeDelete
     }
     data = {
+      miniNum: 0,
+      shops: [],
+      paytype: "",
       onLoadAddressID: "",
       cartId: "",
       list: [],
@@ -171,6 +181,35 @@
       }
       that.$apply();
     }
+    //线下支付 => 改成店内自提
+    createProductOrderByXX(e) {
+      this.paytype = 'cash'
+      //没有门店就提示
+      if (this.shops == null) {
+        wx.showToast({
+          title: "线下支付开通中，敬请期待!",
+          duration: 3000
+        });
+        return false;
+      }
+      //console.log('picker发送选择改变，携带值为', this.data.shops[e.detail.value])
+      let shopAdd = this.address
+      shopAdd['address_xq'] = this.shops[e.detail.value];
+      this.address = shopAdd;
+      console.log(this.address)
+      //其他手机号什么都不用改
+      this.goToPay()
+      //console.log('执行完毕了');
+      this.$apply();
+    }
+    async getShop() {
+      let that = this
+      const json = await api.getShop({
+        query: {}
+      });
+      this.shops = json.data.data
+      that.$apply();
+    }
     onLoad(option) {
       let that = this;
       this.cartId = option.ids,
@@ -183,11 +222,14 @@
       this.jf_num = 0;
       this.reduce_fee = 0;
       this.operating = false;
+      let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
+      this.miniNum = systemInfo.miniNum
       //that.goodsId = option.goodsId == undefined ? "" : option.goodsId;
       //this.purchaseType = option.purchasetype == undefined ? "1" : option.purchasetype;
       /*that.list = bb.result.products;
       console.log(bb.result.products)*/
       this.getOrderDetailInfo();
+      this.getShop()
       // let from = option.from == undefined ? "" : option.from;
       // console.log(from+"---");
       // if (from == "selAdd") {
@@ -214,7 +256,8 @@
           aid: this.address.id,
           remark: this.sellerMessage,
           //reduceScore: this.jf_num,
-          type: 'weixin'
+          type: this.paytype,
+          address: this.address
         }
       });
       if (json.data.code == 0) {
@@ -265,13 +308,17 @@
             },
             fail: function(res) {
               console.log('pay_fail-->', res)
-              tip.alert('支付失败'); // setTimeout(() => {
-              //   //支付成功 关闭loadding 跳转到支付成功页面
-              //   tip.loaded();
-              //   wepy.navigateTo({
-              //     url: "/pages/order"
-              //   })
-              // }, 2000)
+              tip.alert('支付失败');
+              setTimeout(() => {
+                //支付成功 关闭loadding 跳转到支付成功页面
+                tip.loaded();
+                wepy.switchTab({
+                  url: "/pages/info"
+                })
+                // wepy.navigateTo({
+                //   url: "/pages/order"
+                // })
+              }, 2000)
             }
           })
         } else {
@@ -367,7 +414,9 @@
         console.log("====" + e.detail.value);
       },
       async goPay(e) {
-        var fId = e.detail.formId;
+        //var fId = e.detail.formId;
+        //console.log(e)
+        this.paytype = e
         if (!this.is_exit_address) {
           await tip.confirm('你未设置收货地址，请设置地址');
           wepy.navigateTo({
@@ -379,8 +428,7 @@
         // wepy.navigateTo({
         //   url: "/pages/pay_success?orderNo=2746"
         // })
-        
-        this.goToPay(fId);
+        this.goToPay();
       },
       setAddress() {
         wepy.navigateTo({

@@ -158,6 +158,9 @@ const childGoodsCatetoryList = (params) => wxRequest(params, jishi + '/api/news/
 // const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list');
 const getAdList = (params) => wxRequest(params, jishi + '/api/Index/ggtop');
 
+//获取门店地址 
+const getShop = (params) => wxRequest(params, jishi + '/api/Address/getShop');
+
 module.exports = {
   getMiniNum,
   getAdList,
@@ -195,6 +198,7 @@ module.exports = {
   saveByCart,
   toPay,
   getPayOrderDetail,
+  getShop,
 }
 
 // module.exports = {

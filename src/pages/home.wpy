@@ -56,6 +56,7 @@
     <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
     <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <!-- <bombscreen :types.sync="tps" :show.sync="is_show_alert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen> -->
+    <bombscreen :types.sync="tps" :show.sync="is_show_alert"  @callback.user="alertCallback"></bombscreen>
   </view>
 </template>
 
@@ -230,10 +231,11 @@
         }
       },
       alertCallback() {
-        tip.alert('跳转');
+        this.is_show_alert = false
+        //tip.alert('跳转');
       },
       closeAlert() {
-        tip.alert('关闭');
+        //tip.alert('关闭');
       }
     }
     events = {}

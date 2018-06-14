@@ -104,7 +104,7 @@
 				</view>
 			</block>
 			<view class="item" style="background: #fff;">
-				<navigator class="scroll-list" url="/pages/wholesale">
+				<navigator class="scroll-list" url="/pages/wholesale?flag=0">
 					<view class="image_box">
 						<image style="height: 400rpx;" src="../images/more.png"></image>
 					</view>
