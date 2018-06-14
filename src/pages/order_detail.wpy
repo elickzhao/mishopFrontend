@@ -1,23 +1,20 @@
 <!--订单详情-->
 <template>
   <view class="order_detail">
-  <navigator class="item_content" url="/pages/logistics?orderNo={{orderNo}}">
-    <view class="order_state" wx:if="{{obj.status==2 || obj.status==1}}">
-      <view class="left">
-        <i class="iconfont icon-complete"></i>
+    <navigator class="item_content" url="/pages/logistics?orderNo={{orderNo}}">
+      <view class="order_state" wx:if="{{obj.status==2 || obj.status==1}}">
+        <view class="left">
+          <i class="iconfont icon-complete"></i>
+        </view>
+        <view class="center">
+          <view class="state_doc">{{expressFlowInfo.flowName}}</view>
+          <view class="state_time">{{expressFlowInfo.updateTime}}</view>
+        </view>
+        <view class="right">
+          <view>&gt;</view>
+        </view>
       </view>
-
-      <view class="center">
-        <view class="state_doc">{{expressFlowInfo.flowName}}</view>
-        <view class="state_time">{{expressFlowInfo.updateTime}}</view>
-      </view>
-
-      <view class="right">
-        <view>&gt;</view>
-      </view>
-
-    </view>
-  </navigator>
+    </navigator>
     <view class="order_state" wx:if="{{obj.status==0}}">
       <view class="left">
         <view class="unpaid">
@@ -66,304 +63,302 @@
         <text class="receive_money">{{ord.price}}</text>
       </view>
       <view class="btn_group">
-
         <view class="btn" @tap="goLogistics" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">查看物流</view>
         <view class="btn type_pick dsh" @tap="completion" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">待收货</view>
-        <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{ord.status==10}}" data-id="{{ord.id}}" data-orderno="{{obj.payOrderNo}}">立即付款</view>
-<!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
-        <view class="btn type_pick dsh" @tap="refund" wx:if="{{ord.status==20 || ord.status==30}}" data-id="{{obj.orderNo}}">申请退货</view>
+        <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{ord.status==10}}" data-id="{{ord.id}}" data-orderSn="{{item.order_sn}}">立即付款</view>
+        <!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
+        <view class="btn type_pick dsh" @tap="refund({{ord.id}})" wx:if="{{ord.status==20 || ord.status==30 && ord.back != 1 }}">申请退货</view>
+        <view class="btn type_pick" style="background:#ccc" wx:if="{{ord.back == 1 }}">已申请退货</view>
       </view>
     </view>
   </view>
 </template>
+
 <script>
-import wepy from 'wepy';
-import tip from '../utils/tip'
-import ShopItemList from '../components/shop_item_list'
-import api from '../api/api'
-import {
-  SYSTEM_INFO,
-  USER_SPECICAL_INFO
-} from '../utils/constant';
-export default class OrderDetail extends wepy.page {
-  config = {
-    navigationBarTitleText: '订单详情',
-  }
-  data = {
-    ord: {},
-    orderNo:"",
-    flag:"",
-    list:[],
-    orderExpress:{},
-    expressFlowInfo:{}
-  }
-
-  async getOrderInfo(currentPage,size) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    const json = await api.getOrderInfo({
-      query: {
-        order_id: this.orderNo
-      }
-    });
-    if (json.data.code == 0) {
-      console.log(json);
-      this.ord=json.data.ord;
-      that.list=[];
-      that.list = [...that.list, ...json.data.pro];
-      that.$invoke('shopItemList', 'refreshList', that.list);
-
-      console.log("========list返回数据========");
-      console.log(that.list);
-    } else {
-      tip.error(json.data.msg)
+  import wepy from 'wepy';
+  import tip from '../utils/tip'
+  import ShopItemList from '../components/shop_item_list'
+  import api from '../api/api'
+  import {
+    SYSTEM_INFO,
+    USER_SPECICAL_INFO
+  } from '../utils/constant';
+  export default class OrderDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '订单详情',
     }
-
-    that.$apply();
-  }
-
-  async editOrderInfo(orderNo,flag) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    const json = await api.editOrderInfo({
-      query: {
-        orderNo: orderNo,
-        flag:flag
-      }
-    });
-    if (json.data.code == 0) {
-      console.log("===========lzz返回数据=========")
-      console.log(json.data.errerTips);
-      /*that.list = [...that.list, ...json.data.errerTips.orderItemList];
-      that.$invoke('shopItemList', 'refreshList', that.list);
-      console.log(json.data.errerTips.orderItemList);
-      console.log(that.list);*/
-      if (this.flag==2) {//删除
-
-      }
-    } else {
-      tip.error(json.data.msg)
+    data = {
+      ord: {},
+      orderNo: "",
+      flag: "",
+      list: [],
+      orderExpress: {},
+      expressFlowInfo: {}
     }
-    that.$apply();
-  }
-
-  async getOrderExpressInfo() {
-    console.log("orderNo")
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    const json = await api.orderExpressInfo({
-      query: {
-        orderNo: this.orderNo
-      }
-    });
-    if (json.data.code == 0) {
-      that.orderExpress=json.data.orderExpress;
-      that.expressFlowInfo=json.data.expressFlowInfo;
-      console.log("========list返回数据========");
-      console.log(that.list);
-    } else {
-      tip.error(json.data.msg)
-    }
-
-    that.$apply();
-  }
-
-  components = {
-    shopItemList: ShopItemList
-  }
-  onLoad(options) {
-    let that = this;
-    //that.list = bb.result.products;
-    this.orderNo=options.orderNo;
-    that.getOrderInfo();
-    //XXX 一会看看这里
-    //that.getOrderExpressInfo();
-    //console.log(bb.result.products)
-    console.log("=========options==========");
-    console.log(options.id);
-  }
-  computed = {
-
-  }
-  methods = {
-    async delOrder(e) {
-      this.flag=2;
-      this.orderNo = e.currentTarget.dataset.id;
-      await tip.confirm('是否删除订单');
-      console.log(this.flag);
-      this.editOrderInfo(this.orderNo,this.flag);
-      console.log("删除成功")
-    },
-    async completion(e) {
-      this.flag=3;
-      this.orderNo = e.currentTarget.dataset.id;
-      await tip.confirm('是否确认收货');
-      this.editOrderInfo(this.orderNo,this.flag);
-      console.log("完成")
-    },
-    async goLogistics() {
-      tip.confirm('查看物流');
-    },
-    async payMoney(e) {
-      let tradeNo = e.currentTarget.dataset.tradeno;
+    async getOrderInfo(currentPage, size) {
+      let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-      let openId = userSpecialInfo.openid;
-
-      const pay = await api.toPay({
-        query:{
-          openId: openId,
-          orderNo: tradeNo
+      const json = await api.getOrderInfo({
+        query: {
+          order_id: this.orderNo
         }
       });
-      if (pay.data.code==0) {
-        //以下是微信支付
-        wx.requestPayment({
-          appId: pay.data.appId,
-          timeStamp: pay.data.timeStamp,
-          nonceStr: pay.data.nonceStr,
-          package: pay.data.package,
-          signType: 'MD5',
-          paySign: pay.data.paySign,
-          success: function (res) {
-            console.log('pay', res)
-            setTimeout(() => {
-              //支付成功 关闭loadding 跳转到支付成功页面
-              tip.loaded();
-              wepy.navigateTo({
-                url: "/pages/pay_success?orderNo="+tradeNo
-              })
-            }, 2000)
-          },
-          fail: function (res) {
-            tip.alert('支付失败');
-          }
+      if (json.data.code == 0) {
+        console.log(json);
+        this.ord = json.data.ord;
+        that.list = [];
+        that.list = [...that.list, ...json.data.pro];
+        that.$invoke('shopItemList', 'refreshList', that.list);
+        console.log("========list返回数据========");
+        console.log(that.list);
+      } else {
+        tip.error(json.data.msg)
+      }
+      that.$apply();
+    }
+    async editOrderInfo(orderNo, flag) {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
+      const json = await api.editOrderInfo({
+        query: {
+          uid: uid,
+          id: orderNo,
+          flag: flag
+        }
+      });
+      if (json.data.code == 0) {
+        console.log("===========lzz返回数据=========")
+        console.log(json.data);
+        /*that.list = [...that.list, ...json.data.errerTips.orderItemList];
+        that.$invoke('shopItemList', 'refreshList', that.list);
+        console.log(json.data.errerTips.orderItemList);
+        console.log(that.list);*/
+        // if (this.flag==2) {//删除
+        // }
+        
+        //暂时跳到用户中心 因为没有退款那个栏目
+        //this.$emit('refreshOrderList', that.flag); 这有个刷新列表的方法 以后可以留着看看
+        tip.success('申请退款成功!');
+        wepy.switchTab({
+          url: "/pages/info"
         })
       } else {
-        tip.alert('支付失败');
+        tip.error(json.data.msg)
+      }
+      that.$apply();
+    }
+    async getOrderExpressInfo() {
+      console.log("orderNo")
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      const json = await api.orderExpressInfo({
+        query: {
+          orderNo: this.orderNo
+        }
+      });
+      if (json.data.code == 0) {
+        that.orderExpress = json.data.orderExpress;
+        that.expressFlowInfo = json.data.expressFlowInfo;
+        console.log("========list返回数据========");
+        console.log(that.list);
+      } else {
+        tip.error(json.data.msg)
+      }
+      that.$apply();
+    }
+    components = {
+      shopItemList: ShopItemList
+    }
+    onLoad(options) {
+      let that = this;
+      //that.list = bb.result.products;
+      this.orderNo = options.orderNo;
+      that.getOrderInfo();
+      //XXX 一会看看这里
+      //that.getOrderExpressInfo();
+      //console.log(bb.result.products)
+      console.log("=========options==========");
+      console.log(options.id);
+    }
+    computed = {
+    }
+    methods = {
+      async refund(e) {
+        this.flag = 'refund';
+        this.editOrderInfo(e, this.flag);
+      },
+      async delOrder(e) {
+        this.flag = 2;
+        this.orderNo = e.currentTarget.dataset.id;
+        await tip.confirm('是否删除订单');
+        console.log(this.flag);
+        this.editOrderInfo(this.orderNo, this.flag);
+        console.log("删除成功")
+      },
+      async completion(e) {
+        this.flag = 3;
+        this.orderNo = e.currentTarget.dataset.id;
+        await tip.confirm('是否确认收货');
+        this.editOrderInfo(this.orderNo, this.flag);
+        console.log("完成")
+      },
+      async goLogistics() {
+        tip.confirm('查看物流');
+      },
+      async payMoney(e) {
+        this.orderNo = e.currentTarget.dataset.id;
+        let order_sn = e.currentTarget.dataset.ordersn;
+        let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+        let uid = userSpecialInfo.ID;
+        const pay = await api.toPay({
+          query: {
+            uid: uid,
+            order_sn: order_sn,
+            order_id: this.orderNo
+          }
+        });
+        if (pay.data.status == 1) {
+          let payData = pay.data.arr;
+          //以下是微信支付
+          wx.requestPayment({
+            appId: payData.appId,
+            timeStamp: payData.timeStamp,
+            nonceStr: payData.nonceStr,
+            package: payData.package,
+            signType: 'MD5',
+            paySign: payData.paySign,
+            success: function(res) {
+              console.log('pay', res)
+              setTimeout(() => {
+                //支付成功 关闭loadding 跳转到支付成功页面
+                tip.loaded();
+                wepy.navigateTo({
+                  url: "/pages/pay_success?orderNo=" + this.orderNo
+                })
+              }, 2000)
+            },
+            fail: function(res) {
+              tip.alert('支付失败');
+            }
+          })
+        } else {
+          tip.alert('支付失败');
+        }
+      }
+    }
+    events = {
+    }
+  }
+</script>
+
+<style lang="less">
+  .order_detail {
+    position: relative;
+  }
+  .order_state {
+    padding: 35rpx 24rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10rpx;
+    background: #fff;
+    .iconfont {
+      font-size: 40rpx;
+      color: #6a6a6a;
+    }
+    .state_time {
+      padding-top: 24rpx;
+    }
+    .center {
+      flex: 1;
+      margin-left: 50rpx;
+    }
+    .right {
+      display: flex;
+      align-items: center;
+    }
+    .unpaid {
+      margin-left: 50rpx;
+      .unpaid_doc {
+        margin-left: 10rpx;
+      }
+    }
+    .time_doc {
+      font-size: 26rpx;
+      color: #999;
+    }
+    .time_num {
+      font-size: 26rpx;
+      margin-right: 50rpx;
+    }
+  }
+  .address_block {
+    padding: 30rpx;
+    background: #fff;
+    margin-top: 10rpx;
+    .address {
+      padding-top: 20rpx;
+    }
+    .title {
+      color: #858585;
+    }
+    .content {
+      color: #000;
+      padding-left: 24rpx;
+    }
+  }
+  .goods_block {
+    margin-top: 10rpx;
+    background: #fff;
+  }
+  .info_block {
+    margin-top: 10rpx;
+    padding: 18rpx;
+    background: #fff;
+    .item {
+      padding-top: 40rpx;
+      .title {
+        font-size: 28rpx;
+      }
+      .content {
+        color: #808080;
+        font-size: 28rpx;
       }
     }
   }
-
-  events = {
-
-  }
-
-}
-
-</script>
-<style lang="less">
-.order_detail {
-  position: relative;
-}
-
-.order_state {
-  padding: 35rpx 24rpx;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10rpx;
-  background: #fff;
-  .iconfont {
-    font-size: 40rpx;
-    color: #6a6a6a;
-  }
-  .state_time {
-    padding-top: 24rpx;
-  }
-  .center {
-    flex: 1;
-    margin-left: 50rpx;
-  }
-  .right {
+  .footer {
+    position: fixed;
+    bottom: 0rpx;
+    height: 92rpx;
+    background: #fff;
+    width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-  }
-  .unpaid {
-    margin-left: 50rpx;
-    .unpaid_doc {
-      margin-left: 10rpx;
+    padding: 18rpx;
+    border-top: 1px solid #e6e6e6;
+    .btn_group {
+      display: flex;
+      margin-right: 30rpx;
+      .btn {
+        padding: 20rpx 20rpx;
+        border: 1px solid #cccccc;
+        text-align: center;
+        margin: 0 auto;
+        width: 180rpx;
+        -moz-border-radius: 10rpx;
+        /* Firefox */
+        -webkit-border-radius: 10rpx;
+        /* Safari 和 Chrome */
+        border-radius: 10rpx;
+      }
+      .dsh {
+        margin-left: 20rpx;
+      }
+    }
+    .receive_money {
+      color: #ff4856;
     }
   }
-  .time_doc {
-    font-size: 26rpx;
-    color: #999;
-  }
-  .time_num {
-    font-size: 26rpx;
-    margin-right: 50rpx;
-  }
-}
-
-.address_block {
-  padding: 30rpx;
-  background: #fff;
-  margin-top: 10rpx;
-  .address {
-    padding-top: 20rpx;
-  }
-  .title {
-    color: #858585;
-  }
-  .content {
-    color: #000;
-    padding-left: 24rpx;
-  }
-}
-
-.goods_block {
-  margin-top: 10rpx;
-  background: #fff;
-}
-
-.info_block {
-  margin-top: 10rpx;
-  padding: 18rpx;
-  background: #fff;
-  .item {
-    padding-top: 40rpx;
-    .title {
-      font-size: 28rpx;
-    }
-    .content {
-      color: #808080;
-      font-size: 28rpx;
-    }
-  }
-}
-
-.footer {
-  position: fixed;
-  bottom: 0rpx;
-  height: 92rpx;
-  background: #fff;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18rpx;
-  border-top: 1px solid #e6e6e6;
-  .btn_group {
-    display: flex;
-    margin-right: 30rpx;
-    .btn {
-      padding: 20rpx 20rpx;
-      border: 1px solid #cccccc;
-      text-align: center;
-      margin: 0 auto;
-      width: 180rpx;
-      -moz-border-radius: 10rpx;
-      /* Firefox */
-      -webkit-border-radius: 10rpx;
-      /* Safari 和 Chrome */
-      border-radius: 10rpx;
-    }
-    .dsh {
-      margin-left: 20rpx;
-    }
-  }
-  .receive_money {
-    color: #ff4856;
-  }
-}
-
 </style>

@@ -27,134 +27,131 @@
     </view>
   </view>
 </template>
+
 <script>
-import wepy from 'wepy';
-import api from '../api/api';
-import {
-  SYSTEM_INFO,
-  USER_SPECICAL_INFO
-} from '../utils/constant';
-import tip from '../utils/tip'
-export default class paySuccess extends wepy.page {
-  config = {
-    navigationBarTitleText: '支付成功',
-  }
-  data = {
-    orderNo : "",
-    totalFee: 0
-  }
-  components = {
-
-  }
-  async getPayOrderDetail() {
-    let that = this;
-    const json = await api.getPayOrderDetail({
-      query: {
-        oid: this.orderNo
+  import wepy from 'wepy';
+  import api from '../api/api';
+  import {
+    SYSTEM_INFO,
+    USER_SPECICAL_INFO
+  } from '../utils/constant';
+  import tip from '../utils/tip'
+  export default class paySuccess extends wepy.page {
+    config = {
+      navigationBarTitleText: '支付成功',
+    }
+    data = {
+      orderNo: "",
+      totalFee: 0
+    }
+    components = {
+    }
+    async getPayOrderDetail() {
+      let that = this;
+      const json = await api.getPayOrderDetail({
+        query: {
+          oid: this.orderNo
+        }
+      });
+      if (json.data.code == 0) {
+        this.totalFee = json.data.order;
+      } else {
+        tip.error(json.data.msg)
       }
-    });
-    if (json.data.code == 0) {
-      this.totalFee = json.data.order;
-    } else {
-      tip.error(json.data.msg)
+      that.$apply();
     }
-
-    that.$apply();
-  }
-  onLoad(option) {
-    //tip.success('支付成功,接收的参数为' + option.orderNo);
-    this.orderNo = option.orderNo;
-    this.getPayOrderDetail();
-  }
-  computed = {
-
-  }
-  methods = {
-    goOrderDetail() {
-      wepy.redirectTo({
-        url: "/pages/order"
-      })
-    },
-    goIndex() {
-      wepy.switchTab({
-        url: "/pages/home"
-      })
+    onLoad(option) {
+      //tip.success('支付成功,接收的参数为' + option.orderNo);
+      this.orderNo = option.orderNo;
+      this.getPayOrderDetail();
+    }
+    computed = {
+    }
+    methods = {
+      goOrderDetail() {
+        //这个跳转过后要不就是没有返回出不了页面 回不到首页  要不就是有返回 又回到下单了
+        // wepy.redirectTo({
+        //   url: "/pages/order"
+        // })
+        wepy.switchTab({
+          url: "/pages/info"
+        })
+      },
+      goIndex() {
+        wepy.switchTab({
+          url: "/pages/home"
+        })
+      }
+    }
+    events = {
     }
   }
-
-  events = {
-
-  }
-
-}
-
 </script>
+
 <style lang="less">
-.pay_success {
-  background: #fff;
-  padding-bottom: 50rpx;
-  .pay_btn,
-  .pay_type,
-  .pay_money {
-    display: flex;
-    width: 100%;
-  }
-  .icon {
-    margin: 0 auto;
-    text-align: center;
-    padding-top: 100rpx;
-  }
-  .block {
-    margin: 0 auto;
-    text-align: center;
-    display: flex;
-    align-items: center;
-  }
-  .icon-success {
-    color: #09bb07;
-    font-size: 150rpx;
-  }
-
-  .success_doc {
-    color: #1a1a1a;
-  }
-  .type {
-    color: #09bb07;
-    margin-left: 20rpx;
-  }
-  .pay_type {
-    padding-top: 84rpx;
-  }
-  .pay_money {
-    padding-top: 25rpx;
-  }
-  .btn_group {
-    display: flex;
-    align-items: center;
-    padding-top: 100rpx;
-    .btn {
-      font-size: 30rpx;
-      padding: 22rpx 55rpx;
-      text-align: center;
-      margin: 0 auto;
+  .pay_success {
+    background: #fff;
+    padding-bottom: 50rpx;
+    .pay_btn,
+    .pay_type,
+    .pay_money {
+      display: flex;
       width: 100%;
-      -moz-border-radius: 10rpx;
-      /* Firefox */
-      -webkit-border-radius: 10rpx;
-      /* Safari 和 Chrome */
-      border-radius: 10rpx;
-      /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
     }
-    .order_detail {
-      color: #333;
-      border: 1px solid #ccc;
+    .icon {
+      margin: 0 auto;
+      text-align: center;
+      padding-top: 100rpx;
     }
-    .get_store {
-      background: #09bb07;
-      color: #fff;
-      margin-left: 85rpx;
+    .block {
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      align-items: center;
+    }
+    .icon-success {
+      color: #09bb07;
+      font-size: 150rpx;
+    }
+    .success_doc {
+      color: #1a1a1a;
+    }
+    .type {
+      color: #09bb07;
+      margin-left: 20rpx;
+    }
+    .pay_type {
+      padding-top: 84rpx;
+    }
+    .pay_money {
+      padding-top: 25rpx;
+    }
+    .btn_group {
+      display: flex;
+      align-items: center;
+      padding-top: 100rpx;
+      .btn {
+        font-size: 30rpx;
+        padding: 22rpx 55rpx;
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        -moz-border-radius: 10rpx;
+        /* Firefox */
+        -webkit-border-radius: 10rpx;
+        /* Safari 和 Chrome */
+        border-radius: 10rpx;
+        /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+      }
+      .order_detail {
+        color: #333;
+        border: 1px solid #ccc;
+      }
+      .get_store {
+        background: #09bb07;
+        color: #fff;
+        margin-left: 85rpx;
+      }
     }
   }
-}
-
 </style>
