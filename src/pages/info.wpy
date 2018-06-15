@@ -25,12 +25,12 @@
         <view class="arrow">&gt;</view>
       </navigator>
       <!-- <navigator class="item" url="/pages/reorder">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_02.png"></image>
-          <view class="text">补货订单</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator> -->
+                        <view class="item_content">
+                          <image class="item_img" src="../images/icon_my_02.png"></image>
+                          <view class="text">补货订单</view>
+                        </view>
+                        <view class="arrow">&gt;</view>
+                      </navigator> -->
       <navigator class="item" url="/pages/points">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_03.png"></image>
@@ -39,12 +39,12 @@
         <view class="arrow">&gt;</view>
       </navigator>
       <!-- <navigator class="item" url="/pages/collection?type=0">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_04.png"></image>
-          <view class="text">我的足迹</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator> -->
+                        <view class="item_content">
+                          <image class="item_img" src="../images/icon_my_04.png"></image>
+                          <view class="text">我的足迹</view>
+                        </view>
+                        <view class="arrow">&gt;</view>
+                      </navigator> -->
       <navigator class="item" url="/pages/collection?type=1">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_05.png"></image>
@@ -73,140 +73,189 @@
     </view>
   </view>
 </template>
+
 <script>
-import wepy from "wepy";
-import api from "../api/api";
-import { USER_INFO, USER_SPECICAL_INFO } from "../utils/constant";
-export default class Index extends wepy.page {
-  config = {
-    navigationBarTitleText: "个人中心"
-    //     backgroundTextStyle: "black",
-    // navigationBarBackgroundColor: "#FFF",
-    // navigationBarTextStyle: "black",
-    // enablePullDownRefresh: false,
-    // backgroundColor: "#EFEFEF",
-  };
-  components = {};
+  import wepy from "wepy";
+  import api from "../api/api";
+  import {
+    USER_INFO,
+    USER_SPECICAL_INFO
+  } from "../utils/constant";
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: "个人中心"
+      //     backgroundTextStyle: "black",
+      // navigationBarBackgroundColor: "#FFF",
+      // navigationBarTextStyle: "black",
+      // enablePullDownRefresh: false,
+      // backgroundColor: "#EFEFEF",
+    };
+    components = {};
+    data = {
+      avatarUrl: "",
+      nickName: "",
+      bShowBind: false
+    };
+    // async getUserInfo(phone,code) {
+    //   let that = this;
+    //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    //   let openId = userSpecialInfo.openid;
+    //   const json = await api.getUserInfo({
+    //     query: {
+    //       openId: openId
+    //     }
+    //   });
+    //   if (json.data.code == 0) {
+    //     if (json.data.user.mobile.length>0) {
+    //       this.bShowBind=false;
+    //     } else {
+    //       this.bShowBind = true;
+    //     }
+    //     that.$apply();
+    //   } else {
+    //     tip.error(json.data.msg)
+    //   }
+    //   that.showLoading = false;
+    // }
+    async onLoad() {
+      let that = this;
+      let userInfo = wepy.getStorageSync(USER_INFO);
 
-  data = {
-    avatarUrl: "",
-    nickName: "",
-    bShowBind: false
-  };
-  // async getUserInfo(phone,code) {
-  //   let that = this;
-  //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-  //   let openId = userSpecialInfo.openid;
-  //   const json = await api.getUserInfo({
-  //     query: {
-  //       openId: openId
-  //     }
-  //   });
-
-  //   if (json.data.code == 0) {
-  //     if (json.data.user.mobile.length>0) {
-  //       this.bShowBind=false;
-  //     } else {
-  //       this.bShowBind = true;
-  //     }
-  //     that.$apply();
-  //   } else {
-  //     tip.error(json.data.msg)
-  //   }
-  //   that.showLoading = false;
-  // }
-
-  onLoad() {
-    let that = this;
-    let userInfo = wepy.getStorageSync(USER_INFO);
-    that.avatarUrl = userInfo.avatarUrl;
-    that.nickName = userInfo.nickName;
+      //老版本兼容
+      if (!userInfo) {
+        let res = await wepy.getSetting();
+        // 查看是否授权
+        if (res.authSetting["scope.userInfo"]) {
+          //console.log("scope.userInfo == " + res.authSetting["scope.userInfo"]);
+          wx.getUserInfo({
+            success: function(res) {
+              console.log(res.userInfo)
+              userInfo = res.userInfo;
+              wepy.setStorageSync(USER_INFO, userInfo);
+            }
+          })
+        } else {
+          wepy.redirectTo({
+            url: '/pages/authorize'
+          });
+          //console.log("未获得用户授权")
+          this.$apply();
+        }
+      }
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO);
+      if (userSpecialInfo == "") {
+        let res = await wepy.login();
+        if (res.code) {
+          let rlt = await api.wxJsCode2Session({
+            query: {
+              code: res.code
+            }
+          });
+          if (rlt.data.openid != "") {
+            let data = rlt.data;
+            if (data.openid) {
+              let json = await api.user2session({
+                query: {
+                  openId: data.openid,
+                  NickName: userInfo.nickName,
+                  avatarUrl: userInfo.avatarUrl,
+                  gender: userInfo.gender,
+                }
+              })
+              userSpecialInfo = json.data.data;
+              userSpecialInfo.openId = data.openid;
+              wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
+            }
+          } else {
+            let res = await wepy.showModal({
+              title: "appid有误",
+              content: "授权失败"
+            });
+          }
+        }
+      }
+      console.log(wepy.getStorageSync(USER_SPECICAL_INFO));
+      that.avatarUrl = userInfo.avatarUrl;
+      that.nickName = userInfo.nickName;
+      this.$apply();
+    }
+    onShow() {
+      let that = this;
+      //this.getUserInfo();
+    }
+    computed = {};
+    methods = {};
+    events = {};
   }
-  onShow() {
-    let that = this;
-    //this.getUserInfo();
-  }
-  computed = {};
-  methods = {};
-  events = {};
-}
 </script>
+
 <style lang="less">
-.header {
-  //background: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/user_info.jpg);
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 0, 119, 100),
-    rgba(255, 0, 119, 5)
-  );
-  height: 260rpx;
-  width: 100%;
-}
-
-.header_content {
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  padding-top: 48rpx;
-}
-
-.avatarUrl {
-  width: 122rpx;
-  height: 122rpx;
-  border-radius: 1000px;
-}
-
-.nickName {
-  font-size: 30rpx;
-  padding-top: 15rpx;
-}
-
-.info_block {
-  margin-top: 10rpx;
-  .item {
-    border-top: 1rpx solid #dbdbdb;
-    background: #fff;
-    padding: 34rpx 28rpx;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .header {
+    //background: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/user_info.jpg);
+    background: linear-gradient( to bottom, rgba(255, 0, 119, 100), rgba(255, 0, 119, 5));
+    height: 260rpx;
+    width: 100%;
   }
-  .item:last-child {
-    border-bottom: 1rpx solid #dbdbdb;
+  .header_content {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 48rpx;
   }
-  .item_content {
-    display: flex;
-    align-items: center;
-    .text {
-      margin-left: 20rpx;
-      color: #1a1a1a;
+  .avatarUrl {
+    width: 122rpx;
+    height: 122rpx;
+    border-radius: 1000px;
+  }
+  .nickName {
+    font-size: 30rpx;
+    padding-top: 15rpx;
+  }
+  .info_block {
+    margin-top: 10rpx;
+    .item {
+      border-top: 1rpx solid #dbdbdb;
+      background: #fff;
+      padding: 34rpx 28rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .item:last-child {
+      border-bottom: 1rpx solid #dbdbdb;
+    }
+    .item_content {
+      display: flex;
+      align-items: center;
+      .text {
+        margin-left: 20rpx;
+        color: #1a1a1a;
+      }
+    }
+    .item_img {
+      width: 42rpx;
+      height: 42rpx;
+    }
+    .arrow {
+      color: #cccccc;
+      font-size: 32rpx;
+    }
+    .tip {
+      color: #999;
+      font-size: 24rpx;
+      margin-top: 20rpx;
+      margin-left: 60rpx;
     }
   }
-  .item_img {
-    width: 42rpx;
-    height: 42rpx;
+  .contact {
+    width: 300rpx;
+    height: 80rpx;
+    margin: 0 auto;
+    position: absolute;
+    text-align: center;
+    line-height: 80rpx;
+    left: 0rpx; // 在客服上面
+    opacity: 0;
+    z-index: 99;
   }
-  .arrow {
-    color: #cccccc;
-    font-size: 32rpx;
-  }
-  .tip {
-    color: #999;
-    font-size: 24rpx;
-    margin-top: 20rpx;
-    margin-left: 60rpx;
-  }
-}
-
-.contact {
-  width: 300rpx;
-  height: 80rpx;
-  margin: 0 auto;
-  position: absolute;
-  text-align: center;
-  line-height: 80rpx;
-  left: 0rpx; // 在客服上面
-  opacity: 0;
-  z-index: 99;
-}
 </style>

@@ -44,6 +44,7 @@
       await this.showLoading();
       let res = await wepy.getSetting();
       if (res.authSetting["scope.userInfo"]) {
+        //console.log("scope.userInfo == "+res.authSetting["scope.userInfo"])
         wepy.switchTab({
           url: "/pages/home"
         });
@@ -68,23 +69,25 @@
               //nickName: e.detail.userInfo.nickName
             }
           });
-          //console.log(rlt);
+
           if (rlt.data.openid != "") {
             let data = rlt.data;
             if (data.openid) {
               let userInfo = e.detail.userInfo
               userInfo.openid = data.openid
-              //console.log(userInfo);
               
               let json = await api.user2session({
                 query:{
                   openId:data.openid,
-                  NickName:userInfo.NickName,
+                  NickName:userInfo.nickName,
                   avatarUrl:userInfo.avatarUrl,
                   gender:userInfo.gender,
                 }
               })
-              wepy.setStorageSync(USER_SPECICAL_INFO, json.data.data);
+
+              let userSpecialInfo = json.data.data
+              userSpecialInfo.openid = data.openid
+              wepy.setStorageSync(USER_SPECICAL_INFO,userSpecialInfo);
               wepy.switchTab({
                 url: "/pages/home"
               });
