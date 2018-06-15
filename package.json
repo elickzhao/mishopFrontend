@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@minui/wxc-abnor": "^1.0.7",
+    "@minui/wxc-dialog": "^1.0.9",
     "@minui/wxc-elip": "^1.0.5",
     "@minui/wxc-flex": "^1.0.5",
     "@minui/wxc-icon": "^1.0.9",

@@ -11,7 +11,10 @@
       <view class="auth-item">环球集市申请获取以下权限：</view>
       <view class="auth-item">获取你的公开信息（头像、昵称等）</view>
       <view class="btn-authorize">
-        <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+        <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+        <view class="fz32" style="color:#EF2F23" wx:else>
+          <button type="warn" lang="zh_CN">请先升级微信版本</button>
+        </view>
       </view>
     </block>
   </view>
@@ -19,6 +22,7 @@
 <script>
   import wepy from "wepy";
   import api from "../api/api";
+  import tip from '../utils/tip'
   import {
     SYSTEM_INFO,
     USER_SPECICAL_INFO,
@@ -38,16 +42,30 @@
     data = {
       $loading: {
         isShow: true
-      }
+      },
+      canIUse: wx.canIUse('button.open-type.getUserInfo')
     };
     async onLoad() {
       await this.showLoading();
       let res = await wepy.getSetting();
       if (res.authSetting["scope.userInfo"]) {
         //console.log("scope.userInfo == "+res.authSetting["scope.userInfo"])
-        wepy.switchTab({
-          url: "/pages/home"
-        });
+        let res = wepy.getSystemInfoSync()
+        //console.log(res)
+        if (res.SDKVersion < "1.7.0") {
+          // let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
+          // dialogComponent && dialogComponent.show();
+          tip.confirm("请升级您的微信,否则小程序某些功能则无法使用")
+        } else {
+          let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
+          if(!wepy.getStorageSync(USER_INFO) || !wepy.getStorageSync(USER_SPECICAL_INFO) || !systemInfo.windowHeight){
+            this.check();
+          }
+
+          wepy.switchTab({
+            url: "/pages/home"
+          });
+        }
       } else {
         wepy.setNavigationBarTitle({
           title: "授权登录"
@@ -56,6 +74,75 @@
         this.$apply();
       }
     }
+    async check(){
+      
+      let userInfo = wepy.getStorageSync(USER_INFO);
+      //老版本兼容
+      if (!userInfo) {
+        console.log("------- userInfo -------")
+        let res = await wepy.getSetting();
+        // 查看是否授权
+        if (res.authSetting["scope.userInfo"]) {
+          //console.log("scope.userInfo == " + res.authSetting["scope.userInfo"]);
+          wx.getUserInfo({
+            success: function(res) {
+              //console.log(res.userInfo)
+              userInfo = res.userInfo;
+              wepy.setStorageSync(USER_INFO, userInfo);
+            }
+          })
+        } else {
+          wepy.redirectTo({
+            url: '/pages/authorize'
+          });
+          //console.log("未获得用户授权")
+          this.$apply();
+        }
+      }
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO);
+      if (!userSpecialInfo) {
+        console.log("------- userSpecialInfo -------")
+        let res = await wepy.login();
+        if (res.code) {
+          let rlt = await api.wxJsCode2Session({
+            query: {
+              code: res.code
+            }
+          });
+          if (rlt.data.openid != "") {
+            let data = rlt.data;
+            if (data.openid) {
+              let json = await api.user2session({
+                query: {
+                  openId: data.openid,
+                  NickName: userInfo.nickName,
+                  avatarUrl: userInfo.avatarUrl,
+                  gender: userInfo.gender,
+                }
+              })
+              userSpecialInfo = json.data.data;
+              userSpecialInfo.openId = data.openid;
+              wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
+            }
+          } else {
+            let res = await wepy.showModal({
+              title: "appid有误",
+              content: "授权失败"
+            });
+          }
+        }
+      }
+
+      let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
+      if(!systemInfo.windowHeight){
+        console.log("------- systemInfo -------")
+        let newInfo = wepy.getSystemInfoSync();
+        newInfo.miniNum = systemInfo.systemInfo;
+        wepy.setStorageSync(SYSTEM_INFO, newInfo);
+      }
+      
+    }
+
     async onGotUserInfo(e) {
       if (e.detail.errMsg == "getUserInfo:ok") {
         let res = await wepy.login();
@@ -69,25 +156,22 @@
               //nickName: e.detail.userInfo.nickName
             }
           });
-
           if (rlt.data.openid != "") {
             let data = rlt.data;
             if (data.openid) {
               let userInfo = e.detail.userInfo
               userInfo.openid = data.openid
-              
               let json = await api.user2session({
-                query:{
-                  openId:data.openid,
-                  NickName:userInfo.nickName,
-                  avatarUrl:userInfo.avatarUrl,
-                  gender:userInfo.gender,
+                query: {
+                  openId: data.openid,
+                  NickName: userInfo.nickName,
+                  avatarUrl: userInfo.avatarUrl,
+                  gender: userInfo.gender,
                 }
               })
-
               let userSpecialInfo = json.data.data
               userSpecialInfo.openid = data.openid
-              wepy.setStorageSync(USER_SPECICAL_INFO,userSpecialInfo);
+              wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
               wepy.switchTab({
                 url: "/pages/home"
               });
