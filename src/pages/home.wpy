@@ -24,18 +24,18 @@
         <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
         <view class="nav_text">签到有礼</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/wholesale?title=新品专区&flag=2">
+      <navigator open-type="navigate" url="/pages/wholesale?title=试用中心&flag=2">
         <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
-        <view class="nav_text">新品专区</view>
+        <view class="nav_text">试用中心</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/wholesale?title=热卖专区&flag=0">
+      <navigator open-type="navigate" url="/pages/wholesale?title=品质奶粉&flag=0">
         <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
-        <view class="nav_text">热卖专区</view>
+        <view class="nav_text">品质奶粉</view>
       </navigator>
       <!-- flag= ['is_hot','type','is_show','is_sale']; -->
-      <navigator open-type="navigate" url="/pages/wholesale?title=推荐专区&flag=1">
+      <navigator open-type="navigate" url="/pages/wholesale?title=明星面膜&flag=1">
         <image src="../images/icon_nav_02.png" class="nav_icon"></image>
-        <view class="nav_text">推荐专区</view>
+        <view class="nav_text">明星面膜</view>
       </navigator>
     </view>
     <!-- 热卖商品 -->

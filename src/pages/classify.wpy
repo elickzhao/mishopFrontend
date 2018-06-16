@@ -165,7 +165,7 @@
     display: flex; 
     //position: relative;
     .classify_catetory {
-      width: 200rpx; 
+      width: 280rpx; 
       position: relative;
       z-index: 1;
       .name {
@@ -189,7 +189,7 @@
       position: relative;
       z-index: 999; // margin-left: -15rpx;
       background: #fff;
-      padding: 15px 10px 10px 30px;
+      padding: 15px 10px 10px 10px;
       .classify_item {}
       .title {
         font-size: 30rpx;

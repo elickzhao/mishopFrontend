@@ -6,7 +6,7 @@
 	}
 	.item {
 		min-width: 32%;
-		min-height: 400rpx;
+		min-height: 300rpx;
 		font-size: 22rpx;
 		text-align: center;
 	}
@@ -39,8 +39,8 @@
 		.image_box {
 			image {
 				width: 100%;
-				height: 300rpx;
-				background: #666;
+				height: 250rpx;
+				background: #FFF;
 			}
 		}
 		.product_name {
@@ -90,7 +90,7 @@
 				<view class="item">
 					<navigator class="scroll-list Shadow" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
 						<view class="image_box">
-							<image src="{{imgUrl}}{{item.photo_x}}"></image>
+							<image mode="aspectFit" src="{{imgUrl}}{{item.photo_x}}"></image>
 						</view>
 						<view class="goods">
 							<view class="product_info">
@@ -104,9 +104,9 @@
 				</view>
 			</block>
 			<view class="item" style="background: #fff;">
-				<navigator class="scroll-list" url="/pages/wholesale?flag=0">
+				<navigator class="scroll-list" url="/pages/wholesale?title=特价专区&flag=3">
 					<view class="image_box">
-						<image style="height: 400rpx;" src="../images/more.png"></image>
+						<image style="height: 350rpx;" src="../images/more.png"></image>
 					</view>
 				</navigator>
 			</view>

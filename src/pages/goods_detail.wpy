@@ -4,8 +4,8 @@
     <!--index.wxml-->
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#FF5588" indicator-color="#efefef" class="swiper">
       <block wx:for="{{detail.img_arr}}" key="item" item="item" wx:key="key">
-        <swiper-item>
-          <image src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
+        <swiper-item style="background-color:#FFF">
+          <image mode="aspectFill" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
         </swiper-item>
       </block>
     </swiper>
