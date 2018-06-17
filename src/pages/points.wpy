@@ -19,7 +19,7 @@
       <view class="left">积分明细</view>
       <!-- <view class="right" @tap="more">查看更多</view> -->
     </view>
-    <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight-165}}px">
+    <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight}}px">
       <!-- 积分记录 -->
       <pointsDetail :is_empty.sync="is_empty" :list.sync="list"></pointsDetail>
     </scroll-view>
@@ -79,11 +79,12 @@ export default class Points extends wepy.page {
 
   onLoad() {
     let that = this;
-    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    //let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    let systemInfo = wepy.getSystemInfoSync();
     let userInfo = wepy.getStorageSync(USER_INFO);
     that.avatarUrl = userInfo.avatarUrl;
     that.nickName = userInfo.nickName;
-    that.winHeight = systemInfo.windowHeight;
+    that.winHeight = systemInfo.windowHeight - 170;
     console.log("winHeight===",that.winHeight);
     that.getUserPoint();
     that.$apply();

@@ -50,22 +50,13 @@
       let res = await wepy.getSetting();
       if (res.authSetting["scope.userInfo"]) {
         //console.log("scope.userInfo == "+res.authSetting["scope.userInfo"])
-        let res = wepy.getSystemInfoSync()
-        //console.log(res)
-        if (res.SDKVersion < "1.7.0") {
-          // let dialogComponent = this.$wxpage.selectComponent('.wxc-dialog')
-          // dialogComponent && dialogComponent.show();
-          tip.confirm("请升级您的微信,否则小程序某些功能则无法使用")
-        } else {
-          let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
-          if(!wepy.getStorageSync(USER_INFO) || !wepy.getStorageSync(USER_SPECICAL_INFO) || !systemInfo.windowHeight){
-            this.check();
-          }
-
-          wepy.switchTab({
-            url: "/pages/home"
-          });
+        let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
+        if (!wepy.getStorageSync(USER_INFO) || !wepy.getStorageSync(USER_SPECICAL_INFO) || !systemInfo.windowHeight) {
+          this.check();
         }
+        wepy.switchTab({
+          url: "/pages/home"
+        });
       } else {
         wepy.setNavigationBarTitle({
           title: "授权登录"
@@ -74,8 +65,7 @@
         this.$apply();
       }
     }
-    async check(){
-      
+    async check() {
       let userInfo = wepy.getStorageSync(USER_INFO);
       //老版本兼容
       if (!userInfo) {
@@ -132,17 +122,14 @@
           }
         }
       }
-
       let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
-      if(!systemInfo.windowHeight){
+      if (!systemInfo.windowHeight) {
         console.log("------- systemInfo -------")
         let newInfo = wepy.getSystemInfoSync();
         newInfo.miniNum = systemInfo.systemInfo;
         wepy.setStorageSync(SYSTEM_INFO, newInfo);
       }
-      
     }
-
     async onGotUserInfo(e) {
       if (e.detail.errMsg == "getUserInfo:ok") {
         let res = await wepy.login();

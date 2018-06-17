@@ -3,7 +3,7 @@
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
-          <image src="{{item.photo}}" class="slide-image" @tap="goToAdvert({{item.link}})" />
+          <image mode="aspectFit" src="{{item.photo}}" class="slide-image" @tap="goToAdvert({{item.link}})" />
         </swiper-item>
       </block>
     </swiper>
@@ -269,7 +269,8 @@
     padding: 30rpx;
   }
   .swiper {
-    height: 348rpx;
+    //height: 348rpx;
+    height: 265rpx;
   }
   .slide-image {
     width: 100%;

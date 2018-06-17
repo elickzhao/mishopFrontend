@@ -124,8 +124,12 @@
       that.getUserFavorite();
       //that.setTitle("我的收藏");
       //设置滚动高度
-      let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
-      that.winHeight = systemInfo.windowHeight;
+      let systemInfo = wepy.getSystemInfoSync();
+      //wepy.getStorageSync(SYSTEM_INFO);
+      //这是权宜之计 暂时这么搞
+      console.log(systemInfo.screenHeight+"-----")
+      //that.winHeight = systemInfo.windowHeight+"200rpx";
+      that.winHeight = systemInfo.screenHeight - systemInfo.statusBarHeight;
       that.$apply();
     }
     computed = {
