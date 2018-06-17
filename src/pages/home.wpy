@@ -40,7 +40,7 @@
     </view>
     <!-- 热卖商品 -->
     <wxc-panel border="{{false}}">
-      <view class="content tc titleFont">热卖商品</view>
+      <view class="content tc titleFont">天天特价</view>
       <scrollXList :list.sync="hotList" :imgUrl.sync="imgUrl"></scrollXList>
     </wxc-panel>
     <!-- /热卖商品 -->
