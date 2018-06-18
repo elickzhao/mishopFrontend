@@ -84,7 +84,7 @@ export default class ShopItemList extends wepy.component {
   methods = {
     refreshList(val){
       if (val==undefined) return;
-      console.log("val.....",val);
+      //console.log("val.....",val);
       this.list = val;
       this.$apply();
     },
@@ -107,8 +107,8 @@ export default class ShopItemList extends wepy.component {
 
   onLoad() {
     this.list=[];
-    console.log("加载list============");
-    console.log(this.list)
+    // console.log("加载list============");
+    // console.log(this.list)
   }
 }
 

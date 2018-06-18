@@ -67,8 +67,9 @@
         <view class="btn type_pick dsh" @tap="completion" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">待收货</view>
         <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{ord.status==10}}" data-id="{{ord.id}}" data-orderSn="{{item.order_sn}}">立即付款</view>
         <!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
-        <view class="btn type_pick dsh" @tap="refund({{ord.id}})" wx:if="{{ord.status==20 || ord.status==30 && ord.back != 1 }}">申请退货</view>
-        <view class="btn type_pick" style="background:#ccc" wx:if="{{ord.back == 1 }}">已申请退货</view>
+        <view class="btn type_pick dsh" @tap="refund({{ord.id}})" wx:if="{{ord.status==20 || ord.status==30 && ord.back == 0 }}">申请退货</view>
+        <view class="btn "  wx:if="{{ord.back == 1 }}">已申请退款</view>
+        <view class="btn "  wx:if="{{ord.back == 2 }}">退款完成</view>
       </view>
     </view>
   </view>

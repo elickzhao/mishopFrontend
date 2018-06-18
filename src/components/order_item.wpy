@@ -21,10 +21,12 @@
               <text class="defult" wx:if="{{item.status==0}}">
               <view class="order_state">待支付</view>
             </text>
-              <view class="order_state" wx:if="{{item.status==0}}">待付款</view>
-              <view class="order_state" wx:if="{{item.status==2 || item.status==1}}">待收货</view>
-              <view class="order_state" wx:if="{{item.status==4}}">已完成</view>
-              <view class="order_state" wx:if="{{item.status==3}}">待评论</view>
+              <view class="order_state" wx:if="{{item.status==10 && item.back==0}}">待付款</view>
+              <view class="order_state" wx:if="{{item.status==20 && item.back==0}}">待付款</view>
+              <view class="order_state" wx:if="{{item.status==30 && item.back==0}}">待收货</view>
+              <view class="order_state" wx:if="{{item.status==50 && item.back==0}}">已完成</view>
+              <view class="order_state" wx:if="{{item.back == 1 }}">退款中</view>
+              <view class="order_state" wx:if="{{item.back == 2}}">退款完成</view>
             </view>
           </view>
           <view class="order_list_center">
@@ -46,7 +48,7 @@
             <view class="btn_group">
               <view class="btn btn_del" @tap="delOrder" data-id="{{item.id}}" wx:if="{{item.status==10 || item.status==4}}">取消订单</view>
               <view class="btn btn_pay" @tap="payMoney" data-id="{{item.id}}" data-orderSn="{{item.order_sn}}" wx:if="{{item.status==10}}">立即付款</view>
-              <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status==30 }}">确认收货</view>
+              <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status==30 && item.back ==0}}">确认收货</view>
             </view>
           </view>
         </view>

@@ -12,8 +12,8 @@
       <view class="list-item">
         <!-- 这个绑定点击有点麻烦 -->
         <!-- <wxc-list wx:for="{{list}}" wx:key="index" class="item" title="{{item.title}}" desc="{{item.slot? '' : item.desc}}" mode="{{index == list.length-1 ? 'none': ''}}" src="{{item.src}}">
-            <view wx:if="{{item.slot && item.desc}}" @tap="myFn(index)" class="desc-highlight">{{item.desc}}</view>
-          </wxc-list> -->
+                <view wx:if="{{item.slot && item.desc}}" @tap="myFn(index)" class="desc-highlight">{{item.desc}}</view>
+              </wxc-list> -->
         <navigator url="/pages/points">
           <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/171226_2kall2je2079dh6ddkgc31d27cce2_38x38.png" title="我的签到积分"></wxc-list>
         </navigator>
@@ -72,52 +72,7 @@
           desc: '',
           slot: false,
           src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_6h37fg4074i3a2l2gb92dbbc15k84_38x38.png'
-        },
-        //  {
-        //   title: '收货地址',
-        //   desc: '',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_00di1ei7f095j8b996icg79kl91kc_38x38.png'
-        // },
-        //  {
-        //   title: '优惠券',
-        //   desc: '满100减20',
-        //   slot: true,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png'
-        // }, 
-        // {
-        //   title: '钱和红包',
-        //   desc: '',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/171011_0acg74g776ig2459c1c6gkge07hch_40x40.png'
-        // }, 
-        // {
-        //   title: '我的消息',
-        //   desc: '和卖家沟通在这里',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_0ea73id6h6926k281cdhia0dg5gdg_38x38.png'
-        // }, 
-        // {
-        //   title: '我的收藏',
-        //   desc: '',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_6h37fg4074i3a2l2gb92dbbc15k84_38x38.png'
-        // }, {
-        //   title: '足迹',
-        //   desc: '',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_00di1ei7f095j8b996icg79kl91kc_38x38.png'
-        // }, {
-        //   title: '我的拼团',
-        //   desc: '',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/170603_55gkg003el4k2jbg2d2ieh030fjcf_38x38.png'
-        // }, {
-        //   title: '充值中心',
-        //   desc: '',
-        //   slot: false,
-        //   src: 'https://s10.mogucdn.com/mlcdn/c45406/180109_26hggaiha8k7blig5k4ihk5k967ii_38x38.png'
-        // }
+        }
       ]
     };
     // async getUserInfo(phone,code) {
@@ -156,7 +111,7 @@
               userInfo = res.userInfo;
               wepy.setStorageSync(USER_INFO, userInfo);
             }
-          });
+          });          
         } else {
           wepy.redirectTo({
             url: "/pages/authorize"
@@ -215,7 +170,7 @@
 <style lang="less">
   .list-wrap {
     width: 100%;
-    background: #efefef;
+    background: #F5F5F5;
     padding-bottom: 30rpx;
     padding-top: 30rpx;
   }
@@ -245,6 +200,7 @@
     height: 260rpx;
     width: 100%;
     .bg1 {
+      width: 100%;
       height: 260rpx;
       position: absolute;
       top: 0;
@@ -276,7 +232,7 @@
   .info_block {
     margin-top: 10rpx;
     .item {
-      border-top: 1rpx solid #dbdbdb;
+      border-top: 1rpx solid #F5F5F5;
       background: #fff;
       padding: 34rpx 28rpx;
       display: flex;
@@ -284,7 +240,7 @@
       justify-content: space-between;
     }
     .item:last-child {
-      border-bottom: 1rpx solid #dbdbdb;
+      border-bottom: 1rpx solid #F5F5F5;
     }
     .item_content {
       display: flex;

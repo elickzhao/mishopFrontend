@@ -11,10 +11,11 @@
       <view class="auth-item">环球集市申请获取以下权限：</view>
       <view class="auth-item">获取你的公开信息（头像、昵称等）</view>
       <view class="btn-authorize">
-        <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
-        <view class="fz32" style="color:#EF2F23" wx:else>
-          <button type="warn" lang="zh_CN">请先升级微信版本</button>
-        </view>
+        <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+        <!-- <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+            <view class="fz32" style="color:#EF2F23" wx:else>
+              <button type="warn" lang="zh_CN">请先升级微信版本</button>
+            </view> -->
       </view>
     </block>
   </view>
@@ -43,7 +44,7 @@
       $loading: {
         isShow: true
       },
-      canIUse: wx.canIUse('button.open-type.getUserInfo')
+      //canIUse: wx.canIUse('button.open-type.getUserInfo')
     };
     async onLoad() {
       await this.showLoading();
@@ -73,7 +74,8 @@
         let res = await wepy.getSetting();
         // 查看是否授权
         if (res.authSetting["scope.userInfo"]) {
-          //console.log("scope.userInfo == " + res.authSetting["scope.userInfo"]);
+          console.log("scope.userInfo == " + res.authSetting["scope.userInfo"]);
+          //这么写是正确的不能改
           wx.getUserInfo({
             success: function(res) {
               //console.log(res.userInfo)

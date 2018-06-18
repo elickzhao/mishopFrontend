@@ -25,6 +25,7 @@
     "@minui/wxc-loadmore": "^1.0.5",
     "@minui/wxc-panel": "^1.0.1",
     "@minui/wxc-price": "^1.0.8",
+    "@minui/wxc-tab": "^1.0.8",
     "promise-polyfill": "^6.0.2",
     "wepy": "^1.5.7",
     "wepy-async-function": "^1.4.6",

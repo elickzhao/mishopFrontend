@@ -67,34 +67,34 @@
       //防止重复加载
       preventRepeatReuqest: false
     }
-    async getGoodList(currentPage, size) {
-      let that = this;
-      const json = await api.getGoodsList({
-        query: {
-          page: currentPage || 1,
-          locationFlag: that.flag, //促销分类
-        }
-      });
-      //console.log(json.data);
-      if (json.data.code == 0) {
-        that.list = [...that.list, ...json.data.list];
-        that.page_total = json.data.page_total;
-        if (that.page_total == 0) {
-          that.is_end = true;
-          //暂无数据
-          that.is_empty = true;
-        }
-      } else {
-        tip.error(json.data.msg);
-      }
-      that.showLoading = false;
-      that.$apply();
-    }
-    onAbnorTap() {
-      wepy.switchTab({
-        url: 'home'
-      })
-    }
+    // async getGoodList(currentPage, size) {
+    //   let that = this;
+    //   const json = await api.getGoodsList({
+    //     query: {
+    //       page: currentPage || 1,
+    //       locationFlag: that.flag, //促销分类
+    //     }
+    //   });
+    //   //console.log(json.data);
+    //   if (json.data.code == 0) {
+    //     that.list = [...that.list, ...json.data.list];
+    //     that.page_total = json.data.page_total;
+    //     if (that.page_total == 0) {
+    //       that.is_end = true;
+    //       //暂无数据
+    //       that.is_empty = true;
+    //     }
+    //   } else {
+    //     tip.error(json.data.msg);
+    //   }
+    //   that.showLoading = false;
+    //   that.$apply();
+    // }
+    // onAbnorTap() {
+    //   wepy.switchTab({
+    //     url: 'home'
+    //   })
+    // }
     async doSearchGoods(currentPage, size) {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
@@ -110,18 +110,18 @@
       if (json.data.code == 0) {
         that.list = [...that.list, ...json.data.list];
         that.page_total = json.data.page_total;
-        if (json.data.page_total == 0) {
-          //暂无数据
-          that.is_empty = true;
+        // if (json.data.page_total == 0) {
+        //   //暂无数据
+        //   that.is_empty = true;
+        // }
+        if (that.page_total == 1) {
+          that.is_end = true
+        }
+        if (that.list.length < 1) {
+          that.is_empty = true
         }
       } else {
         tip.error(json.data.msg);
-      }
-      if (that.page_total == 1) {
-        that.is_end = true
-      }
-      if (that.list.length < 1) {
-        that.is_empty = true
       }
       that.showLoading = false;
       that.$apply();
