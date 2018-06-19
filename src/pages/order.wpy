@@ -112,6 +112,7 @@
       that.orderList = [];
       that.currentTab = opts.type;
       //设置滚动高度
+      //let systemInfo = wepy.getSystemInfoSync();  //针对开发时的模拟机 因为可以切换屏幕 所以造成高度不一样
       let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
       that.winHeight = systemInfo.windowHeight;
       that.$apply();

@@ -5,7 +5,7 @@
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#FF5588" indicator-color="#efefef" class="swiper">
       <block wx:for="{{detail.img_arr}}" key="item" item="item" wx:key="key">
         <swiper-item style="background-color:#FFF">
-          <image mode="aspectFill" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
+          <image mode="aspectFit" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
         </swiper-item>
       </block>
     </swiper>
@@ -605,7 +605,7 @@
   }
   /*----------  /解决解析图片缝隙的问题  ----------*/
   .swiper {
-    height: 662rpx;
+    height: 750rpx;
   }
   .slide-image {
     width: 100%;
