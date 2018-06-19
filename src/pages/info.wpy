@@ -12,8 +12,8 @@
       <view class="list-item">
         <!-- 这个绑定点击有点麻烦 -->
         <!-- <wxc-list wx:for="{{list}}" wx:key="index" class="item" title="{{item.title}}" desc="{{item.slot? '' : item.desc}}" mode="{{index == list.length-1 ? 'none': ''}}" src="{{item.src}}">
-                <view wx:if="{{item.slot && item.desc}}" @tap="myFn(index)" class="desc-highlight">{{item.desc}}</view>
-              </wxc-list> -->
+                  <view wx:if="{{item.slot && item.desc}}" @tap="myFn(index)" class="desc-highlight">{{item.desc}}</view>
+                </wxc-list> -->
         <navigator url="/pages/points">
           <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/171226_2kall2je2079dh6ddkgc31d27cce2_38x38.png" title="我的签到积分"></wxc-list>
         </navigator>
@@ -99,6 +99,8 @@
     async onLoad() {
       let that = this;
       let userInfo = wepy.getStorageSync(USER_INFO);
+      // console.log("userINFO->>>>>>" + userInfo);
+      // console.log(userInfo);
       //老版本兼容
       if (!userInfo) {
         let res = await wepy.getSetting();
@@ -111,7 +113,7 @@
               userInfo = res.userInfo;
               wepy.setStorageSync(USER_INFO, userInfo);
             }
-          });          
+          });
         } else {
           wepy.redirectTo({
             url: "/pages/authorize"
@@ -129,7 +131,10 @@
               code: res.code
             }
           });
+          //console.log(rlt)
           if (rlt.data.openid != "") {
+            // console.log("--------  rlt.data  ========  ")
+            // console.log(rlt.data)
             let data = rlt.data;
             if (data.openid) {
               let json = await api.user2session({
@@ -140,9 +145,16 @@
                   gender: userInfo.gender
                 }
               });
-              userSpecialInfo = json.data.data;
-              userSpecialInfo.openId = data.openid;
-              wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
+              //console.log(json);
+              if (json.data.code == 0) {
+                userSpecialInfo = json.data.data;
+                //console.log(userSpecialInfo);
+                userSpecialInfo.openId = data.openid;
+                //console.log(userSpecialInfo);
+                wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
+              } else {
+                console.log(json.data.msg);
+              }
             }
           } else {
             let res = await wepy.showModal({

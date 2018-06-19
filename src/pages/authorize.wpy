@@ -13,9 +13,9 @@
       <view class="btn-authorize">
         <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
         <!-- <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
-            <view class="fz32" style="color:#EF2F23" wx:else>
-              <button type="warn" lang="zh_CN">请先升级微信版本</button>
-            </view> -->
+                <view class="fz32" style="color:#EF2F23" wx:else>
+                  <button type="warn" lang="zh_CN">请先升级微信版本</button>
+                </view> -->
       </view>
     </block>
   </view>
@@ -52,9 +52,14 @@
       if (res.authSetting["scope.userInfo"]) {
         //console.log("scope.userInfo == "+res.authSetting["scope.userInfo"])
         let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
+        // console.log("权限检查 userinfo")
+        // console.log(wepy.getStorageSync(USER_INFO))
+        // console.log(wepy.getStorageSync(USER_SPECICAL_INFO))
         if (!wepy.getStorageSync(USER_INFO) || !wepy.getStorageSync(USER_SPECICAL_INFO) || !systemInfo.windowHeight) {
-          this.check();
+         // console.log("老版本兼容 授权检查----------------------");
+          await this.check();
         }
+        //console.log("未曾检查就跳过了.............")
         wepy.switchTab({
           url: "/pages/home"
         });
@@ -128,7 +133,7 @@
       if (!systemInfo.windowHeight) {
         console.log("------- systemInfo -------")
         let newInfo = wepy.getSystemInfoSync();
-        newInfo.miniNum = systemInfo.systemInfo;
+        newInfo.miniNum = systemInfo.miniNum;
         wepy.setStorageSync(SYSTEM_INFO, newInfo);
       }
     }
@@ -176,7 +181,18 @@
               });
             }
           }
+        } else {
+          let res = await wepy.showModal({
+            title: "登录失败",
+            content: res.errMsg
+          });
         }
+      } else {
+        let res = await wepy.showModal({
+          title: "授权失败",
+          content: "拒绝授权,将无法使用小程序!"
+        });
+        console.log(e.detail.errMsg);
       }
     }
     showLoading() {
