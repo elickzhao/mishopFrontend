@@ -90,11 +90,11 @@
     //   that.showLoading = false;
     //   that.$apply();
     // }
-    // onAbnorTap() {
-    //   wepy.switchTab({
-    //     url: 'home'
-    //   })
-    // }
+    onAbnorTap() {
+      wepy.switchTab({
+        url: 'home'
+      })
+    }
     async doSearchGoods(currentPage, size) {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};

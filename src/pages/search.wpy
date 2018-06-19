@@ -13,8 +13,8 @@
       </view>
       <!-- <view class="weui-search-bar__cancel-btn" bindtap="hideInput">搜索</view> -->
       <button size='mini' id="searchBtn" bindtap="doSearch">
-                    搜索
-                  </button>
+                                    搜索
+                                  </button>
     </view>
     <view class="{{show?'mt100':''}}">
       <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
@@ -25,23 +25,27 @@
       <view style="background: #f5f5f5;">
         <wxc-loadmore is-end="{{is_end}}" text="{{loadMsg}}" icon="{{true}}"></wxc-loadmore>
       </view>
-      <!--加载更多时动画-->
-      <!-- <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore> -->
-      <!--暂无数据显示-->
-      <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
+    </view>
+    <view wx:elif="{{is_empty}}" style="height: 600rpx;overflow:hidden;">
+      <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
     </view>
     <view class=" {{show?'':'hidden'}}" wx:else>
-      <view class="cont mt100">
-        <block wx:if="{{historyKeyList.length}}">
-          <text class="font_14">历史搜索</text> <text class="fz24" bindtap="clearHistory" style='float:right;margin-top:15rpx;color:#989898'>清除</text>
+      <block wx:if="{{!is_empty}}">
+        <view class="cont mt100">
+          <block wx:if="{{historyKeyList.length}}">
+            <text class="font_14">历史搜索</text> <text class="fz24" bindtap="clearHistory" style='float:right;margin-top:15rpx;color:#989898'>清除</text>
+            <view class="w100">
+              <button wx:for="{{historyKeyList}}" wx:key="*this" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
+            </view>
+          </block>
+          <text class="font_14">热门搜索</text>
           <view class="w100">
-            <button wx:for="{{historyKeyList}}" wx:key="*this" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
+            <button wx:for="{{hotKeyList}}" wx:key="*this" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
           </view>
-        </block>
-        <text class="font_14">热门搜索</text>
-        <view class="w100">
-          <button wx:for="{{hotKeyList}}" wx:key="*this" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
         </view>
+      </block>
+      <view wx:if="{{is_empty}}" style="height: 600rpx;overflow:hidden;">
+        <wxc-abnor type="SEARCH" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
       </view>
     </view>
   </view>
@@ -69,7 +73,8 @@
         "wxc-flex": "../../packages/@minui/wxc-flex/dist/index",
         "wxc-label": "../../packages/@minui/wxc-label/dist/index",
         "wxc-price": "../../packages/@minui/wxc-price/dist/index",
-        "wxc-loadmore": "../../packages/@minui/wxc-loadmore/dist/index"
+        "wxc-loadmore": "../../packages/@minui/wxc-loadmore/dist/index",
+        'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
       }
     };
     components = {
@@ -160,6 +165,9 @@
           //暂无数据
           that.is_empty = true;
         }
+        if (that.page_total == 1) {
+          that.is_end = true
+        }
       } else {
         tip.error(json.data.msg);
       }
@@ -213,6 +221,11 @@
         this.getHotKeyList();
       }
     }
+    onAbnorTap() {
+      wepy.switchTab({
+        url: 'home'
+      })
+    }
     onShow() {
       //console.log(this.show)
     }
@@ -231,6 +244,7 @@
         this.$apply();
       },
       clearInput() {
+        this.is_empty = false;
         this.keyword = '';
         this.$apply();
       },
@@ -239,7 +253,7 @@
         this.is_empty = false;
         //tip.success("搜索：" + val);
         this.showLoading = true;
-        if(typeof(val) == "string"){
+        if (typeof(val) == "string") {
           this.keyword = val;
         }
         //console.log(typeof(val))
@@ -344,9 +358,7 @@
     color: #fff;
     left: -5rpx;
   }
-  page {
-    background: #fff;
-  }
+
   .cont {
     width: 94%;
     padding: 3%;

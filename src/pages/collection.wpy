@@ -164,6 +164,11 @@
     }
     computed = {}
     methods = {
+      onAbnorTap() {
+        wepy.switchTab({
+          url: 'home'
+        })
+      }
       // getCurrentTab(cur, evt) {
       //   this.currentPage = 1;
       //   this.page_total = 0;
@@ -223,7 +228,7 @@
         that.loadMsg = "正在努力加载中...";
       } else {
         that.showLoading = false;
-                that.is_end = true;
+        that.is_end = true;
         that.loadMsg = "到底了～";
       }
     };
