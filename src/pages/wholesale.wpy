@@ -126,7 +126,7 @@
       that.showLoading = false;
       that.$apply();
     }
-    async onLoad(options) {
+    onLoad(options) {
       let that = this;
       that.list = [];
       this.imgUrl = this.$parent.globalData.imgUrl;

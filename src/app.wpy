@@ -85,6 +85,7 @@
       }
     };
     globalData = {
+      hostUrl: "https://small.huanqiujishi.com",
       imgUrl: "https://small.huanqiujishi.com/Data/",
       miniNum: "68"
     };
@@ -98,18 +99,24 @@
       // 用这个不用globalData的原因是不用每次启动都请求了
       // globalData适合写死的数据
       let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
-      if (!systemInfo.miniNum) {
-        let json = await api.getMiniNum({
-          query: {}
-        });
-        if (json.data.code == 0) {
-          systemInfo.miniNum = json.data.data.minimum; //XXX  注意这里曾经的拼写错误 因为老版还在用暂时没改
-          this.miniNum = json.data.data.minimum;
-          wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-          //console.log(systemInfo)
-        } else {
-          console.log(json.data.msg);
-        }
+      //不能做判断 因为起送费随时会改
+      //if (!systemInfo.miniNum) {
+      let json = await api.getMiniNum({
+        query: {}
+      });
+      if (json.data.code == 0) {
+        systemInfo.miniNum = json.data.data.minimum; //XXX  注意这里曾经的拼写错误 因为老版还在用暂时没改
+        this.miniNum = json.data.data.minimum;
+        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+        //console.log(systemInfo)
+      } else {
+        console.log(json.data.msg);
+      }
+      //}
+      if (!systemInfo.hostUrl || !systemInfo.imgUrl) {
+        systemInfo.imgUrl = this.globalData.imgUrl;
+        systemInfo.hostUrl = this.globalData.hostUrl;
+        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
       }
     }
   }

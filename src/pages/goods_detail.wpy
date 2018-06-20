@@ -14,8 +14,8 @@
       <view class="details_pinfo">
         <text class="price">￥{{detail.price_yh}}</text>
         <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
-                                    <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-                                  </view> -->
+                                      <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+                                    </view> -->
         <view class="other-price c999">卖场价:
           <wxc-price status="del" del-color="#999">{{detail.price}}</wxc-price>
         </view>
@@ -242,7 +242,6 @@
         }
       });
       let time = {};
-      //XXXX 记得删除
       //console.log(json.data.data);
       if (json.data.code == 0) {
         let data = json.data.data;
@@ -277,6 +276,12 @@
       } else {
         if (json.data.msg) {
           tip.error(json.data.msg);
+          //XXX 还未测试
+          setTimeout(() => {
+            wepy.navigateBack({
+              delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+            });
+          }, 1000);
         } else {
           tip.error("查看商品失败");
         }
