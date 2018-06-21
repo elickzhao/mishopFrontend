@@ -34,10 +34,10 @@
             <view class="goods-label">数量: x {{item.num}}</view>
             <view class="goods-price">¥ {{item.price_yh}}</view>
             <!-- <view class="buy-num">
-                                  <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-                                  <input type="number" value="{{item.num}}" disabled/>
-                                  <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
-                                </view> -->
+                                    <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
+                                    <input type="number" value="{{item.num}}" disabled/>
+                                    <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
+                                  </view> -->
           </view>
         </view>
         <!-- </swipeDelete> -->
@@ -57,10 +57,10 @@
         </view>
       </view>
       <!-- <view class="spacing"></view>
-                          <view class="block">
-                            <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
-                            <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
-                          </view> -->
+                            <view class="block">
+                              <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
+                              <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
+                            </view> -->
       <view class="spacing"></view>
       <view class="block">
         <view class="left tongji">商品金额</view>
@@ -75,7 +75,7 @@
         <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
       </block>
       <block wx:else>
-        <button form-type="submit" class="button">满 {{miniNum}} 元起送</button>
+        <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
       </block>
       <br/>
       <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
@@ -213,7 +213,7 @@
     onLoad(option) {
       let that = this;
       this.cartId = option.ids,
-      this.actualPrice = 0;
+        this.actualPrice = 0;
       this.totalPrice = 0;
       this.total_jf_num = 0;
       this.can_use_score = 0;
@@ -395,9 +395,9 @@
     //   this.$apply();
     // }
     methods = {
-      handleDelItem(itemData) {
-        this.deleteGoods(itemData);
-      },
+      // handleDelItem(itemData) {
+      //   this.deleteGoods(itemData);
+      // },
       bindKeyInput(e) {
         this.sellerMessage = e.detail.value;
         //console.log("====" + e.detail.value);
@@ -462,33 +462,33 @@
       //   this.$apply();*/
       //   this.addGoodNum(id, num, index);
       // },
-    //   jfInput(e) {
-    //     let num = e.detail.value * 10 / 10;
-    //     let reg = /^[0-9]+$/;
-    //     if (!reg.test(num)) {
-    //       tip.error("输入类型有误");
-    //       this.jf_num = "";
-    //       return {
-    //         value: ""
-    //       };;
-    //     }
-    //     if (this.can_use_score != num && num != 0) {
-    //       this.jf_num = this.can_use_score;
-    //     }
-    //     /* else if(parseInt(this.jf_num)%this.deduScore) {
-    //             this.jf_num = Math.floor(parseInt(this.jf_num)/this.deduScore)*this.deduScore;
-    //           }*/
-    //     else {
-    //       this.jf_num = num;
-    //     }
-    //     let beishu = this.jf_num / this.deduScore;
-    //     this.reduce_fee = beishu * this.deduFee;
-    //     this.actualPrice = this.totalPrice - this.reduce_fee;
-    //     return {
-    //       value: this.jf_num
-    //     };
-    //   }
-    // }
+      // jfInput(e) {
+      //   let num = e.detail.value * 10 / 10;
+      //   let reg = /^[0-9]+$/;
+      //   if (!reg.test(num)) {
+      //     tip.error("输入类型有误");
+      //     this.jf_num = "";
+      //     return {
+      //       value: ""
+      //     };;
+      //   }
+      //   if (this.can_use_score != num && num != 0) {
+      //     this.jf_num = this.can_use_score;
+      //   }
+      //   /* else if(parseInt(this.jf_num)%this.deduScore) {
+      //           this.jf_num = Math.floor(parseInt(this.jf_num)/this.deduScore)*this.deduScore;
+      //         }*/
+      //   else {
+      //     this.jf_num = num;
+      //   }
+      //   let beishu = this.jf_num / this.deduScore;
+      //   this.reduce_fee = beishu * this.deduFee;
+      //   this.actualPrice = this.totalPrice - this.reduce_fee;
+      //   return {
+      //     value: this.jf_num
+      //   };
+      // }
+    }
     events = {}
   }
 </script>
