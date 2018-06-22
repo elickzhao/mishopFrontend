@@ -6,9 +6,9 @@
           <view class="address_list" @tap="tapSelAddress" data-id="{{item.id}}">
             <view class="title">
               <!-- <view class="user_info">
-                  <text class="name">{{item.name}}</text>
-                  <text class="phone">{{item.tel}}</text>
-                </view> -->
+                                <text class="name">{{item.name}}</text>
+                                <text class="phone">{{item.tel}}</text>
+                              </view> -->
               <view class="address-name-phone">
                 <text class="address-name">{{item.name}}</text>
                 <text class="address-phone">{{item.tel}}</text>
@@ -23,8 +23,11 @@
       </view>
     </repeat>
   </view>
+  <view class="add_wrap2">
+    <view wx:if="{{addressList.length < 1}}" class="button type_green" @tap="addwechat">使用微信地址</view>
+  </view>
   <view class="add_wrap">
-    <view class="button type_red" @tap="add">新增地址</view>
+    <view class="button type_red mt10" @tap="add">新增地址</view>
   </view>
 </template>
 
@@ -61,7 +64,7 @@
       let uid = userSpecialInfo.ID;
       const json = await api.delUserAddress({
         query: {
-          uid:uid,
+          uid: uid,
           id: id
         }
       });
@@ -74,10 +77,115 @@
       }
       that.showLoading = false;
     }
+    // async addAddress() {
+    //   let that = this;
+    //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    //   let uid = userSpecialInfo.ID;    
+      
+    //   console.log("微信地址..........................."+uid )
+    //   wx.chooseAddress({
+    //     success: function(res) {
+    //       // console.log("微信地址...........................")
+    //       // console.log(res)
+    //       const json = await api.saveAddress({
+    //         query: {
+    //           uid: uid,
+    //           receiver: res.userName,
+    //           tel: res.telNumber,
+    //           sheng: res.provinceName,
+    //           city: res.cityName,
+    //           quyu: res.countyName,
+    //           adds: res.detailInfo,
+    //           code: res.postalCode,
+    //         }
+    //       });
+    //       // console.log(json)
+    //       // console.log("上面是");
+    //       if (json.data.code == 0) {
+    //         wx.showToast({
+    //           title: '保存成功！',
+    //           duration: 2000
+    //         });
+    //       } else {
+    //         //console.log(json.data.msg)
+    //         tip.error(json.data.msg)
+    //         wx.showToast({
+    //           title: json.data.msg,
+    //           duration: 5000
+    //         });
+    //       }
+    //       that.showLoading = false;
+    //     },
+    //     fail: function() {
+    //       // fail
+    //       tip.error("网络异常！")
+    //       wx.showToast({
+    //         title: '网络异常！',
+    //         duration: 2000
+    //       });
+    //     }
+    //   });
+    // }
+    addAddress() {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;          
+      wx.chooseAddress({
+          success: function (res) {
+            wx.request({
+              url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
+              data: {
+                user_id: uid,
+                receiver: res.userName,
+                tel: res.telNumber,
+                sheng: res.provinceName,
+                city: res.cityName,
+                quyu: res.countyName,
+                adds: res.detailInfo,
+                code: res.postalCode,
+              },
+              method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+              header: {// 设置请求的 header
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              success: function (res) {
+                // success
+                var status = res.data.status;
+                if (status == 1) {
+                  wx.showToast({
+                    title: '保存成功！',
+                    duration: 2000
+                  });
+                  //that.loadProductDetail();
+                } else {
+                  console.log(res.data.err);
+                  wx.showToast({
+                    title: res.data.err,
+                    duration: 5000
+                  });
+                }
+                // wx.redirectTo({
+                //   url: 'user-address/user-address?cartId=' + cartId
+                // });
+              },
+              fail: function () {
+                // fail
+                wx.showToast({
+                  title: '网络异常！',
+                  duration: 2000
+                });
+              }
+            })
+          }
+        })
+    }
     methods = {
       add() {
         //0 列表 1新增 2编辑
         this.$emit('currentPage', 1);
+      },
+      addwechat() {
+        this.addAddress();
       },
       edit(e) {
         var id = e.currentTarget.dataset.id;
@@ -112,8 +220,7 @@
         })
       }
     }
-    onLoad() {
-    }
+    onLoad() {}
   }
 </script>
 
@@ -160,6 +267,15 @@
     right: 0;
     position: absolute;
     bottom: 20rpx;
+    margin: 0 auto;
+  }
+  .add_wrap2 {
+    display: block;
+    width: 95%;
+    left: 0;
+    right: 0;
+    position: absolute;
+    bottom: 130rpx;
     margin: 0 auto;
   }
   .address-name-phone {

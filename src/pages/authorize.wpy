@@ -240,6 +240,11 @@
   }
   .bg-img {
     background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg);
-    background-size: cover
+    background-repeat:no-repeat; 
+    background-size:100% 100%;
+    padding-top: 0rpx;
+    // -moz-background-size:100% 100%;
+    // -webkit-background-size: 100% 100%;  
+    //background-size: cover
   }
 </style>

@@ -98,7 +98,7 @@
           </view>
           <view class="product_wrap">
             <view class="product_name">{{detail.name}}</view>
-            <view class="price">￥ {{detail.price}}</view>
+            <view class="price">￥ {{detail.price_yh}}</view>
           </view>
         </view>
         <scroll-view scroll-y="true" style="height:400rpx">
@@ -276,7 +276,6 @@
       } else {
         if (json.data.msg) {
           tip.error(json.data.msg);
-          //XXX 还未测试
           setTimeout(() => {
             wepy.navigateBack({
               delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,

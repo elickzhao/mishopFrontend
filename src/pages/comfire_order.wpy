@@ -34,10 +34,10 @@
             <view class="goods-label">数量: x {{item.num}}</view>
             <view class="goods-price">¥ {{item.price_yh}}</view>
             <!-- <view class="buy-num">
-                                    <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-                                    <input type="number" value="{{item.num}}" disabled/>
-                                    <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
-                                  </view> -->
+                                      <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
+                                      <input type="number" value="{{item.num}}" disabled/>
+                                      <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
+                                    </view> -->
           </view>
         </view>
         <!-- </swipeDelete> -->
@@ -57,10 +57,10 @@
         </view>
       </view>
       <!-- <view class="spacing"></view>
-                            <view class="block">
-                              <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
-                              <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
-                            </view> -->
+                              <view class="block">
+                                <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
+                                <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
+                              </view> -->
       <view class="spacing"></view>
       <view class="block">
         <view class="left tongji">商品金额</view>
@@ -94,13 +94,9 @@
     USER_SPECICAL_INFO,
     ADDRESS_ID
   } from '../utils/constant';
-  import swipeDelete from '../components/common/wepy-swipe-delete'
   export default class ComfireOrder extends wepy.page {
     config = {
       navigationBarTitleText: '确认订单',
-    }
-    components = {
-      swipeDelete
     }
     data = {
       miniNum: 0,
@@ -132,7 +128,7 @@
     //获取订单详情
     async getOrderDetailInfo() {
       let that = this;
-      console.log(this.cartId)
+      //console.log(this.cartId)
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
       let uid = userSpecialInfo.ID;
       const json = await api.preOrder({
@@ -141,15 +137,16 @@
           cart_id: that.cartId
         }
       });
-      console.log(json)
+      //console.log(json)
       if (json.data.code == 0) {
         let data = json.data;
+        let aid = data.adds ? data.adds.id : "";
         this.list = data.list;
         this.totalPrice = data.price;
         this.actualPrice = data.price.toFixed(2);
         this.is_exit_address = data.addemt;
         this.address = data.adds;
-        this.onLoadAddressID = data.adds.id;
+        this.onLoadAddressID = aid;
         // this.total_jf_num = data.userScore;
         // this.can_use_score = data.canUseScore;
         // this.deduScore = data.deduScore;
@@ -177,7 +174,11 @@
         this.is_exit_address = true;
         this.address = adress;
       } else {
-        tip.error(json.data.msg)
+        if (json.data.code == 1) {
+          tip.error(json.data.msg)
+        } else {
+          console.log(json.data.msg);
+        }
       }
       that.$apply();
     }
@@ -394,6 +395,61 @@
     //   }
     //   this.$apply();
     // }
+    addAddress() {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
+      wx.chooseAddress({
+        success: function(res) {
+          wx.request({
+            url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
+            data: {
+              user_id: uid,
+              receiver: res.userName,
+              tel: res.telNumber,
+              sheng: res.provinceName,
+              city: res.cityName,
+              quyu: res.countyName,
+              adds: res.detailInfo,
+              code: res.postalCode,
+            },
+            method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            header: { // 设置请求的 header
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            success: function(res) {
+              // success
+              var status = res.data.status;
+              console.log(res)
+              if (status == 1) {
+                that.getAddressInfo(res.data.add_arr.addr_id)
+                // wx.showToast({
+                //   title: '保存成功！',
+                //   duration: 2000
+                // });
+                //that.loadProductDetail();
+              } else {
+                console.log(res.data.err);
+                wx.showToast({
+                  title: res.data.err,
+                  duration: 5000
+                });
+              }
+              // wx.redirectTo({
+              //   url: 'user-address/user-address?cartId=' + cartId
+              // });
+            },
+            fail: function() {
+              // fail
+              wx.showToast({
+                title: '网络异常！',
+                duration: 2000
+              });
+            }
+          })
+        }
+      })
+    }
     methods = {
       // handleDelItem(itemData) {
       //   this.deleteGoods(itemData);
@@ -408,9 +464,11 @@
         this.paytype = e
         if (!this.is_exit_address) {
           await tip.confirm('你未设置收货地址，请设置地址');
-          wepy.navigateTo({
-            url: "/pages/address?type=order"
-          })
+          this.addAddress()
+          // wepy.navigateTo({
+          //   url: "/pages/address?type=order"
+          // })
+          //getAddressInfo
           return false;
         }
         //这个是为了查看支付成功页面做的
