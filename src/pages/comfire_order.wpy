@@ -1,26 +1,31 @@
 <!--确认订单-->
 <template>
   <view class="comfire_order">
-    <view class="address" @tap="setAddress">
-      <view class="empty_address" wx:if="{{!is_exit_address}}">
-        <view class="title">设置收货地址</view>
-        <view class="arrow">&gt;</view>
-      </view>
-      <view class="address_info" wx:else>
-        <view class="title">
-          <view class="address-name-phone">
-            <text class="address-name">收货人: {{address.name}}</text>
-            <text class="address-phone">{{address.tel}}</text>
+    <!-- <view class="address" @tap="setAddress">
+          <view class="empty_address" wx:if="{{!is_exit_address}}">
+            <view class="title">设置收货地址</view>
+            <view class="arrow">&gt;</view>
           </view>
-          <view class="active_address">
-            <text class="defult" wx:if="{{address.is_default==1}}"> [默认]</text> {{address.address_xq}}
+          <view class="address_info" wx:else>
+            <view class="title">
+              <view class="address-name-phone">
+                <text class="address-name">收货人: {{address.name}}</text>
+                <text class="address-phone">{{address.tel}}</text>
+              </view>
+              <view class="active_address">
+                <text class="defult" wx:if="{{address.is_default==1}}"> [默认]</text> {{address.address_xq}}
+              </view>
+            </view>
+            <view class="arrow">&gt;</view>
           </view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </view>
-    </view>
+          <image class="hr" src="http://img.leshare.shop/shop/other/address-hr.png" />
+        </view> -->
+    <!-- 新收货地址 -->
+    <!-- XXX 在这里 -->
+    <address :address.sync="address" :is_exit_address.sync="is_exit_address"></address>
+    <!-- /新收货地址 -->
     <view class="spacing"></view>
-    <view class="goodsList">
+    <view class="{{is_exit_address ? 'goodsList1' : 'goodsList'}} ">
       <!--列表显示2个，绑定数据记得去掉，这里做调试-->
       <repeat for="{{list}}" key="index" index="index" item="item">
         <!-- <view class="list_box"> -->
@@ -34,15 +39,19 @@
             <view class="goods-label">数量: x {{item.num}}</view>
             <view class="goods-price">¥ {{item.price_yh}}</view>
             <!-- <view class="buy-num">
-                                      <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-                                      <input type="number" value="{{item.num}}" disabled/>
-                                      <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
-                                    </view> -->
+                                                <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
+                                                <input type="number" value="{{item.num}}" disabled/>
+                                                <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
+                                              </view> -->
           </view>
         </view>
         <!-- </swipeDelete> -->
         <!-- </view> -->
       </repeat>
+      <wxc-panel margin="{{false}}">
+        <view class="content">
+          <text space="ensp">共 {{list.length}} 件商品  合计:</text> <text class="totalPrice"> ￥{{totalPrice}}</text></view>
+      </wxc-panel>
     </view>
     <view class="spacing"></view>
     <view class="order_info">
@@ -57,10 +66,10 @@
         </view>
       </view>
       <!-- <view class="spacing"></view>
-                              <view class="block">
-                                <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
-                                <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
-                              </view> -->
+                                        <view class="block">
+                                          <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
+                                          <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
+                                        </view> -->
       <view class="spacing"></view>
       <view class="block">
         <view class="left tongji">商品金额</view>
@@ -71,7 +80,7 @@
       </view>
     </view>
     <view class="pay_box">
-      <block wx:if="{{totalPrice > miniNum}}">
+      <block wx:if="{{totalNum > miniNum}}">
         <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
       </block>
       <block wx:else>
@@ -86,17 +95,28 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import api from '../api/api';
-  import tip from '../utils/tip';
+  import wepy from "wepy";
+  import api from "../api/api";
+  import tip from "../utils/tip";
+  import Adress from "../components/address";
   import {
     SYSTEM_INFO,
     USER_SPECICAL_INFO,
     ADDRESS_ID
-  } from '../utils/constant';
+  } from "../utils/constant";
   export default class ComfireOrder extends wepy.page {
     config = {
-      navigationBarTitleText: '确认订单',
+      navigationBarTitleText: "确认订单",
+      usingComponents: {
+        "wxc-flex": "../../packages/@minui/wxc-flex/dist/index",
+        "wxc-icon": "../../packages/@minui/wxc-icon/dist/index",
+        "wxc-list": "../../packages/@minui/wxc-list/dist/index",
+        "wxc-panel": "../../packages/@minui/wxc-panel/dist/index",
+      }
+    };
+    components = {
+      // discover: Discover,
+      address: Adress,
     }
     data = {
       miniNum: 0,
@@ -112,6 +132,7 @@
       is_exit_address: false,
       address: {},
       //总价
+      totalNum: 0,
       totalPrice: 0,
       actualPrice: 0,
       purchaseType: 1,
@@ -124,7 +145,7 @@
       jf_num: 0,
       reduce_fee: 0,
       operating: false
-    }
+    };
     //获取订单详情
     async getOrderDetailInfo() {
       let that = this;
@@ -142,7 +163,8 @@
         let data = json.data;
         let aid = data.adds ? data.adds.id : "";
         this.list = data.list;
-        this.totalPrice = data.price;
+        this.totalPrice = data.price.toFixed(2);
+        this.totalNum = data.price;
         this.actualPrice = data.price.toFixed(2);
         this.is_exit_address = data.addemt;
         this.address = data.adds;
@@ -154,13 +176,13 @@
         // this.jf_num = data.canUseScore;
         // this.reduce_fee = data.reduceFee;
       } else {
-        tip.error(json.data.msg)
-        console.log(json.data.err)
+        tip.error(json.data.msg);
+        console.log(json.data.err);
       }
       that.$apply();
     }
     async getAddressInfo(id) {
-      let that = this
+      let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
       const json = await api.receiverInfoById({
         query: {
@@ -168,14 +190,21 @@
         }
       });
       if (json.data.code == 0) {
-        console.log(json)
-        let adress = json.data.receiverInfo
-        adress.address_xq = adress.provinceName + " " + adress.cityName + " " + adress.areaName + " " + adress.addr_xq
+        //console.log(json);
+        let adress = json.data.receiverInfo;
+        adress.address_xq =
+          adress.provinceName +
+          " " +
+          adress.cityName +
+          " " +
+          adress.areaName +
+          " " +
+          adress.addr_xq;
         this.is_exit_address = true;
         this.address = adress;
       } else {
         if (json.data.code == 1) {
-          tip.error(json.data.msg)
+          tip.error(json.data.msg);
         } else {
           console.log(json.data.msg);
         }
@@ -184,7 +213,7 @@
     }
     //线下支付 => 改成店内自提
     createProductOrderByXX(e) {
-      this.paytype = 'cash'
+      this.paytype = "cash";
       //没有门店就提示
       if (this.shops == null) {
         wx.showToast({
@@ -194,27 +223,26 @@
         return false;
       }
       //console.log('picker发送选择改变，携带值为', this.data.shops[e.detail.value])
-      let shopAdd = this.address
-      shopAdd['address_xq'] = this.shops[e.detail.value];
+      let shopAdd = this.address;
+      shopAdd["address_xq"] = this.shops[e.detail.value];
       this.address = shopAdd;
-      console.log(this.address)
+      //console.log(this.address);
       //其他手机号什么都不用改
-      this.goToPay()
+      this.goToPay();
       //console.log('执行完毕了');
       this.$apply();
     }
     async getShop() {
-      let that = this
+      let that = this;
       const json = await api.getShop({
         query: {}
       });
-      this.shops = json.data.data
+      this.shops = json.data.data;
       that.$apply();
     }
     onLoad(option) {
       let that = this;
-      this.cartId = option.ids,
-        this.actualPrice = 0;
+      (this.cartId = option.ids), (this.actualPrice = 0);
       this.totalPrice = 0;
       this.total_jf_num = 0;
       this.can_use_score = 0;
@@ -223,14 +251,14 @@
       this.jf_num = 0;
       this.reduce_fee = 0;
       this.operating = false;
-      let systemInfo = wepy.getStorageSync(SYSTEM_INFO)
-      this.miniNum = systemInfo.miniNum
+      let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+      this.miniNum = systemInfo.miniNum;
       //that.goodsId = option.goodsId == undefined ? "" : option.goodsId;
       //this.purchaseType = option.purchasetype == undefined ? "1" : option.purchasetype;
       /*that.list = bb.result.products;
-      console.log(bb.result.products)*/
+        console.log(bb.result.products)*/
       this.getOrderDetailInfo();
-      this.getShop()
+      this.getShop();
       // let from = option.from == undefined ? "" : option.from;
       // console.log(from+"---");
       // if (from == "selAdd") {
@@ -238,13 +266,13 @@
       // }
     }
     onShow(option) {
-      let onShowAddressID = wepy.getStorageSync(ADDRESS_ID)
+      let onShowAddressID = wepy.getStorageSync(ADDRESS_ID);
       if (this.onLoadAddressID != onShowAddressID && onShowAddressID != "") {
-        this.onLoadAddressID = onShowAddressID
-        this.getAddressInfo(onShowAddressID)
+        this.onLoadAddressID = onShowAddressID;
+        this.getAddressInfo(onShowAddressID);
       }
     }
-    computed = {}
+    computed = {};
     async goToPay(formId) {
       //测试调用接口用，可注释
       tip.loading("提交订单中");
@@ -280,14 +308,14 @@
             timeStamp: payData.timeStamp,
             nonceStr: payData.nonceStr,
             package: payData.package,
-            signType: 'MD5',
+            signType: "MD5",
             paySign: payData.paySign,
             success: function(res) {
-              console.log('pay', res)
+              console.log("pay", res);
               //tip.loaded();
               wepy.navigateTo({
                 url: "/pages/pay_success?orderNo=" + order.order_id
-              })
+              });
               // setTimeout(() => {
               //   //支付成功 关闭loadding 跳转到支付成功页面
               //   tip.loaded();
@@ -297,32 +325,32 @@
               // }, 2000)
             },
             fail: function(res) {
-              console.log('pay_fail-->', res)
-              tip.alert('支付失败');
+              console.log("pay_fail-->", res);
+              tip.alert("支付失败");
               setTimeout(() => {
                 //支付成功 关闭loadding 跳转到支付成功页面
                 tip.loaded();
                 wepy.switchTab({
                   url: "/pages/info"
-                })
+                });
                 // wepy.navigateTo({
                 //   url: "/pages/order"
                 // })
-              }, 2000)
+              }, 2000);
             }
-          })
+          });
         } else {
-          tip.alert('支付失败');
+          tip.alert("支付失败");
           setTimeout(() => {
             //支付成功 关闭loadding 跳转到支付成功页面
             tip.loaded();
             wepy.navigateTo({
               url: "/pages/order"
-            })
-          }, 2000)
+            });
+          }, 2000);
         }
       } else {
-        tip.error(json.data.msg)
+        tip.error(json.data.msg);
       }
     }
     // async reduceGoodNum(id, num, index) {
@@ -402,7 +430,7 @@
       wx.chooseAddress({
         success: function(res) {
           wx.request({
-            url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
+            url: "https://small.huanqiujishi.com/index.php/Api/Address/add_adds",
             data: {
               user_id: uid,
               receiver: res.userName,
@@ -411,18 +439,19 @@
               city: res.cityName,
               quyu: res.countyName,
               adds: res.detailInfo,
-              code: res.postalCode,
+              code: res.postalCode
             },
-            method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-            header: { // 设置请求的 header
-              'Content-Type': 'application/x-www-form-urlencoded'
+            method: "POST", // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+            header: {
+              // 设置请求的 header
+              "Content-Type": "application/x-www-form-urlencoded"
             },
             success: function(res) {
               // success
               var status = res.data.status;
-              console.log(res)
+              console.log(res);
               if (status == 1) {
-                that.getAddressInfo(res.data.add_arr.addr_id)
+                that.getAddressInfo(res.data.add_arr.addr_id);
                 // wx.showToast({
                 //   title: '保存成功！',
                 //   duration: 2000
@@ -442,13 +471,13 @@
             fail: function() {
               // fail
               wx.showToast({
-                title: '网络异常！',
+                title: "网络异常！",
                 duration: 2000
               });
             }
-          })
+          });
         }
-      })
+      });
     }
     methods = {
       // handleDelItem(itemData) {
@@ -461,10 +490,10 @@
       async goPay(e) {
         //var fId = e.detail.formId;
         //console.log(e)
-        this.paytype = e
+        this.paytype = e;
         if (!this.is_exit_address) {
-          await tip.confirm('你未设置收货地址，请设置地址');
-          this.addAddress()
+          await tip.confirm("你未设置收货地址，请设置地址");
+          this.addAddress();
           // wepy.navigateTo({
           //   url: "/pages/address?type=order"
           // })
@@ -480,8 +509,8 @@
       setAddress() {
         wepy.navigateTo({
           url: "/pages/address?type=order"
-        })
-      },
+        });
+      }
       // jianBtnTap(e) {
       //   if (this.operating) {
       //     return;
@@ -546,12 +575,25 @@
       //     value: this.jf_num
       //   };
       // }
-    }
-    events = {}
+    };
+    events = {};
   }
 </script>
 
 <style lang="less">
+  .goodsList {
+    margin-top: 90rpx; 
+  }
+  .goodsList1 {
+    margin-top: 130rpx; 
+  }
+  .content {
+    padding: 30rpx;
+    float: right;
+  }
+  .totalPrice {
+    color: #FF0077;
+  }
   .address {
     border-top: 1px solid #efefef;
     background: #fff;
@@ -561,7 +603,7 @@
       justify-content: space-between;
       height: 103rpx;
       align-items: center;
-      padding: 0rpx 35rpx;
+      padding: 0rpx 35rpx; //******间隔******/
       .title {
         color: #000;
       }
@@ -666,7 +708,7 @@
     bottom: 30rpx;
     display: flex;
     font-size: 24rpx;
-    text-align: center
+    text-align: center;
   }
   .goods-info .text-box .buy-num .jian-btn {
     width: 48rpx;

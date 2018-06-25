@@ -157,6 +157,7 @@
                     duration: 2000
                   });
                   //that.loadProductDetail();
+                  this.$emit('refreshAddList', 'hehe');
                 } else {
                   console.log(res.data.err);
                   wx.showToast({

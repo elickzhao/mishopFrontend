@@ -1,0 +1,103 @@
+<!--  -->
+<template>
+  <view class="list-wrap">
+    <view class="list-item">
+      <view class="list-check">
+        <i class="iconfont list-image ">&#xe60b;</i>
+        <block wx:if="{{!is_exit_address}}">
+          <wxc-list class="item" title="设置收货地址" bind:click="setaddress"></wxc-list>
+        </block>
+        <block wx:if="{{is_exit_address}}">
+          <wxc-list class="item" title="收货人: {{address.name}}  {{address.tel}}" detail="{{address.address_xq}}" bind:click="setaddress"></wxc-list>
+        </block>
+      </view>
+      <image class="{{is_exit_address ? 'hr1' : 'hr'}} " src="http://img.leshare.shop/shop/other/address-hr.png" />
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from "wepy";
+  export default class Address extends wepy.component {
+    props = {
+      address: {
+        twoWay: true
+      },
+      is_exit_address: {}
+    };
+    data = {};
+    components = {};
+    methods = {
+      setaddress() {
+        wepy.navigateTo({
+          url: "/pages/address?type=order"
+        });
+      }
+    };
+    events = {};
+    watch = {};
+    computed = {};
+    onLoad() {}
+    onShow() {}
+  }
+</script>
+
+<style lang='scss'>
+  .list-wrap {
+    width: 100%;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 60rpx;
+    z-index: 99;
+  }
+  .list-item {
+    background: #fff; // margin-bottom: 30rpx;
+  }
+  .list-item:last-child {
+    margin: 0;
+  }
+  .list-check {
+    display: flex;
+    align-items: center;
+  }
+  .check-wrap {
+    position: relative;
+    width: 40rpx;
+    height: 40rpx;
+    margin-left: 30rpx;
+    border-radius: 100%;
+    border: 1px solid #d8d8d8;
+  }
+  .check {
+    position: absolute;
+    top: 0;
+    left: -2rpx;
+    width: 100%;
+    height: 100%;
+    line-height: 42rpx;
+  }
+  .list-image {
+    margin-left: 30rpx;
+    font-size: 20px;
+    color: #ff0077;
+  }
+  .item {
+    flex: 1;
+  }
+  .hr {
+    width: 100%;
+    height: 6rpx;
+    position: absolute;
+    top: 90rpx;
+  }
+  .hr1 {
+    width: 100%;
+    height: 6rpx;
+    position: absolute;
+    top: 130rpx;
+  }
+</style>
