@@ -11,7 +11,7 @@
           <wxc-list class="item" title="收货人: {{address.name}}  {{address.tel}}" detail="{{address.address_xq}}" bind:click="setaddress"></wxc-list>
         </block>
       </view>
-      <image class="{{is_exit_address ? 'hr1' : 'hr'}} " src="http://img.leshare.shop/shop/other/address-hr.png" />
+      <image class="{{is_exit_address ? 'hr1' : 'hr'}} " src="../images/address-hr.png" />
     </view>
   </view>
 </template>

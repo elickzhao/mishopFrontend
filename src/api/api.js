@@ -50,7 +50,7 @@ const cartUpdateNum = (params) => wxRequest(params, jishi + '/api/news/cartUpdat
 const preOrder = (params) => wxRequest(params, jishi + '/api/news/buyCart');
 
 //支付前生成订单
-const saveByCart = (params) => wxRequest(params, jishi + '/api/news/payment');
+const saveByCart = (params) => wxRequest(params, jishi + '/api/news/payment1');
 
 //支付统一下单
 const toPay = (params) => wxRequest(params, jishi + '/Api/Wxpay/wxpay');

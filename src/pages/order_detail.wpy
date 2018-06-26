@@ -46,6 +46,10 @@
         <text class="content">{{ord.order_sn}}</text>
       </view>
       <view class="item">
+        <text class="title">商品总价:</text>
+        <text class="content">{{ord.price}}</text>
+      </view>
+      <view class="item">
         <text class="title">提交时间:</text>
         <text class="content">{{ord.addtime}}</text>
       </view>
@@ -59,8 +63,8 @@
       </view>
     </view>
     <view class="footer">
-      <view class="money">订单总价:
-        <text class="receive_money">{{ord.price}}</text>
+      <view class="money">应付价格:
+        <text class="receive_money">{{ord.amount}}</text>
       </view>
       <view class="btn_group">
         <view class="btn" @tap="goLogistics" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">查看物流</view>

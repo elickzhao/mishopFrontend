@@ -2,34 +2,35 @@
 <template>
   <view class="comfire_order">
     <!-- <view class="address" @tap="setAddress">
-          <view class="empty_address" wx:if="{{!is_exit_address}}">
-            <view class="title">设置收货地址</view>
-            <view class="arrow">&gt;</view>
-          </view>
-          <view class="address_info" wx:else>
-            <view class="title">
-              <view class="address-name-phone">
-                <text class="address-name">收货人: {{address.name}}</text>
-                <text class="address-phone">{{address.tel}}</text>
-              </view>
-              <view class="active_address">
-                <text class="defult" wx:if="{{address.is_default==1}}"> [默认]</text> {{address.address_xq}}
-              </view>
-            </view>
-            <view class="arrow">&gt;</view>
-          </view>
-          <image class="hr" src="http://img.leshare.shop/shop/other/address-hr.png" />
-        </view> -->
+                    <view class="empty_address" wx:if="{{!is_exit_address}}">
+                      <view class="title">设置收货地址</view>
+                      <view class="arrow">&gt;</view>
+                    </view>
+                    <view class="address_info" wx:else>
+                      <view class="title">
+                        <view class="address-name-phone">
+                          <text class="address-name">收货人: {{address.name}}</text>
+                          <text class="address-phone">{{address.tel}}</text>
+                        </view>
+                        <view class="active_address">
+                          <text class="defult" wx:if="{{address.is_default==1}}"> [默认]</text> {{address.address_xq}}
+                        </view>
+                      </view>
+                      <view class="arrow">&gt;</view>
+                    </view>
+                    <image class="hr" src="http://img.leshare.shop/shop/other/address-hr.png" />
+                  </view> -->
     <!-- 新收货地址 -->
     <!-- XXX 在这里 -->
     <address :address.sync="address" :is_exit_address.sync="is_exit_address"></address>
     <!-- /新收货地址 -->
     <view class="spacing"></view>
     <view class="{{is_exit_address ? 'goodsList1' : 'goodsList'}} ">
+      <wxc-panel margin="{{false}}">
+        <view class="content1"> <i class="iconfont shopIcon">&#xe6df;</i><text space="ensp" style="font-size:16px;color: #666;">  环球集市旗舰店</text></view>
+      </wxc-panel>
       <!--列表显示2个，绑定数据记得去掉，这里做调试-->
       <repeat for="{{list}}" key="index" index="index" item="item">
-        <!-- <view class="list_box"> -->
-        <!-- <swipeDelete :swipeData="item" @delItem.user="handleDelItem"> -->
         <view class="goods-info">
           <view class="img-box">
             <image src="{{item.photo_x}}" class="img" />
@@ -38,15 +39,8 @@
             <view class="goods-title">{{item.name}}</view>
             <view class="goods-label">数量: x {{item.num}}</view>
             <view class="goods-price">¥ {{item.price_yh}}</view>
-            <!-- <view class="buy-num">
-                                                <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
-                                                <input type="number" value="{{item.num}}" disabled/>
-                                                <view class="jia-btn " catchtap="jiaBtnTap" data-index="{{index}}" data-id="{{item.id}}">+</view>
-                                              </view> -->
           </view>
         </view>
-        <!-- </swipeDelete> -->
-        <!-- </view> -->
       </repeat>
       <wxc-panel margin="{{false}}">
         <view class="content">
@@ -65,18 +59,23 @@
           <input name="remark" bindinput="bindKeyInput" placeholder="对本次交易的说明" />
         </view>
       </view>
-      <!-- <view class="spacing"></view>
-                                        <view class="block">
-                                          <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
-                                          <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分" /></view>
-                                        </view> -->
+      <view wx:if="{{total_jf_num > 100 && totalPrice > 20}}" class="list-item">
+        <!-- <wxc-list title="积分优惠券" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" arrow="{{false}}" mode="none"> -->
+        <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
+          <view class="desc-highlight">满100积分减5元</view>
+          <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
+        </wxc-list>
+      </view>
       <view class="spacing"></view>
       <view class="block">
-        <view class="left tongji">商品金额</view>
+        <view class="left tongji">合计金额</view>
         <view>
           <view class="right price" wx:if="{{jf_num>0}}">商品金额:￥{{totalPrice}}-积分:￥{{reduce_fee}}</view>
           <view class="right price">应付:￥{{actualPrice}}</view>
         </view>
+      </view>
+      <view wx:if="{{deduScore}}" class="list-item">
+        <wxc-list title="积分优惠:" desc="- ￥5.00" arrow="{{false}}" mode="none">        </wxc-list>
       </view>
     </view>
     <view class="pay_box">
@@ -119,6 +118,8 @@
       address: Adress,
     }
     data = {
+      //积分优惠券减去的钱数
+      cutPrice: 5,
       miniNum: 0,
       shops: [],
       paytype: "",
@@ -139,7 +140,7 @@
       //总积分
       total_jf_num: 0,
       can_use_score: 0,
-      deduScore: 0,
+      deduScore: false,
       deduFee: 0,
       //输入抵扣积分
       jf_num: 0,
@@ -169,8 +170,8 @@
         this.is_exit_address = data.addemt;
         this.address = data.adds;
         this.onLoadAddressID = aid;
-        // this.total_jf_num = data.userScore;
-        // this.can_use_score = data.canUseScore;
+        this.total_jf_num = data.userScore;
+        //this.can_use_score = data.canUseScore;
         // this.deduScore = data.deduScore;
         // this.deduFee = data.deduFee;
         // this.jf_num = data.canUseScore;
@@ -284,7 +285,8 @@
           cart_id: this.cartId,
           aid: this.address.id,
           remark: this.sellerMessage,
-          //reduceScore: this.jf_num,
+          deduScore: this.deduScore,
+          actualPrice:this.actualPrice,
           type: this.paytype,
           address: this.address
         }
@@ -483,6 +485,15 @@
       // handleDelItem(itemData) {
       //   this.deleteGoods(itemData);
       // },
+      useCoupon(e) {
+        if (e.detail.value) {
+          this.actualPrice = (this.actualPrice - 5).toFixed(2)
+        } else {
+          this.actualPrice = this.totalPrice
+        }
+        this.deduScore = e.detail.value;
+        // console.log('switch1 发生 change 事件，携带值为', e.detail.value)
+      },
       bindKeyInput(e) {
         this.sellerMessage = e.detail.value;
         //console.log("====" + e.detail.value);
@@ -580,16 +591,33 @@
   }
 </script>
 
-<style lang="less">
+<style lang="scss">
+  .desc-highlight {
+    font-size: 24rpx;
+    height: 38rpx;
+    padding: 0 22rpx;
+    border: 1px solid #f5342f;
+    border-radius: 20rpx;
+    color: #f5342f;
+    line-height: 38rpx; // margin-right: 140rpx;
+    margin-right: 180rpx;
+  }
+  .shopIcon {
+    color: #9a9a9a;
+    font-size: 20px;
+  }
   .goodsList {
-    margin-top: 90rpx; 
+    margin-top: 90rpx;
   }
   .goodsList1 {
-    margin-top: 130rpx; 
+    margin-top: 130rpx;
   }
   .content {
-    padding: 30rpx;
+    padding: 20rpx;
     float: right;
+  }
+  .content1 {
+    padding: 20rpx;
   }
   .totalPrice {
     color: #FF0077;

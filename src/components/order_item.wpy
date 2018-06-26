@@ -42,7 +42,7 @@
         </navigator>
         <view class="order_list_footer">
           <view class="reveiveMoney c333">应付款：
-            <text class="num">{{item.price}}</text>
+            <text class="num">{{item.amount}}</text>
           </view>
           <view class="order_state" wx:if="{{item.auditStatus==5}}">
           </view>
