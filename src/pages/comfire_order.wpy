@@ -2,24 +2,24 @@
 <template>
   <view class="comfire_order">
     <!-- <view class="address" @tap="setAddress">
-                    <view class="empty_address" wx:if="{{!is_exit_address}}">
-                      <view class="title">设置收货地址</view>
-                      <view class="arrow">&gt;</view>
-                    </view>
-                    <view class="address_info" wx:else>
-                      <view class="title">
-                        <view class="address-name-phone">
-                          <text class="address-name">收货人: {{address.name}}</text>
-                          <text class="address-phone">{{address.tel}}</text>
-                        </view>
-                        <view class="active_address">
-                          <text class="defult" wx:if="{{address.is_default==1}}"> [默认]</text> {{address.address_xq}}
-                        </view>
-                      </view>
-                      <view class="arrow">&gt;</view>
-                    </view>
-                    <image class="hr" src="http://img.leshare.shop/shop/other/address-hr.png" />
-                  </view> -->
+                                  <view class="empty_address" wx:if="{{!is_exit_address}}">
+                                    <view class="title">设置收货地址</view>
+                                    <view class="arrow">&gt;</view>
+                                  </view>
+                                  <view class="address_info" wx:else>
+                                    <view class="title">
+                                      <view class="address-name-phone">
+                                        <text class="address-name">收货人: {{address.name}}</text>
+                                        <text class="address-phone">{{address.tel}}</text>
+                                      </view>
+                                      <view class="active_address">
+                                        <text class="defult" wx:if="{{address.is_default==1}}"> [默认]</text> {{address.address_xq}}
+                                      </view>
+                                    </view>
+                                    <view class="arrow">&gt;</view>
+                                  </view>
+                                  <image class="hr" src="http://img.leshare.shop/shop/other/address-hr.png" />
+                                </view> -->
     <!-- 新收货地址 -->
     <!-- XXX 在这里 -->
     <address :address.sync="address" :is_exit_address.sync="is_exit_address"></address>
@@ -59,11 +59,16 @@
           <input name="remark" bindinput="bindKeyInput" placeholder="对本次交易的说明" />
         </view>
       </view>
-      <view wx:if="{{total_jf_num > 100 && totalPrice > 20}}" class="list-item">
+      <view wx:if="{{total_jf_num >= 100 && totalPrice > 30}}" class="list-item">
         <!-- <wxc-list title="积分优惠券" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" arrow="{{false}}" mode="none"> -->
         <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
           <view class="desc-highlight">满100积分减5元</view>
           <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
+        </wxc-list>
+      </view>
+      <view class="list-item" wx:else>
+        <wxc-list title="积分优惠券" arrow="{{false}}" mode="none" desc="当前积分或商品 无法使用优惠券">
+          <!-- <view>当前积分 {{total_jf_num}} 小于100 无法兑换优惠券</view> -->
         </wxc-list>
       </view>
       <view class="spacing"></view>
@@ -75,20 +80,31 @@
         </view>
       </view>
       <view wx:if="{{deduScore}}" class="list-item">
-        <wxc-list title="积分优惠:" desc="- ￥5.00" arrow="{{false}}" mode="none">        </wxc-list>
+        <wxc-list title="积分优惠:" desc="- ￥5.00" arrow="{{false}}" mode="none"></wxc-list>
       </view>
     </view>
-    <view class="pay_box">
-      <block wx:if="{{totalNum > miniNum}}">
-        <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
-      </block>
-      <block wx:else>
-        <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
-      </block>
-      <br/>
-      <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
-        <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
-      </picker>
+    <!-- <view class="pay_box">
+          <block wx:if="{{totalNum > miniNum}}">
+            <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
+          </block>
+          <block wx:else>
+            <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
+          </block>
+          <br/>
+          <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
+            <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
+          </picker>
+        </view> -->
+    <view class="spacing5"></view>
+    <view class="footer">
+      <wxc-panel border="{{false}}">
+        <view class="bottom-left">实付款: <text class="totalPrice"> ￥{{actualPrice}}</text></view>
+        <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
+          <view class=" content to-pay-btn" style="background:#09bb07;">门店自提</view>
+        </picker>
+        <view wx:if="{{totalNum > miniNum}}" class=" content to-pay-btn" @tap="goPay('weixin')">配送到家</view>
+        <view class=" content to-pay-btn" style="background:#999;" wx:else>满 {{miniNum}} 元起送</view>
+      </wxc-panel>
     </view>
   </view>
 </template>
@@ -286,7 +302,7 @@
           aid: this.address.id,
           remark: this.sellerMessage,
           deduScore: this.deduScore,
-          actualPrice:this.actualPrice,
+          actualPrice: this.actualPrice,
           type: this.paytype,
           address: this.address
         }
@@ -592,6 +608,35 @@
 </script>
 
 <style lang="scss">
+  .bottom-left {
+    padding: 30rpx;
+    float: left;
+    color: #666
+  }
+  .to-pay-btn {
+    width: 180rpx;
+    text-align: center;
+    line-height: 58rpx;
+    background-color: #ff0077;
+    font-size: 32rpx;
+    color: #ffffff;
+  }
+  .spacing5 {
+    height: 120rpx;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+  }
+  .comfire_order {
+    margin-bottom: -50px;
+  }
+  .footer {
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    z-index: 9999;
+  }
   .desc-highlight {
     font-size: 24rpx;
     height: 38rpx;

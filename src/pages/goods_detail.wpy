@@ -14,8 +14,8 @@
       <view class="details_pinfo">
         <text class="price">￥{{detail.price_yh}}</text>
         <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
-                                      <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-                                    </view> -->
+                                              <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+                                            </view> -->
         <view class="other-price c999">卖场价:
           <wxc-price status="del" del-color="#999">{{detail.price}}</wxc-price>
         </view>
@@ -71,6 +71,9 @@
         </contact-button>
         <view class="item" @tap="shopCart">
           <i class="iconfont">&#xe635;</i>
+          <block wx:if="{{shopCartNum > 0}}">
+          <wxc-badge class="user__un-read-msg-count">{{shopCartNum}}</wxc-badge>
+          </block>
           <view class="doc">购物车</view>
         </view>
         <view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite">
@@ -140,10 +143,12 @@
       navigationBarTitleText: "商品详情",
       usingComponents: {
         "wxc-price": "../../packages/@minui/wxc-price/dist/index",
+        "wxc-badge": "../../packages/@minui/wxc-badge/dist/index",
         "wxc-input": "../../packages/@minui/wxc-input/dist/index"
       }
     };
     data = {
+      shopCartNum: 0, //购物车商品数量
       showGoodsInfo: false, //展示商品详细信息
       winWidth: 0,
       winHeight: "100%",
@@ -212,6 +217,28 @@
         delay: 0
       });
       this.animation = animation;
+      this.getShopCartNum();
+    }
+    async getShopCartNum() {
+      let that = this
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
+      const json = await api.cartList({
+        query: {
+          uid: uid
+        }
+      });
+      if (json.data.code == 0) {
+        let data = json.data;
+        let cartNum = 0
+        for (var i = 0; i < data.list.length; i++) {
+          cartNum += parseInt(data.list[i].num)
+        }
+        this.shopCartNum = cartNum;
+      } else {
+        tip.error(json.data.msg);
+      }
+      that.$apply();
     }
     wxParseImgLoad(e) {}
     wxParseImgTap(e) {
@@ -330,6 +357,7 @@
           this.$apply();
         }, 100);
         tip.success("成功加入购物车");
+        this.shopCartNum +=this.orderNum 
       } else {
         if (json.data.msg) {
           tip.error(json.data.msg);
@@ -597,6 +625,10 @@
 </script>
 
 <style lang="less">
+  .user__un-read-msg-count {
+    position: absolute;
+    top: -10rpx;
+  }
   /*----------  解决解析图片缝隙的问题  ----------*/
   .free-images {
     position: relative;
