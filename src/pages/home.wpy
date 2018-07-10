@@ -232,6 +232,7 @@
       },
       alertCallback() {
         this.is_show_alert = false
+        wepy.navigateTo({ url: '/pages/coupon_center' });
         //tip.alert('跳转');
       },
       closeAlert() {

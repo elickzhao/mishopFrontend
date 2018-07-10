@@ -29,7 +29,7 @@
                         <view class="order_state">待支付</view>
                       </text>
               <view class="order_state" wx:if="{{item.status==10 && item.back==0}}">待付款</view>
-              <view class="order_state" wx:if="{{item.status==20 && item.back==0}}">待付款</view>
+              <view class="order_state" wx:if="{{item.status==20 && item.back==0}}">已付款</view>
               <view class="order_state" wx:if="{{item.status==30 && item.back==0}}">待收货</view>
               <view class="order_state" wx:if="{{item.status==50 && item.back==0}}">已完成</view>
               <view class="order_state" wx:if="{{item.back == 1 }}">退款中</view>
@@ -234,7 +234,7 @@
       align-items: center;
       .btn {
         font-size: 30rpx;
-        padding: 22rpx 35rpx;
+        padding: 12rpx 25rpx;
         text-align: center;
         margin: 0 auto;
         width: 100%;

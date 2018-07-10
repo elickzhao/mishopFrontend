@@ -8,7 +8,7 @@
           <wxc-list class="item" title="设置收货地址" bind:click="setaddress"></wxc-list>
         </block>
         <block wx:if="{{is_exit_address}}">
-          <wxc-list class="item" title="收货人: {{address.name}}  {{address.tel}}" detail="{{address.address_xq}}" bind:click="setaddress"></wxc-list>
+          <wxc-list class="item" title="收货人: {{address.name}}  {{address.tel}}" detail="{{aPlus}}" bind:click="setaddress"></wxc-list>
         </block>
       </view>
       <image class="{{is_exit_address ? 'hr1' : 'hr'}} " src="../images/address-hr.png" />
@@ -36,7 +36,29 @@
     };
     events = {};
     watch = {};
-    computed = {};
+    get_length(s) {
+      var char_length = 0;
+      for (var i = 0; i < s.length; i++) {
+        var son_char = s.charAt(i);
+        encodeURI(son_char).length > 2 ? char_length += 1 : char_length += 0.5;
+      }
+      return char_length;
+    }
+    computed = {
+      aPlus() {      
+        if(!this.address){
+          return;
+        } 
+        let dd = this.address.address_xq
+        if(typeof(dd) == "string" && (dd.length > 22)){
+          let ad = (this.address.address_xq).slice(0,22)+"..."
+          return ad
+        }else{
+          return this.address.address_xq
+        }
+        
+      }
+    };
     onLoad() {}
     onShow() {}
   }

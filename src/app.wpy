@@ -42,7 +42,9 @@
         "pages/filter",
         "pages/logistics",
         "pages/comment",
-        "pages/comment_add"
+        "pages/comment_add",
+        "pages/coupon_center",
+        "pages/coupon_customer"
       ],
       window: {
         backgroundTextStyle: "light",

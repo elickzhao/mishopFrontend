@@ -20,6 +20,12 @@
         <navigator url="/pages/collection">
           <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_6h37fg4074i3a2l2gb92dbbc15k84_38x38.png" title="我的收藏"></wxc-list>
         </navigator>
+        <navigator url="/pages/coupon_customer">
+          <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" title="我的优惠券"></wxc-list>
+        </navigator>
+        <!-- <navigator url="/pages/coupon_center">
+          <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" title="领券中心"></wxc-list>
+        </navigator> -->
       </view>
       <view class="list-item">
         <contact-button class="contact">

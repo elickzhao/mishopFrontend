@@ -161,6 +161,15 @@ const getAdList = (params) => wxRequest(params, jishi + '/api/Index/ggtop');
 //获取门店地址 
 const getShop = (params) => wxRequest(params, jishi + '/api/Address/getShop');
 
+//获取优惠券列表
+const getCouponList = (params) => wxRequest(params, jishi + '/api/news/getCouponList');
+
+//获取优惠券
+const addVoucher = (params) => wxRequest(params, jishi + '/api/news/addVoucher');
+
+//获取用户优惠券
+const getCustCouponList = (params) => wxRequest(params, jishi + '/api/news/getCustCouponList');
+
 module.exports = {
   getMiniNum,
   getAdList,
@@ -199,6 +208,9 @@ module.exports = {
   toPay,
   getPayOrderDetail,
   getShop,
+  getCouponList,
+  addVoucher,
+  getCustCouponList
 }
 
 // module.exports = {

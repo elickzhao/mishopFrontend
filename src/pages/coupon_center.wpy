@@ -1,0 +1,104 @@
+<!-- 会员中心 -->
+<template>
+    <view class='container'>
+        <repeat for="{{coupons}}" key="index" index="index" item="item">
+            <couponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></couponItem>
+        </repeat>
+        <view wx:if="{{this.coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
+            <wxc-abnor type="COUPON" title='还没有可领取的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from "wepy";
+    import api from "../api/api";
+    import tip from "../utils/tip";
+    import couponItem from "../components/coupon_item";
+    import {
+        USER_INFO,
+        USER_SPECICAL_INFO
+    } from "../utils/constant";
+    export default class couponCenter extends wepy.page {
+        config = {
+            navigationBarTitleText: "领券中心",
+            usingComponents: {
+                "wxc-panel": "../../packages/@minui/wxc-panel/dist/index",
+                "wxc-flex": "../../packages/@minui/wxc-flex/dist/index",
+                'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
+                'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+            }
+        };
+        data = {
+            coupons: {},
+            type:"cen"
+        };
+        components = {
+            couponItem: couponItem
+        };
+        async couponList() {
+            let that = this;
+            let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+            let uid = userSpecialInfo.ID;
+            const json = await api.getCouponList({
+                query: {
+                    uid: uid
+                }
+            });
+            if (json.data.code == 0) {
+                this.coupons = json.data.list;
+                that.$apply();
+            } else {
+                tip.error(json.data.msg);
+            }
+            console.log(this.coupons);
+            that.showLoading = false;
+        }
+        async add(vid) {
+            let that = this;
+            let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+            let uid = userSpecialInfo.ID;
+            const json = await api.addVoucher({
+                query: {
+                    uid: uid,
+                    vid: vid,
+                }
+            });
+            //console.log(json);
+            if (json.data.code == 0) {
+                console.log(json);
+                that.$apply();
+            } else {
+                tip.error(json.data.msg);
+            }
+            that.showLoading = false;
+        }
+        methods = {
+            parentFn(vid) {
+                //console.log("parent received emit event, number is: " + num);
+                this.add(vid)
+            },
+            onAbnorTap() {
+                wepy.switchTab({
+                    url: 'home'
+                })
+            }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        onLoad() {
+            this.couponList();
+        }
+        onShow() {}
+    }
+</script>
+
+<style lang='scss'>
+    .container {
+        // background-color:#F5F5F5;
+        background-color: #eee;
+        padding: 30rpx 20rpx;
+        height: 95vh;
+    }
+</style>
