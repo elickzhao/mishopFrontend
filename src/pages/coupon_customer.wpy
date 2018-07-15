@@ -6,21 +6,27 @@
                 <repeat for="{{coupons}}" key="index" index="index" item="item">
                     <couponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></couponItem>
                 </repeat>
+                <view wx:if="{{coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
+                    <wxc-abnor type="COUPON" title='还没有可领取的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+                </view>
             </wxc-tab-panel>
             <wxc-tab-panel tab-index="1" component-id="c2" label="已使用">
                 <repeat for="{{coupons}}" key="index" index="index" item="item">
                     <couponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></couponItem>
                 </repeat>
+                <view wx:if="{{coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
+                    <wxc-abnor type="COUPON" title='还没有已使用的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+                </view>
             </wxc-tab-panel>
             <wxc-tab-panel tab-index="2" component-id="c2" label="已作废">
                 <repeat for="{{coupons}}" key="index" index="index" item="item">
                     <couponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></couponItem>
                 </repeat>
+                <view wx:if="{{coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
+                    <wxc-abnor type="COUPON" title='还没有已作废的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+                </view>
             </wxc-tab-panel>
         </wxc-tab>
-        <view wx:if="{{this.coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
-            <wxc-abnor type="COUPON" title='还没有可领取的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
-        </view>
     </view>
 </template>
 

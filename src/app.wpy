@@ -44,7 +44,8 @@
         "pages/comment",
         "pages/comment_add",
         "pages/coupon_center",
-        "pages/coupon_customer"
+        "pages/coupon_customer",
+        "pages/coupon_xianxia"
       ],
       window: {
         backgroundTextStyle: "light",

@@ -13,9 +13,9 @@
       <view class="btn-authorize">
         <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
         <!-- <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
-                <view class="fz32" style="color:#EF2F23" wx:else>
-                  <button type="warn" lang="zh_CN">请先升级微信版本</button>
-                </view> -->
+                    <view class="fz32" style="color:#EF2F23" wx:else>
+                      <button type="warn" lang="zh_CN">请先升级微信版本</button>
+                    </view> -->
       </view>
     </block>
   </view>
@@ -42,11 +42,12 @@
     };
     data = {
       $loading: {
-        isShow: true
+        isShow: true,
+        backUrl: ""
       },
       //canIUse: wx.canIUse('button.open-type.getUserInfo')
     };
-    async onLoad() {
+    async onLoad(ops) {
       await this.showLoading();
       let res = await wepy.getSetting();
       if (res.authSetting["scope.userInfo"]) {
@@ -56,7 +57,7 @@
         // console.log(wepy.getStorageSync(USER_INFO))
         // console.log(wepy.getStorageSync(USER_SPECICAL_INFO))
         if (!wepy.getStorageSync(USER_INFO) || !wepy.getStorageSync(USER_SPECICAL_INFO) || !systemInfo.windowHeight) {
-         // console.log("老版本兼容 授权检查----------------------");
+          // console.log("老版本兼容 授权检查----------------------");
           await this.check();
         }
         //console.log("未曾检查就跳过了.............")
@@ -67,6 +68,10 @@
         wepy.setNavigationBarTitle({
           title: "授权登录"
         });
+        console.log(ops);
+        if (ops.back) {
+          this.backUrl = ops.back
+        }
         this.$loading.isShow = false;
         this.$apply();
       }
@@ -138,6 +143,7 @@
       }
     }
     async onGotUserInfo(e) {
+      let that = this
       if (e.detail.errMsg == "getUserInfo:ok") {
         let res = await wepy.login();
         if (res.code) {
@@ -166,9 +172,15 @@
               let userSpecialInfo = json.data.data
               userSpecialInfo.openid = data.openid
               wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
-              wepy.switchTab({
-                url: "/pages/home"
-              });
+              if (that.backUrl) {
+                wepy.redirectTo({
+                  url: '/pages/' + that.backUrl
+                });
+              } else {
+                wepy.switchTab({
+                  url: "/pages/home"
+                });
+              }
             }
           } else {
             let res = await wepy.showModal({
@@ -176,9 +188,18 @@
               content: "授权失败"
             });
             if (res.confirm) {
-              wepy.switchTab({
-                url: "/pages/home"
-              });
+              // wepy.switchTab({
+              //   url: "/pages/home"
+              // });
+              if (that.backUrl) {
+                wepy.redirectTo({
+                  url: '/pages/' + that.backUrl
+                });
+              } else {
+                wepy.switchTab({
+                  url: "/pages/home"
+                });
+              }
             }
           }
         } else {
@@ -240,10 +261,9 @@
   }
   .bg-img {
     background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg);
-    background-repeat:no-repeat; 
-    background-size:100% 100%;
-    padding-top: 0rpx;
-    // -moz-background-size:100% 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding-top: 0rpx; // -moz-background-size:100% 100%;
     // -webkit-background-size: 100% 100%;  
     //background-size: cover
   }

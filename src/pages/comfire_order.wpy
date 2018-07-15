@@ -52,7 +52,7 @@
           </view> -->
       <view class="spacing"></view>
       <view wx:if="{{totalPrice > 30 && (total_jf_num >= 100 || coupons.length >0)}}" class="list-item" @tap="selectCoupon">
-        <wxc-list title="优惠券" arrow="{{false}}" mode="none">
+        <wxc-list title="优惠券" desc="使用优惠券" arrow="{{true}}" mode="none">
         </wxc-list>
       </view>
       <view class="spacing"></view>

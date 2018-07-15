@@ -1,0 +1,263 @@
+<!-- 线下优惠券页面 -->
+<template>
+    <view class="authorize-contianer  bg-img ">
+        <wxc-flex class="wrap" main="center" cross="start">
+            <button type="primary" size="default" disabled="{{(voucher.status > 0)?true:false}}" @tap="getVoucher({{voucher.id}})"> 立即领取 </button>
+            <button id="dan" type="primary" size="default" disabled="{{(shareVoucher.status > 0)?true:false}}" open-type="share"> 单人转发优惠券 </button>
+            <button id="qun" type="primary" size="default" disabled="{{(shareGroup.status > 0)?true:false}}" open-type="share"> 群转发优惠券 </button>
+        </wxc-flex>
+        <wxc-flex class="info" main="center" cross="start">
+            <navigator class="button type_yellow button_mini" open-type="switchTab" url="/pages/info">用户中心</navigator>
+        </wxc-flex>
+    </view>
+</template>
+
+<script>
+    import wepy from "wepy";
+    import api from "../api/api";
+    import tip from "../utils/tip";
+    import {
+        USER_INFO,
+        USER_SPECICAL_INFO
+    } from "../utils/constant";
+    export default class CouponXianXia extends wepy.page {
+        config = {
+            navigationBarTitleText: "线下优惠券",
+            usingComponents: {
+                "wxc-flex": "../../packages/@minui/wxc-flex/dist/index"
+            }
+        };
+        data = {
+            voucher: {},
+            shareVoucher: {},
+            shareGroup: {}
+        };
+        //优惠券列表
+        async couponList() {
+            let that = this;
+            let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+            let uid = userSpecialInfo.ID;
+            const json = await api.getCouponList({
+                query: {
+                    uid: uid,
+                    flag: "xianxia"
+                }
+            });
+            if (json.data.code == 0) {
+                let arr = json.data.list;
+                this.coupons = arr;
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i].type == 3) {
+                        this.voucher = arr[i];
+                    }
+                    if (arr[i].type == 4) {
+                        this.shareVoucher = arr[i];
+                    }
+                    if (arr[i].type == 5) {
+                        this.shareGroup = arr[i];
+                    }
+                }
+                that.$apply();
+            } else {
+                tip.error(json.data.msg);
+            }
+            console.log(this.coupons);
+            that.showLoading = false;
+        }
+        //领取优惠券
+        async add(vid) {
+            let that = this;
+            let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+            let uid = userSpecialInfo.ID;
+            const json = await api.addVoucher({
+                query: {
+                    uid: uid,
+                    vid: vid
+                }
+            });
+            //console.log(json);
+            if (json.data.code == 0) {
+                console.log(json);
+                tip.alert(json.data.msg);
+                that.$apply();
+            } else {
+                tip.error(json.data.msg);
+            }
+            that.showLoading = false;
+        }
+        // 授权查询
+        async authorize() {
+            let that = this;
+            let userInfo = wepy.getStorageSync(USER_INFO);
+            //老版本兼容
+            if (!userInfo) {
+                let res = await wepy.getSetting();
+                // 查看是否授权
+                if (res.authSetting["scope.userInfo"]) {
+                    //console.log("scope.userInfo == " + res.authSetting["scope.userInfo"]);
+                    wx.getUserInfo({
+                        success: function(res) {
+                            console.log(res.userInfo);
+                            userInfo = res.userInfo;
+                            wepy.setStorageSync(USER_INFO, userInfo);
+                        }
+                    });
+                } else {
+                    wepy.redirectTo({
+                        url: "/pages/authorize?back=coupon_xianxia"
+                    });
+                    //console.log("未获得用户授权")
+                    this.$apply();
+                }
+            }
+            let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO);
+            if (userSpecialInfo == "") {
+                let res = await wepy.login();
+                if (res.code) {
+                    let rlt = await api.wxJsCode2Session({
+                        query: {
+                            code: res.code
+                        }
+                    });
+                    //console.log(rlt)
+                    if (rlt.data.openid != "") {
+                        // console.log("--------  rlt.data  ========  ")
+                        // console.log(rlt.data)
+                        let data = rlt.data;
+                        if (data.openid) {
+                            let json = await api.user2session({
+                                query: {
+                                    openId: data.openid,
+                                    NickName: userInfo.nickName,
+                                    avatarUrl: userInfo.avatarUrl,
+                                    gender: userInfo.gender
+                                }
+                            });
+                            //console.log(json);
+                            if (json.data.code == 0) {
+                                userSpecialInfo = json.data.data;
+                                //console.log(userSpecialInfo);
+                                userSpecialInfo.openId = data.openid;
+                                //console.log(userSpecialInfo);
+                                wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
+                            } else {
+                                console.log(json.data.msg);
+                            }
+                        }
+                    } else {
+                        let res = await wepy.showModal({
+                            title: "appid有误",
+                            content: "授权失败"
+                        });
+                    }
+                }
+            }
+            this.$apply();
+        }
+        components = {};
+        methods = {
+            //XXX 就差群分享的优惠券
+            onShareAppMessage: function(res) {
+                let that = this;
+                console.log("转发单人优惠券领取" + this.shareVoucher.id);
+                if (res.from == "button") {
+                    console.log(res.target.id);
+                    let btnId = res.target.id
+                    if (btnId == "dan") {
+                        return {
+                            title: "天官赐福,朋友共享5元优惠券",
+                            success: function(res) {
+                                console.log("ddddxxxxxx");
+                                console.log("转发成功:" + JSON.stringify(res));
+                                that.add(that.shareVoucher.id);
+                            },
+                            fail: function(res) {
+                                // 转发失败
+                                console.log("转发失败:" + JSON.stringify(res));
+                            }
+                        };
+                    }
+                    if (btnId == "qun") {
+                        console.log("转发群优惠券领取" + this.shareGroup.id);
+                        wx.showShareMenu({
+                            // 要求小程序返回分享目标信息
+                            withShareTicket: true,
+                            success: function(res) {
+                                console.log("这里是showsharemenu");
+                                console.log(res);
+                            }
+                        });
+                        return {
+                            title: "天官赐福,朋友共享5元优惠券",
+                            success: function(res) {
+                                console.log("转发群了");
+                                that.add(that.shareGroup.id);
+                            },
+                            fail: function(res) {
+                                // 转发失败
+                                tip.error("您分享的不是群组");
+                                console.log("转发失败:" + JSON.stringify(res));
+                            }
+                        };
+                    }
+                }
+            },
+            getVoucher(id) {
+                //console.log(id);
+                this.add(id);
+            }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        async onLoad() {
+            //XXX 还得验证是否是第一次使用小程序
+            await this.authorize();
+            //检查是否已经有领过的情况
+            await this.couponList();
+        }
+        onShow() {}
+    }
+</script>
+
+<style lang='scss'>
+    page {
+        height: 100%;
+    }
+    .wrap {
+        display: block;
+        //height: 50%; //padding: 10rpx;
+        padding-top: 720rpx;
+    }
+    .info{
+        display: block;
+        margin-top: 10rpx;
+    }
+    .authorize-contianer {
+        height: 100%;
+        background: #fff;
+        text-align: center;
+        padding-top: 100rpx;
+        .authorize-icon {
+            width: 128rpx;
+            height: 128rpx;
+            display: block;
+            margin: 0 auto;
+            padding-bottom: 10rpx;
+        }
+        .auth-item {
+            padding: 5rpx 0;
+        }
+        .btn-authorize {
+            margin: 100rpx 50rpx;
+        }
+    }
+    .bg-img {
+        background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/xianxia.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        padding-top: 0rpx; // -moz-background-size:100% 100%;
+        // -webkit-background-size: 100% 100%;
+        //background-size: cover
+    }
+</style>
