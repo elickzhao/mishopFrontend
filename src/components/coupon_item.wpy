@@ -1,6 +1,8 @@
 <!--  -->
 <template>
     <view class='container-item'>
+        <!-- {{ (10 / 3) * 100}}
+        {{m1.perNum(10,3)}} -->
         <wxc-panel border="{{false}}">
             <view class="content">
                 <view class="content-title">{{coupon.title}}</view>
@@ -18,7 +20,7 @@
                         <!-- status 0 未领取 1 已领取 2 未使用 3 已使用 -->
                         <view class="item">
                             <block wx:if="{{type == 'cen'}}">
-                                <block wx:if="{{coupon.status == 0}}">
+                                <block wx:if="{{coupon.status == 0 && (coupon.receive_num < coupon.count)}}">
                                     <button @tap.stop="tap({{coupon.id}})" class="btn-coupon" size="mini">立即领取</button>
                                 </block>
                                 <block wx:if="{{coupon.status == 1 && (coupon.receive_num < coupon.count)}}">
@@ -52,9 +54,9 @@
                         <block wx:if="{{type == 'cen'}}">
                             <view class="footer-time">
                                 <wxc-flex cross="center">
-                                    <view style="flex-grow: 0;font-size:24rpx">已经领取: {{ (coupon.receive_num / coupon.count) * 100 }} % </view>
+                                    <view style="flex-grow: 0;font-size:24rpx">已经领取: {{ m1.perNum(coupon.receive_num,coupon.count)}} % </view>
                                     <view style="flex-grow: 1;margin-left:22rpx;" class="percent-item">
-                                        <wxc-progress percent="{{ (coupon.receive_num / coupon.count) * 100 }}" active-color="#ac89ff,#ff76a2"></wxc-progress>
+                                        <wxc-progress percent="{{ m1.perNum(coupon.receive_num,coupon.count) }}" active-color="#ac89ff,#ff76a2"></wxc-progress>
                                     </view>
                                 </wxc-flex>
                             </view>
@@ -68,6 +70,7 @@
 
 <script>
     import wepy from 'wepy';
+    import mywxs from '../utils/common.wxs';
     export default class couponItem extends wepy.component {
         props = {
             coupon: {
@@ -76,6 +79,9 @@
             type: String,
         };
         data = {};
+        wxs = {
+            m1: mywxs
+        };
         components = {};
         methods = {
             tap(id) {

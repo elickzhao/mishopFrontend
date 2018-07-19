@@ -1,6 +1,6 @@
 <!-- 会员中心 -->
 <template>
-    <view class='container'>
+    <view class='container'>       
         <repeat for="{{coupons}}" key="index" index="index" item="item">
             <couponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></couponItem>
         </repeat>

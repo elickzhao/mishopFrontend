@@ -1,0 +1,116 @@
+<!-- 商品详情的优惠券列表 -->
+<template>
+    <view class='container'>
+        <scroll-view scroll-x="true" style=" white-space: nowrap; display: flex;margin-bottom: 15rpx;">
+            <wxc-flex>
+                <repeat for="{{items}}" key="index" index="index" item="item">
+                    <voucherItem :coupon.sync="item"></voucherItem>
+                </repeat>
+            </wxc-flex>
+        </scroll-view>
+    </view>
+</template>
+
+<script>
+    import wepy from "wepy";
+    import voucherItem from "../components/voucher_item";
+    export default class couponGoodsList extends wepy.component {
+        props = {
+            items: {}
+        };
+        data = {
+            // list: [1, 2, 3, 4]
+        };
+        components = {
+            voucherItem:voucherItem
+        };
+        methods = {
+            // tap(id) {
+            //     // console.log('child is clicked'+id)
+            //     // console.log('-------')
+            //     // if (this.coupon.status == 0) {
+            //     //     this.coupon.status = 1
+            //     // }
+            //     this.$emit('childFn', id)
+            // }
+        };
+        events = {};
+        watch = {};
+        computed = {};
+        onLoad() {}
+        onShow() {}
+    }
+</script>
+
+<style lang='scss'>
+    .item {
+        // min-width: 32%;
+        // min-height: 300rpx;
+        font-size: 22rpx;
+        text-align: center;
+        padding: 10rpx;
+    }
+    .coupon-main {
+        color: #fff;
+        width: 300rpx;
+        height: 80px;
+        background: #fe7db0;
+    }
+    .coupon-price {
+        font-size: 60rpx;
+        padding: 15rpx;
+    }
+    .coupon-btn {
+        width: 150rpx;
+        height: 80px;
+        position: relative;
+    }
+    .unused-color {
+        background: #74d2d4;
+    }
+    .used-color {
+        background: #cccccc;
+    }
+    .btn-lq {
+        color: #fff;
+        font-size: 40rpx;
+        white-space: normal;
+        word-wrap: break-word;
+        word-break: break-all;
+        position: absolute;
+        width: 100rpx;
+        left: 0;
+        padding: 30rpx;
+    }
+    .eg3:after {
+        color: #ddd;
+        font-size: 5px;
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 100%;
+        z-index: 1000;
+        left: 0%;
+        background: #fff;
+        background: radial-gradient( circle at -20%, #fe7db0 0, #fe7db0 50%, transparent 0);
+        background-size: 10px 15px;
+        /* 而且好像用了 repeat了 */
+    }
+    .eg4:after {
+        color: #ddd;
+        font-size: 5px;
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 100%;
+        z-index: 1000;
+        left: 0%;
+        background: radial-gradient(#fe7db0 0, #fe7db0 50%, transparent 0);
+        /* 这里是做了 两个*/
+        background-repeat: repeat-y;
+        /* 这是波浪边 出现的位置  其实是圆形不断沿着 y轴 复制 所以这样就可以是左右边  如果是 x轴 就是上下线边了 */
+        background-size: 15px 12px;
+        /* 	这个是圆圈的位置 因为这里做了两个 所以用 , 分开了. 当x与y轴转换时 调整-20px 160px 这两个值也得对调 这应该一个属于x轴 一个属于y轴*/
+        background-position: -8px 190px, 380px -40px;
+    }
+</style>

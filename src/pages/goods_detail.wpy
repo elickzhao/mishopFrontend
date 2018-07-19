@@ -14,8 +14,8 @@
       <view class="details_pinfo">
         <text class="price">￥{{detail.price_yh}}</text>
         <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
-                                              <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-                                            </view> -->
+                                                              <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+                                                            </view> -->
         <view class="other-price c999">卖场价:
           <wxc-price status="del" del-color="#999">{{detail.price}}</wxc-price>
         </view>
@@ -32,6 +32,17 @@
       <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 4小时到达 </view>
       <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 48小时无条件退货 </view>
     </view>
+    <view class="spacing"></view>
+    <!-- 优惠活动  -->
+    <block wx:if="{{coupons.length > 0}}">
+      <view class="block">
+        <view class="block_title">优惠活动</view>
+        <view class="block_content">
+          <couponGoodsList @childFn.user="parentFn" :items.sync="coupons"></couponGoodsList>
+        </view>
+      </view>
+    </block>
+    <!-- /优惠活动  -->
     <view class="spacing"></view>
     <view class="block">
       <view class="block_title">商品信息</view>
@@ -138,16 +149,22 @@
   import tip from "../utils/tip";
   import api from "../api/api";
   import WxParse from "../plugins/wxParse/wxParse";
+  import CouponGoodsList from "../components/coupon_goods_list"; //XXX 测试用 用完就删
   export default class goodsDetail extends wepy.page {
     config = {
       navigationBarTitleText: "商品详情",
       usingComponents: {
         "wxc-price": "../../packages/@minui/wxc-price/dist/index",
         "wxc-badge": "../../packages/@minui/wxc-badge/dist/index",
-        "wxc-input": "../../packages/@minui/wxc-input/dist/index"
+        "wxc-input": "../../packages/@minui/wxc-input/dist/index",
+        'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
       }
     };
+    components = {
+      couponGoodsList: CouponGoodsList,
+    }
     data = {
+      coupons: {},
       shopCartNum: 0, //购物车商品数量
       showGoodsInfo: false, //展示商品详细信息
       winWidth: 0,
@@ -204,6 +221,7 @@
         this.special = option.special;
       }
       that.getGoodsDetail();
+      this.couponList();
       //that.addUserBrowser();
       //console.log("special===" + this.special);
     }
@@ -218,6 +236,56 @@
       });
       this.animation = animation;
       this.getShopCartNum();
+    }
+    async couponList() {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
+      const json = await api.getCouponList({
+        query: {
+          uid: uid
+        }
+      });
+      if (json.data.code == 0) {
+        // this.coupons = json.data.list;
+        // that.$apply();
+        this.sortList(json.data.list)
+      } else {
+        tip.error(json.data.msg);
+      }
+      //console.log(this.coupons);
+      that.showLoading = false;
+    }
+     sortList(array) {
+      //去除掉已经领取和已经领光的优惠券
+      let arr = []
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].status == 0 && array[i].receive_num < array[i].count) {
+          arr.push(array[i])
+        }
+      }
+      //console.log(arr);
+      this.coupons = arr
+      this.$apply();
+    }
+    async add(vid) {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
+      const json = await api.addVoucher({
+        query: {
+          uid: uid,
+          vid: vid,
+        }
+      });
+      //console.log(json);
+      if (json.data.code == 0) {
+        //console.log(json);
+        that.$apply();
+      } else {
+        tip.error(json.data.msg);
+      }
+      that.showLoading = false;
     }
     async getShopCartNum() {
       let that = this
@@ -333,7 +401,13 @@
       // });
     }
     computed = {};
-    events = {};
+    events = {
+      'childFn': (vid) => {
+        //console.log("parent received emit event, number is: " + vid);
+        this.add(vid)
+      }
+    };
+    watch = {};
     //加入购物车
     async doTakeCart() {
       let that = this;
@@ -357,7 +431,7 @@
           this.$apply();
         }, 100);
         tip.success("成功加入购物车");
-        this.shopCartNum +=this.orderNum 
+        this.shopCartNum += this.orderNum
       } else {
         if (json.data.msg) {
           tip.error(json.data.msg);
