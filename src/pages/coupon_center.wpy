@@ -51,7 +51,7 @@
             } else {
                 tip.error(json.data.msg);
             }
-            console.log(this.coupons);
+            //console.log(this.coupons);
             that.showLoading = false;
         }
         async add(vid) {

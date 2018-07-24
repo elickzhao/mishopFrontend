@@ -2,7 +2,7 @@
   <view wx:if="{{show}}">
     <view wx:if="{{types===0}}">
       <view class="pop-alert-box">
-        <image src="../images/2.jpg" class="icon_alert" mode="aspectFit" @tap.stop="callback"></image>
+        <image src="https://small.huanqiujishi.com/Data/UploadFiles/logo/hongbao.png" class="icon_alert" mode="aspectFit" @tap.stop="callback"></image>
         <i class="iconfont icon-close" @tap.stop="close"></i>
       </view>
     </view>
