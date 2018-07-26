@@ -28,9 +28,9 @@
       <view class="baoyou c666">满 {{miniNum}} 元起送</view>
     </view>
     <view class="order_num">
-      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 2小时发货 </view>
-      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 4小时到达 </view>
-      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 48小时无条件退货 </view>
+      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 30分钟发货 </view>
+      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 5公里用户 </view>
+      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 1小时及时送达 </view>
     </view>
     <view class="spacing"></view>
     <!-- 优惠活动  -->

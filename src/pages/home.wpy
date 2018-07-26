@@ -7,8 +7,10 @@
         </swiper-item>
       </block>
     </swiper>
+    <image src="../images/gg.png" mode="widthFix" class="gg" lazy-load="false"></image>
     <view class="pos">
       <view class="search_read_only">
+        <image src="../images/1xs1.png" mode="widthFix" class="xs" lazy-load="false"></image>
         <navigator class="search_content" open-type="navigate" url="/pages/search">
           <i class="iconfont icon-search"></i>
           <view class="search_input">搜索商品</view>
@@ -56,7 +58,7 @@
     <!-- <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder> -->
     <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <!-- <bombscreen :types.sync="tps" :show.sync="is_show_alert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen> -->
-    <bombscreen :types.sync="tps" :show.sync="is_show_alert"  @callback.user="alertCallback"></bombscreen>
+    <bombscreen :types.sync="tps" :show.sync="is_show_alert" @callback.user="alertCallback"></bombscreen>
   </view>
 </template>
 
@@ -232,7 +234,9 @@
       },
       alertCallback() {
         this.is_show_alert = false
-        wepy.navigateTo({ url: '/pages/coupon_center' });
+        wepy.navigateTo({
+          url: '/pages/coupon_center'
+        });
         //tip.alert('跳转');
       },
       closeAlert() {
@@ -266,6 +270,18 @@
 </script>
 
 <style lang="less">
+  .xs {
+    // height: 40rpx;
+    // width: 150rpx;
+    //     width: 166px;
+    // height: 46px;
+    width: 110px;
+    margin-right: 20rpx;
+  }
+  .gg {
+    width: 100%;
+
+  }
   .content {
     padding: 30rpx;
   }
@@ -283,7 +299,7 @@
     top: 0rpx;
     left: 0;
     right: 0;
-    background: linear-gradient(to bottom, rgba(56, 56, 56, 100), rgba(255, 0, 0, 0));
+    background: linear-gradient(to bottom, rgba(12, 12, 12, 10), rgba(255, 0, 0, 0));
     .search_content {
       background: rgba(0, 0, 0, 0.1);
       border: 1px solid #efefee;

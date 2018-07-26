@@ -83,7 +83,7 @@
     }
     .btn-lq {
         color: #fff;
-        font-size: 40rpx;
+        font-size: 20px;
         white-space: normal;
         word-wrap: break-word;
         word-break: break-all;
