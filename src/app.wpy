@@ -50,7 +50,7 @@
       window: {
         backgroundTextStyle: "light",
         navigationBarBackgroundColor: "#FF0077",
-        navigationBarTitleText: "环球集市",
+        navigationBarTitleText: "TFS环球免税店",
         navigationBarTextStyle: "light",
         enablePullDownRefresh: false,
         backgroundColor: "#FFF"

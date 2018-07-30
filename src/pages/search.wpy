@@ -1,8 +1,8 @@
 <template>
   <view>
     <!-- <search @searchValue.user="doSearch"></search> -->
-    <view wx:if="{{show==1}}" class="weui-search-bar" style='z-index:99; position: fixed; top: 0;   width: 100%;  '>
-      <view class="weui-search-bar__form">
+    <view wx:if="{{show==1}}" class="weui-search-bar" style='z-index:99; position: fixed; top: 0;   width: 100%; max-height:100rpx; '>
+      <view class="weui-search-bar__form" style=' flex: 8;'>
         <view class="weui-search-bar__box">
           <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
           <input type="text" class="weui-search-bar__input" placeholder="请输入您搜索的商品" confirm-type="search" value="{{keyword}}" auto-focus focus="true" bindinput="searchValueInput" bindconfirm="doSearch" />
@@ -12,9 +12,7 @@
         </view>
       </view>
       <!-- <view class="weui-search-bar__cancel-btn" bindtap="hideInput">搜索</view> -->
-      <button size='mini' id="searchBtn" bindtap="doSearch">
-                                    搜索
-                                  </button>
+      <button size='mini' id="searchBtn" bindtap="doSearch">搜索</button>
     </view>
     <view class="{{show?'mt100':''}}">
       <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
@@ -35,12 +33,12 @@
           <block wx:if="{{historyKeyList.length}}">
             <text class="font_14">历史搜索</text> <text class="fz24" bindtap="clearHistory" style='float:right;margin-top:15rpx;color:#989898'>清除</text>
             <view class="w100">
-              <button wx:for="{{historyKeyList}}" wx:key="*this" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
+              <button wx:for="{{historyKeyList}}" wx:key="id" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
             </view>
           </block>
           <text class="font_14">热门搜索</text>
           <view class="w100">
-            <button wx:for="{{hotKeyList}}" wx:key="*this" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
+            <button wx:for="{{hotKeyList}}" wx:key="keyword" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
           </view>
         </view>
       </block>
@@ -357,8 +355,8 @@
     background-color: #ff1d77;
     color: #fff;
     left: -5rpx;
+    flex: 1;
   }
-
   .cont {
     width: 94%;
     padding: 3%;

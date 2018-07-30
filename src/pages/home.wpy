@@ -49,7 +49,8 @@
     <!--发现好商品模块-->
     <!-- <discover :list.sync="discoverList"></discover> -->
     <!-- <view class="recommend-title">商品推荐</view> -->
-    <image src="https://small.huanqiujishi.com/Data/UploadFiles/adv/20171216/1513391184141358.jpg" mode="scaleToFill" style="width:100%; height:49px"></image>
+    <!-- <image src="https://small.huanqiujishi.com/Data/UploadFiles/adv/20171216/1513391184141358.jpg" mode="scaleToFill" style="width:100%; height:49px"></image> -->
+    <image src="https://small.huanqiujishi.com/Data/UploadFiles/logo/jifen.gif" mode="widthFix" style="width:100%;margin-top:15rpx;"></image>
     <shopGridList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list" :imgUrl.sync="imgUrl"></shopGridList>
     <wxc-loadmore is-end="{{is_end}}" text="{{loadMsg}}" icon="{{true}}"></wxc-loadmore>
     <!--加载更多时动画-->
