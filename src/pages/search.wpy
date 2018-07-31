@@ -14,10 +14,12 @@
       <!-- <view class="weui-search-bar__cancel-btn" bindtap="hideInput">搜索</view> -->
       <button size='mini' id="searchBtn" bindtap="doSearch">搜索</button>
     </view>
-    <view class="{{show?'mt100':''}}">
+    <!-- <view class="{{show?'hidden':''}}  {{barMove?'showBar':''}} " id="the-id"> 这是头部滚动后变动的效果-->
+    <view class="{{show?'hidden':''}} showBar " id="the-id">
       <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
     </view>
-    <view wx:if="{{list.length>0}}">
+    <!-- <view class="{{barMove?'mt100':''}}" wx:if="{{list.length>0}}">   这是头部滚动后变动的效果-->
+    <view class="mt100" wx:if="{{list.length>0}}">
       <!--矩阵商品列表模块-->
       <shopGridList :purchasetype.sync="purchasetype" :list.sync="list" :imgUrl.sync="imgUrl"></shopGridList>
       <view style="background: #f5f5f5;">
@@ -84,6 +86,7 @@
       placeholder: Placeholder
     };
     data = {
+      barMove: false,
       historyKeyList: [],
       hotKeyList: ['面膜', '牙膏'],
       imgUrl: "",
@@ -224,6 +227,52 @@
         url: 'home'
       })
     }
+    //监听某个节点的一些参数 比如距离头部   但是这个都是异步的 不是实时的 所以虽然可以做监听然后操作  但是不如viewscroll那个组件 监听滚动那么完美 操作起来那么特别顺滑
+    queryMultipleNodes() {
+      let that = this
+      var query = wx.createSelectorQuery()
+      query.select('#the-id').boundingClientRect()
+      query.selectViewport().scrollOffset()
+      query.exec(function(res) {
+        res[0].top // #the-id节点的上边界坐标
+        res[1].scrollTop // 显示区域的竖直滚动位置
+        console.log(res[0].top);
+        if (res[0].top < 0 && that.barMove != true) {
+          that.barMove = true
+          that.$apply();
+        }
+        if (res[0].top == 0 && that.barMove != false) {
+          that.barMove = false
+          that.$apply();
+        }
+      })
+    }
+    //监听窗口滚动 滚动的距离等等  异步接口 不会到达一个点后立即显示过渡效果 得等到异步操作后才会起效
+    getScrollOffset() {
+      let that = this
+      wx.createSelectorQuery().selectViewport().scrollOffset(function(res) {
+        res.id // 节点的ID
+        res.dataset // 节点的dataset
+        res.scrollLeft // 节点的水平滚动位置
+        res.scrollTop // 节点的竖直滚动位置
+        //console.log(res.scrollTop );
+        
+        if (res.scrollTop > 100 && that.barMove != true) {
+          console.log("变固定");
+          that.barMove = true
+          that.$apply();
+        }
+        if (res.scrollTop == 0 && that.barMove != false) {
+          console.log("不固定");
+          that.barMove = false
+          that.$apply();
+        }
+      }).exec()
+    }
+    onPageScroll() {
+      //this.queryMultipleNodes()
+      //this.getScrollOffset()  //滚动监听窗口
+    }
     onShow() {
       //console.log(this.show)
     }
@@ -356,6 +405,12 @@
     color: #fff;
     left: -5rpx;
     flex: 1;
+  }
+  .showBar {
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    width: 100%;
   }
   .cont {
     width: 94%;
