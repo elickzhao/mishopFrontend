@@ -69,6 +69,9 @@ page {
 .mt100{
   margin-top:100rpx;
 }
+.mt160{
+  margin-top:160rpx;
+}
 
 .bottom-1px{
   .mix-1px(0, 0, 1, 0, #ddd);
@@ -286,4 +289,14 @@ page {
   display: -webkit-box;
   -webkit-line-clamp: @line;
   box-orient: vertical;
+}
+
+// 两行截断
+.line-clamp{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;  /*限制在一个块元素显示的文本的行数*/
+  -webkit-box-orient: vertical;
 }

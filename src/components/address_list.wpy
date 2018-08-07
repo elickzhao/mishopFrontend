@@ -69,7 +69,7 @@
         }
       });
       if (json.data.code == 0) {
-        console.log("删除成功");
+        //console.log("删除成功");
         this.$emit('currentPage', 0);
         this.$emit('refreshAddList', 'hehe');
       } else {
@@ -132,6 +132,7 @@
       let uid = userSpecialInfo.ID;          
       wx.chooseAddress({
           success: function (res) {
+            console.log(res)
             wx.request({
               url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
               data: {
@@ -150,6 +151,7 @@
               },
               success: function (res) {
                 // success
+                console.log(res)
                 var status = res.data.status;
                 if (status == 1) {
                   wx.showToast({
@@ -157,9 +159,9 @@
                     duration: 2000
                   });
                   //that.loadProductDetail();
-                  this.$emit('refreshAddList', 'hehe');
+                  that.$emit('refreshAddList', 'hehe');
                 } else {
-                  console.log(res.data.err);
+                  console.log("添加失败:"+res.data.err);
                   wx.showToast({
                     title: res.data.err,
                     duration: 5000
@@ -214,7 +216,7 @@
           return;
         }
         var id = e.currentTarget.dataset.id;
-        console.log("id==" + id);
+        //console.log("id==" + id);
         wepy.setStorageSync(ADDRESS_ID, id);
         wepy.navigateBack({
           url: "/pages/comfire_order?from=selAdd"

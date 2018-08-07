@@ -15,17 +15,34 @@
       <button size='mini' id="searchBtn" bindtap="doSearch">搜索</button>
     </view>
     <!-- <view class="{{show?'hidden':''}}  {{barMove?'showBar':''}} " id="the-id"> 这是头部滚动后变动的效果-->
-    <view class="{{show?'hidden':''}} showBar " id="the-id">
+    <view class="{{show?'hidden':''}} showBar Shadow" id="the-id">
+      <!-- 搜索框 -->
+      <view class="search-wrap">
+        <view class="search_read_only">
+          <navigator class="search_content" url="/pages/search" style="width:800rpx;">
+            <i class="iconfont icon-search"></i>
+            <view class="search_input">搜索商品</view>
+          </navigator>
+        </view>
+        <view style="margin-top:15rpx;">
+        <i class="iconfont search-icon" wx:if="{{listview=='row'}}" @tap="changeList(col)">&#xe66f;</i>
+        <i class="iconfont search-icon" wx:if="{{listview=='col'}}" @tap="changeList(row)">&#xe608;</i>
+        </view>
+      </view>
+      <!-- /搜索框 -->
       <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
     </view>
+    <!-- 产品列表 -->
     <!-- <view class="{{barMove?'mt100':''}}" wx:if="{{list.length>0}}">   这是头部滚动后变动的效果-->
-    <view class="mt100" wx:if="{{list.length>0}}">
+    <view class="{{show?'mt100':'mt160'}}" wx:if="{{list.length>0}}">
       <!--矩阵商品列表模块-->
-      <shopGridList :purchasetype.sync="purchasetype" :list.sync="list" :imgUrl.sync="imgUrl"></shopGridList>
+      <shopList wx:if="{{listview=='col'}}" :purchasetype.sync="purchasetype" :list.sync="list" :imgUrl.sync="imgUrl"></shopList>
+      <shopGridList wx:if="{{listview=='row'}}" :purchasetype.sync="purchasetype" :list.sync="list" :imgUrl.sync="imgUrl"></shopGridList>
       <view style="background: #f5f5f5;">
         <wxc-loadmore is-end="{{is_end}}" text="{{loadMsg}}" icon="{{true}}"></wxc-loadmore>
       </view>
     </view>
+    <!-- /产品列表 -->
     <view wx:elif="{{is_empty}}" style="height: 600rpx;overflow:hidden;">
       <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
     </view>
@@ -65,6 +82,7 @@
   import BottomLoadMore from "../components/common/bottomLoadMore";
   import Placeholder from "../components/common/placeholder";
   import FilterSlider from "../components/filterSlider";
+  import ShopList from "../components/shop_list";
   export default class Search extends wepy.page {
     config = {
       navigationBarTitleText: "搜索",
@@ -75,12 +93,14 @@
         "wxc-price": "../../packages/@minui/wxc-price/dist/index",
         "wxc-loadmore": "../../packages/@minui/wxc-loadmore/dist/index",
         'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+        'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
       }
     };
     components = {
       search: Searchs,
       filterBar: FilterBar,
       filterSlider: FilterSlider,
+      shopList: ShopList,
       shopGridList: ShopGridList,
       bottomLoadMore: BottomLoadMore,
       placeholder: Placeholder
@@ -91,6 +111,7 @@
       hotKeyList: ['面膜', '牙膏'],
       imgUrl: "",
       list: [],
+      listview: "row",
       showLoading: false,
       purchasetype: 1,
       is_empty: false,
@@ -160,6 +181,7 @@
         }
       });
       if (json.data.code == 0) {
+        //console.log(json);
         that.list = [...that.list, ...json.data.list];
         that.page_total = json.data.page_total;
         if (json.data.page_total == 0) {
@@ -221,6 +243,12 @@
         //热门搜索
         this.getHotKeyList();
       }
+
+      let systemInfo = wx.getStorageSync(SYSTEM_INFO);
+      if(systemInfo.listview){
+        this.listview = systemInfo.listview;
+      }
+      this.$apply();
     }
     onAbnorTap() {
       wepy.switchTab({
@@ -256,7 +284,6 @@
         res.scrollLeft // 节点的水平滚动位置
         res.scrollTop // 节点的竖直滚动位置
         //console.log(res.scrollTop );
-        
         if (res.scrollTop > 100 && that.barMove != true) {
           console.log("变固定");
           that.barMove = true
@@ -286,6 +313,12 @@
       }
     }
     methods = {
+      changeList(e) {
+        this.listview = e;
+        let systemInfo = wx.getStorageSync(SYSTEM_INFO);
+        systemInfo.listview = e;
+        wepy.setStorageSync(SYSTEM_INFO,systemInfo);
+      },
       searchValueInput(e) {
         this.keyword = e.detail.value;
         this.$apply();
@@ -406,6 +439,33 @@
     left: -5rpx;
     flex: 1;
   }
+  .search-wrap {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 70rpx;
+    color: #ddd;
+    background: #FFF; // border-bottom: 1px solid #fb4747;
+  }
+  .search-class {
+    flex-grow: 1;
+    margin: 0rpx 24rpx;
+    height: 55rpx;
+    .search {
+      display: flex;
+      align-items: center;
+      min-width: 510rpx;
+      height: 50rpx;
+      overflow: hidden;
+    }
+  }
+  .search-icon {
+    width: 44rpx;
+    height: 90rpx;
+    line-height: 90rpx;
+    margin-right: 22rpx;
+    color: #ff0077;
+  }
   .showBar {
     position: fixed;
     top: 0;
@@ -427,6 +487,8 @@
     display: inline-table;
     padding: 5px 10px;
     font-size: 12px;
+    background-color: #FFF;
+    -moz-box-shadow:2px 2px 5px #999999; -webkit-box-shadow:2px 2px 5px #999999; box-shadow:2px 2px 5px #999999;
   }
   .history {
     padding: 20px 27px;
