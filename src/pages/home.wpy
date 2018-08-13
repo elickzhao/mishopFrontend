@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view id="container">
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
@@ -8,6 +8,7 @@
       </block>
     </swiper>
     <image src="../images/gg.png" mode="widthFix" class="gg" lazy-load="false"></image>
+    <!-- 搜索条 -->
     <view class="pos">
       <view class="search_read_only">
         <image src="../images/1xs1.png" mode="widthFix" class="xs" lazy-load="false"></image>
@@ -21,14 +22,15 @@
         </navigator>
       </view>
     </view>
+    <!-- /搜索条 -->
     <view class="nav_list">
       <navigator open-type="navigate" url="/pages/sign_in">
         <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
         <view class="nav_text">签到有礼</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/wholesale?title=试用中心&flag=2">
+      <navigator open-type="navigate" url="/pages/wholesale?title=1元面膜&flag=2">
         <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
-        <view class="nav_text">试用中心</view>
+        <view class="nav_text">1元面膜</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/wholesale?title=品质奶粉&flag=0">
         <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
@@ -42,8 +44,8 @@
     </view>
     <!-- 热卖商品 -->
     <wxc-panel border="{{false}}">
-      <view class="content tc titleFont">天天特价</view>
-      <scrollXList :list.sync="hotList" :imgUrl.sync="imgUrl"></scrollXList>
+      <view class="content tc titleFont">买一送一</view>
+      <scrollXList :list.sync="hotList" :imgUrl.sync="imgUrl" title="买一送一"></scrollXList>
     </wxc-panel>
     <!-- /热卖商品 -->
     <!--发现好商品模块-->
@@ -60,29 +62,35 @@
     <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <!-- <bombscreen :types.sync="tps" :show.sync="is_show_alert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen> -->
     <bombscreen :types.sync="tps" :show.sync="is_show_alert" @callback.user="alertCallback"></bombscreen>
+    <!-- 悬浮按钮 -->
+    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
+    <!-- /悬浮按钮 -->
   </view>
+  
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import api from '../api/api';
-  import tip from '../utils/tip'
+  import wepy from "wepy";
+  import api from "../api/api";
+  import tip from "../utils/tip";
+  import GotopMixin from "../utils/gotop-mix";
   // import Discover from '../components/discover'
-  import Bombscreen from '../components/bomb_screen'
-  import BottomLoadMore from "../components/common/bottomLoadMore"
-  import Placeholder from "../components/common/placeholder"
-  import ScrollXList from "../components/scroll_x_list"
-  import ShopGridList from '../components/shop_grid_list'
+  import Bombscreen from "../components/bomb_screen";
+  import BottomLoadMore from "../components/common/bottomLoadMore";
+  import Placeholder from "../components/common/placeholder";
+  import ScrollXList from "../components/scroll_x_list";
+  import ShopGridList from "../components/shop_grid_list";
   export default class Home extends wepy.page {
     config = {
       usingComponents: {
-        'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
-        'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
-        'wxc-label': '../../packages/@minui/wxc-label/dist/index',
-        'wxc-price': '../../packages/@minui/wxc-price/dist/index',
-        'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index',
+        "wxc-panel": "../../packages/@minui/wxc-panel/dist/index",
+        "wxc-flex": "../../packages/@minui/wxc-flex/dist/index",
+        "wxc-label": "../../packages/@minui/wxc-label/dist/index",
+        "wxc-price": "../../packages/@minui/wxc-price/dist/index",
+        "wxc-loadmore": "../../packages/@minui/wxc-loadmore/dist/index",
+        "wux-floating-button": "../../packages/floating-button/index"
       }
-    }
+    };
     components = {
       // discover: Discover,
       bottomLoadMore: BottomLoadMore,
@@ -90,10 +98,13 @@
       bombscreen: Bombscreen,
       scrollXList: ScrollXList,
       shopGridList: ShopGridList
-    }
+    };
+    mixins = [GotopMixin];
     data = {
-      appName: '',
-      imgUrl: '',
+      showCom:'gotop',
+      topFixed:false,
+      appName: "",
+      imgUrl: "",
       hotList: [],
       list: [],
       purchasetype: 1,
@@ -103,7 +114,7 @@
       //是否到底
       is_end: false,
       //加载信息
-      loadMsg: '',
+      loadMsg: "",
       //当前页面
       currentPage: 1,
       //总页数
@@ -122,7 +133,7 @@
       adList: [],
       tps: 0,
       is_show_alert: true
-    }
+    };
     // async getDiscoverList(currentPage, size) {
     //   let that = this;
     //   const json = await api.getHomeDisvocerList({
@@ -193,8 +204,8 @@
     }
     onAbnorTap() {
       wepy.switchTab({
-        url: 'home'
-      })
+        url: "home"
+      });
     }
     onLoad() {
       let that = this;
@@ -206,7 +217,7 @@
       that.getHotList();
       this.getGoodList();
     }
-    computed = {}
+    computed = {};
     methods = {
       goToAdvert(url) {
         console.log("url===" + url);
@@ -215,43 +226,46 @@
         }
         wepy.navigateTo({
           url: url
-        })
+        });
       },
       onShareAppMessage: function(res) {
-        if (res.from === 'button') {
+        if (res.from === "button") {
           // 来自页面内转发按钮
-          console.log(res.target)
+          console.log(res.target);
         }
         return {
           title: this.appName,
-          path: '/pages/home',
+          path: "/pages/home",
           success: function(res) {
             // 转发成功
           },
           fail: function(res) {
             // 转发失败
           }
-        }
+        };
       },
       alertCallback() {
-        this.is_show_alert = false
+        this.is_show_alert = false;
         wepy.navigateTo({
-          url: '/pages/coupon_center'
+          url: "/pages/coupon_center"
         });
         //tip.alert('跳转');
       },
       closeAlert() {
         //tip.alert('关闭');
       }
+    };
+    onPageScroll() {
+      this.queryMultipleNodes();
     }
-    events = {}
+    events = {};
     //加载更多
     onReachBottom() {
       let that = this;
       that.showLoading = true;
       console.log(that.page_total + "===" + that.currentPage);
       //判断总页数是否大于翻页数
-      if ((that.page_total) > that.currentPage) {
+      if (that.page_total > that.currentPage) {
         //防止重复加载
         if (that.preventRepeatReuqest) {
           return true;
@@ -266,7 +280,7 @@
         that.is_end = true;
         that.loadMsg = "到底了～";
       }
-    };
+    }
   }
 </script>
 
@@ -281,7 +295,6 @@
   }
   .gg {
     width: 100%;
-
   }
   .content {
     padding: 30rpx;
@@ -296,11 +309,13 @@
     height: 100%;
   }
   .pos {
-    position: absolute;
-    top: 0rpx;
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to bottom, rgba(12, 12, 12, 10), rgba(255, 0, 0, 0));
+    z-index:99;
+    width:100%;
+    background: linear-gradient( to bottom, rgba(12, 12, 12, 10), rgba(255, 0, 0, 0));
     .search_content {
       background: rgba(0, 0, 0, 0.1);
       border: 1px solid #efefee;
@@ -327,7 +342,7 @@
     justify-content: space-between;
     padding: 17rpx 50rpx;
     navigator {
-      text-align: center
+      text-align: center;
     }
     .nav_icon {
       height: 80rpx;
@@ -336,7 +351,7 @@
       margin-bottom: 14rpx;
     }
     .nav_text {
-      font-size: 26rpx
+      font-size: 26rpx;
     }
   }
   .recommend-title {

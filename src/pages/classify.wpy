@@ -1,29 +1,29 @@
 <template>
-  <view class="top_search bottom-1px">
-    <view class="search_read_only">
-      <navigator class="search_content" url="/pages/search">
-        <i class="iconfont icon-search"></i>
-        <view class="search_input">搜索商品</view>
-      </navigator>
-    </view>
-  </view>
-  <view class="classify section">
-    <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" >
-    <!-- <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}rpx"> -->
-      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate({{item.id}})">
-        {{item.name}}
-      </view>
-    </scroll-view>
-    <scroll-view class="classify_detail" scroll-y scroll-with-animation="true">
-    <!-- <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}rpx"> -->
-      <view class="children">
-        <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}">
-          <image class="child_image" src="{{imgUrl}}/{{item.bz_1}}"></image>
-          <view class="child_name">{{item.name}}</view>
+    <view class="top_search bottom-1px">
+      <view class="search_read_only">
+        <navigator class="search_content" url="/pages/search">
+          <i class="iconfont icon-search"></i>
+          <view class="search_input">搜索商品</view>
         </navigator>
       </view>
-    </scroll-view>
-  </view>
+    </view>
+    <view class="classify section">
+      <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true">
+        <!-- <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}rpx"> -->
+        <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate({{item.id}})">
+          {{item.name}}
+        </view>
+      </scroll-view>
+      <scroll-view class="classify_detail" scroll-y scroll-with-animation="true">
+        <!-- <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight}}rpx"> -->
+        <view class="children">
+          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}">
+            <image class="child_image" src="{{imgUrl}}/{{item.bz_1}}"></image>
+            <view class="child_name">{{item.name}}</view>
+          </navigator>
+        </view>
+      </scroll-view>
+    </view>
 </template>
 
 <script>
@@ -101,11 +101,10 @@
       }
       this.$apply();
     }
-
     onLoad() {
       let that = this;
       this.imgUrl = this.$parent.globalData.imgUrl;
-      let systemInfo = wepy.getSystemInfoSync()//wx.getStorageSync(SYSTEM_INFO);
+      let systemInfo = wepy.getSystemInfoSync() //wx.getStorageSync(SYSTEM_INFO);
       this.windowHeight = systemInfo.windowHeight + 350;
       this.$apply();
     }
@@ -149,12 +148,11 @@
 </script>
 
 <style lang="less">
-  page{
+  page {
     overflow: hidden;
   }
   .section {
-    position: absolute;
-    // height: 91% - 0.8rpx;
+    position: absolute; // height: 91% - 0.8rpx;
     height: 90%;
     overflow: hidden;
   }
@@ -162,10 +160,9 @@
     width: 100%;
   }
   .classify {
-    display: flex; 
-    //position: relative;
+    display: flex; //position: relative;
     .classify_catetory {
-      width: 280rpx; 
+      width: 280rpx;
       position: relative;
       z-index: 1;
       .name {
@@ -198,8 +195,7 @@
       }
       .children {
         display: flex;
-        flex-wrap: wrap;
-        //margin: 20rpx 0rpx;
+        flex-wrap: wrap; //margin: 20rpx 0rpx;
       }
       .child_image {
         width: 160rpx;

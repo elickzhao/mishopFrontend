@@ -104,7 +104,7 @@
 				</view>
 			</block>
 			<view class="item" style="background: #fff;">
-				<navigator class="scroll-list" url="/pages/wholesale?title=天天特价&flag=3">
+				<navigator class="scroll-list" url="/pages/wholesale?title={{title}}&flag=3">
 					<view class="image_box">
 						<image style="height: 360rpx;" src="../images/more.png"></image>
 					</view>
@@ -120,6 +120,7 @@
 		props = {
 			imgUrl: String,
 			list: [],
+			title:String,
 		};
 		// 事件处理函数（集中保存在 methods 对象中）
 		methods = {}

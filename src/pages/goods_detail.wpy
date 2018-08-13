@@ -137,6 +137,9 @@
       <view class="comfire_btn" @tap.stop="confirmTake">确定</view>
     </view>
   </view>
+      <!-- 悬浮按钮 -->
+    <wux-floating-button id="wux-floating-button" wux-class="myButtons" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
+    <!-- /悬浮按钮 -->
 </template>
 
 <script>
@@ -149,7 +152,8 @@
   import tip from "../utils/tip";
   import api from "../api/api";
   import WxParse from "../plugins/wxParse/wxParse";
-  import CouponGoodsList from "../components/coupon_goods_list"; //XXX 测试用 用完就删
+  import CouponGoodsList from "../components/coupon_goods_list"; 
+  import GotopMixin from "../utils/gotop-mix";
   export default class goodsDetail extends wepy.page {
     config = {
       navigationBarTitleText: "商品详情",
@@ -158,12 +162,15 @@
         "wxc-badge": "../../packages/@minui/wxc-badge/dist/index",
         "wxc-input": "../../packages/@minui/wxc-input/dist/index",
         'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+        "wux-floating-button": "../../packages/floating-button/index"
       }
     };
     components = {
       couponGoodsList: CouponGoodsList,
-    }
+    };
+    mixins = [GotopMixin];
     data = {
+      showCom:'menu',
       coupons: {},
       shopCartNum: 0, //购物车商品数量
       showGoodsInfo: false, //展示商品详细信息
@@ -1080,5 +1087,8 @@
     /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
     color: #ff4856;
     border: 1px solid #ff4856;
+  }
+  .myButtons{
+    bottom:150rpx !important;
   }
 </style>
