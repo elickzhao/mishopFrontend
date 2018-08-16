@@ -7,7 +7,9 @@
         <view class="nickName cfff">{{nickName}}</view>
       </view>
     </view>
-    <OrderBar />
+    <!-- 订单导航 -->
+    <OrderBar :count.sync="orderCount" ></OrderBar>
+    <!-- /订单导航 -->
     <view class="list-wrap">
       <view class="list-item">
         <!-- 这个绑定点击有点麻烦 -->
@@ -68,6 +70,7 @@
     };
     data = {
       avatarUrl: "",
+      orderCount:[],
       nickName: "",
       bShowBind: false,
       list: [{
@@ -84,29 +87,28 @@
         }
       ]
     };
-    // async getUserInfo(phone,code) {
-    //   let that = this;
-    //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    //   let openId = userSpecialInfo.openid;
-    //   const json = await api.getUserInfo({
-    //     query: {
-    //       openId: openId
-    //     }
-    //   });
-    //   if (json.data.code == 0) {
-    //     if (json.data.user.mobile.length>0) {
-    //       this.bShowBind=false;
-    //     } else {
-    //       this.bShowBind = true;
-    //     }
-    //     that.$apply();
-    //   } else {
-    //     tip.error(json.data.msg)
-    //   }
-    //   that.showLoading = false;
-    // }
+    async getOrderCount() {
+      let that = this;
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+      let uid = userSpecialInfo.ID;
+      const json = await api.getOrderCount({
+        query: {
+          uid: uid
+        }
+      });
+      //console.log(json.data);
+      if (json.data.code == 0) {
+        that.orderCount = json.data.count;
+        that.$apply();
+      } else {
+        tip.error(json.data.msg)
+      }
+      //console.log(that.orderCount);
+      //that.showLoading = false;
+    }
     async onLoad() {
       let that = this;
+      //await this.getOrderCount();
       let userInfo = wepy.getStorageSync(USER_INFO);
       // console.log("userINFO->>>>>>" + userInfo);
       // console.log(userInfo);
@@ -178,8 +180,9 @@
       that.nickName = userInfo.nickName;
       this.$apply();
     }
-    onShow() {
-      let that = this;
+    async onShow() {
+      let that = this; 
+      await this.getOrderCount();
       //this.getUserInfo();
     }
     computed = {};

@@ -127,25 +127,25 @@
         const cur = e.detail.key;
         this.currentTab = cur;
         if (cur == 0) {
-          console.log("待付款");
+          //console.log("待付款");
           that.orderStatus = 10;
           that.getMyOrder();
         } else if (cur == 1) {
-          console.log("待发货");
+          //console.log("待发货");
           that.orderStatus = 20;
           that.getMyOrder();
         } else if (cur == 2) {
-          console.log("待收货");
+          //console.log("待收货");
           that.orderStatus = 30;
           //that.receiveFlg=2;
           that.getMyOrder();
         } else if (cur == 3) {
-          console.log("已完成订单类型");
+          //console.log("已完成订单类型");
           that.orderStatus = 50;
           //that.receiveFlg=4;
           that.getMyOrder();
         } else if (cur == 4) {
-          console.log("退款订单类型");
+          //console.log("退款订单类型");
           that.orderStatus = 'refund';
           //that.receiveFlg=4;
           that.getMyOrder();
@@ -160,7 +160,7 @@
     };
     events = {
       refreshOrderList(msg) {
-        console.log("msg值:" + msg);
+        //console.log("msg值:" + msg);
         if (msg == 3) {
           this.currentTab = 3;
           this.$apply();
@@ -183,21 +183,21 @@
         }
         that.preventRepeatReuqest = true;
         that.currentPage++;
-        console.log(this.currentTab);
+        //console.log(this.currentTab);
         if (this.currentTab == 0) {
-          console.log("待付款");
+          //console.log("待付款");
           that.orderStatus = 10;
         } else if (this.currentTab == 1) {
-          console.log("待发货");
+          //console.log("待发货");
           that.orderStatus = 20;
         } else if (this.currentTab == 2) {
-          console.log("待收货");
+          //console.log("待收货");
           that.orderStatus = 30;
         } else if (this.currentTab == 3) {
-          console.log("已完成订单类型");
+          //console.log("已完成订单类型");
           that.orderStatus = 50;
         } else if (this.currentTab == 4) {
-          console.log("退款订单类型");
+          //console.log("退款订单类型");
           that.orderStatus = 'refund';
         }
         that.getMyOrder(that.currentPage);

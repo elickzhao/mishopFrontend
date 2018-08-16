@@ -11,25 +11,25 @@
     </view>
     <view class="row-around state-box">
       <view class="column-center" @tap="list(0)">
-        <icon class="payment small" color="gray"/>
+        <icon class="payment small" color="gray" />
         <text>待付款</text>
-        <view class="weui-badge" wx:if="{{count[1] > 0}}">{{count[1]}}</view>
+        <view class="weui-badge" wx:if="{{count[0] > 0}}">{{count[0]}}</view>
       </view>
       <view class="column-center" @tap="list(1)">
-        <icon class="delivery small" color="gray"/>
+        <icon class="delivery small" color="gray" />
         <text>待发货</text>
-        <view class="weui-badge" wx:if="{{count[2] > 0}}" >{{count[2]}}</view>
+        <view class="weui-badge" wx:if="{{count[1] > 0}}">{{count[1]}}</view>
       </view>
       <view class="column-center" @tap="list(2)">
-        <icon class="received small" color="gray"/>
+        <icon class="received small" color="gray" />
         <text>待收货</text>
-        <view class="weui-badge" wx:if="{{count[3] > 0}}">{{count[3]}}</view>
+        <view class="weui-badge" wx:if="{{count[2] > 0}}">{{count[2]}}</view>
       </view>
       <view class="column-center" @tap="list(3)">
-        <icon class="evaluated small" color="gray"/>
+        <icon class="evaluated small" color="gray" />
         <!-- <text>待评论</text> -->
         <text>已完成</text>
-        <view class="weui-badge" wx:if="{{count[4] > 0}}">{{count[4]}}</view>
+        <view class="weui-badge" wx:if="{{count[3] > 0}}">{{count[3]}}</view>
       </view>
       <!-- <view class="column-center" @tap="list(5)">
         <icon class="refund small" color="gray"/>
@@ -44,16 +44,40 @@
   import wepy from 'wepy';
   // import order from '../../api/order';
   // import Event from '../../utils/Event';
-
+  import api from "../../api/api";
+  import {
+    USER_INFO,
+    USER_SPECICAL_INFO
+  } from "../../utils/constant";
   export default class OrderBar extends wepy.component {
     props = {
+      count:[]
     };
     data = {
-      count: null
+      //count: null
     };
+    // async getOrderCount() {
+    //   let that = this;
+    //   let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    //   let uid = userSpecialInfo.ID;
+    //   const json = await api.getOrderCount({
+    //     query: {
+    //       uid: uid
+    //     }
+    //   });
+    //   //console.log(json.data);
+    //   if (json.data.code == 0) {
+    //     that.count = json.data.count;
+    //     that.$apply();
+    //   } else {
+    //     tip.error(json.data.msg)
+    //   }
+    //   that.showLoading = false;
+    // }
     async onLoad() {
       // Event.listen(Event.ORDER_LIST_UPDATE, this.load.bind(this), this);
       // await this.load();
+      //await this.getOrderCount();      
     }
     async load() {
       this.count = await order.count();
@@ -77,19 +101,19 @@
   @import "../../styles/weui2.scss";
   @import "../../styles/icons.scss";
   @import "../../styles/variable";
-  .order-box{
+  .order-box {
     background-color: #FFFFFF;
     border-bottom: $border;
-    .weui-cells{
+    .weui-cells {
       margin-top: 0;
     }
-    .state-box{
+    .state-box {
       position: relative;
       padding: 10rpx 0;
-      .column-center{
+      .column-center {
         position: relative;
       }
-      .weui-badge{
+      .weui-badge {
         position: absolute;
         top: 0;
         right: -5px;

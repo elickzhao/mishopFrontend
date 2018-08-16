@@ -123,7 +123,7 @@ const clearSearchKeyword = (params) => wxRequest(params, jishi + '/api/news/delH
 const getMyOrderList = (params) => wxRequest(params, jishi + '/api/news/getMyOrderList');
 
 //查询我的订单数量
-//const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderSize');
+const getOrderCount = (params) => wxRequest(params, jishi + '/api/news/getOrderCount');
 
 //根据订单号查询详情
 const getOrderInfo = (params) => wxRequest(params, jishi + '/api/news/getOrderDetail');
@@ -170,6 +170,8 @@ const addVoucher = (params) => wxRequest(params, jishi + '/api/news/addVoucher')
 //获取用户优惠券
 const getCustCouponList = (params) => wxRequest(params, jishi + '/api/news/getCustCouponList');
 
+
+
 module.exports = {
   getMiniNum,
   getAdList,
@@ -210,7 +212,8 @@ module.exports = {
   getShop,
   getCouponList,
   addVoucher,
-  getCustCouponList
+  getCustCouponList,
+  getOrderCount
 }
 
 // module.exports = {
@@ -245,7 +248,7 @@ module.exports = {
 //   goodsFavorite,
 //   goodsUnFavorite,
 //   goodsIsFavorite,
-//   getMyOrderSize,getPayOrderDetail,
+//   getOrderCount,getPayOrderDetail,
 //   getAdList,
 //   getSignDate,
 //   discountGoodsList
