@@ -17,7 +17,7 @@
           </view>
           <view class="text-box">
             <view class="goods-title">{{item.name}}</view>
-            <view class="goods-label">数量: x {{item.num}}</view>
+            <view class="goods-label">数量: x {{item.num}}  <block wx:if="{{item.pro_type == 2}}"><wxc-label class="label" style="margin-left:20rpx;" type="fill" type-color="#ffe8ee" text-color="#ff5577">特价商品无法使用优惠券</wxc-label></block></view>
             <view class="goods-price">¥ {{item.price_yh}}</view>
           </view>
         </view>
@@ -51,7 +51,7 @@
             </wxc-list>
           </view> -->
       <view class="spacing"></view>
-      <view wx:if="{{totalPrice > 30 && (total_jf_num >= 100 || coupons.length >0)}}" class="list-item" @tap="selectCoupon">
+      <view wx:if="{{limitPrice > 30 && (total_jf_num >= 100 || coupons.length >0)}}" class="list-item" @tap="selectCoupon">
         <wxc-list title="优惠券" desc="使用优惠券" arrow="{{true}}" mode="none">
         </wxc-list>
       </view>
@@ -111,6 +111,7 @@
         "wxc-icon": "../../packages/@minui/wxc-icon/dist/index",
         "wxc-list": "../../packages/@minui/wxc-list/dist/index",
         "wxc-panel": "../../packages/@minui/wxc-panel/dist/index",
+        "wxc-label": "../../packages/@minui/wxc-label/dist/index",
       }
     };
     components = {
@@ -118,6 +119,7 @@
       address: Adress,
     }
     data = {
+      limitPrice:0, //这个价格是去掉特价商品的总价
       coupons: [],
       couponItems: [],
       //优惠的金额
@@ -176,6 +178,7 @@
         this.address = data.adds;
         this.onLoadAddressID = aid;
         this.total_jf_num = data.userScore;
+        this.limitPrice = data.limitPrice;
         //this.can_use_score = data.canUseScore;
         // this.deduScore = data.deduScore;
         // this.deduFee = data.deduFee;
@@ -187,6 +190,7 @@
       }
       that.$apply();
     }
+    //获取收货地址
     async getAddressInfo(id) {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
@@ -238,6 +242,7 @@
       //console.log('执行完毕了');
       this.$apply();
     }
+    //获取门店列表
     async getShop() {
       let that = this;
       const json = await api.getShop({
@@ -280,6 +285,7 @@
       }
     }
     computed = {};
+    //支付
     async goToPay(formId) {
       //测试调用接口用，可注释
       tip.loading("提交订单中");
@@ -362,6 +368,7 @@
         tip.error(json.data.msg);
       }
     }
+    //添加地址
     addAddress() {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
@@ -418,6 +425,7 @@
         }
       });
     }
+    //优惠券列表
     async couponList() {
       let that = this;
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
@@ -426,7 +434,7 @@
         query: {
           uid: uid,
           flag: 1,
-          totalPrice: this.totalPrice,
+          totalPrice: this.limitPrice, //这个价格是去掉特价商品的总价
         }
       });
       //console.log(json)
@@ -462,6 +470,7 @@
       //console.log(this.coupons);
       that.showLoading = false;
     }
+    //使用优惠券
     useVoucher(id) {
       // console.log(this.coupons.length);
       // console.log(id)
@@ -492,6 +501,7 @@
       // handleDelItem(itemData) {
       //   this.deleteGoods(itemData);
       // },
+      //选择要使用的优惠券
       async selectCoupon() {
         let that = this
         //加上这个就是同步的了 要不这里会获取不到数组
@@ -512,6 +522,7 @@
           }
         })
       },
+      //这是原本的积分优惠券
       useCoupon(e) {
         if (e.detail.value) {
           this.actualPrice = (this.actualPrice - 5).toFixed(2)
@@ -521,10 +532,12 @@
         this.deduScore = e.detail.value;
         // console.log('switch1 发生 change 事件，携带值为', e.detail.value)
       },
+      //买家留言
       bindKeyInput(e) {
         this.sellerMessage = e.detail.value;
         //console.log("====" + e.detail.value);
       },
+      //去支付
       async goPay(e) {
         //var fId = e.detail.formId;
         //console.log(e)
@@ -544,6 +557,7 @@
         // })
         this.goToPay();
       },
+      //设置收货地址
       setAddress() {
         wepy.navigateTo({
           url: "/pages/address?type=order"

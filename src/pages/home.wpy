@@ -29,7 +29,7 @@
         <view class="nav_text">签到有礼</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/wholesale?title=1元面膜&flag=2">
-        <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
+        <image src="../images/icon_nav_02_new.gif" class="nav_icon"></image>
         <view class="nav_text">1元面膜</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/wholesale?title=品质奶粉&flag=0">

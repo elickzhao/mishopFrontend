@@ -68,7 +68,7 @@
         wepy.setNavigationBarTitle({
           title: "授权登录"
         });
-        console.log(ops);
+        //console.log(ops);
         if (ops.back) {
           this.backUrl = ops.back
         }

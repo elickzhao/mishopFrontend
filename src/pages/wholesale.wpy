@@ -142,7 +142,7 @@
           this.keyword = "奶粉";
           break;
         case "3":
-          this.keyword = "天天特价";
+          this.keyword = options.title;
           break;
         default:
           this.keyword = "面膜";
