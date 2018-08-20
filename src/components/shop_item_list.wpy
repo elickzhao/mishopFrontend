@@ -6,7 +6,7 @@
       <image src="{{item.photo_x}}"></image>
     </view>
     <view class="goods">
-      <navigator class="item_content" url="/pages/goods_detail?id={{item.id}}">
+      <navigator class="item_content" url="/pages/goods_detail?id={{item.pid}}">
       <view class="product_name">{{item.name}}</view>
       <!-- <view class="product_rule">规格:{{item.goodsSkuVals}}</view> -->
       <view class="product_info">
@@ -42,6 +42,7 @@ import {
 
 export default class ShopItemList extends wepy.component {
   props = {
+    //这里的值 不是用props传递的 是用事件传递的
     goodsList: {
       default: []
     },

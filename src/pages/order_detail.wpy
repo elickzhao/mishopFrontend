@@ -109,13 +109,13 @@
         }
       });
       if (json.data.code == 0) {
-        console.log(json);
+        //console.log(json);
         this.ord = json.data.ord;
         that.list = [];
         that.list = [...that.list, ...json.data.pro];
         that.$invoke('shopItemList', 'refreshList', that.list);
-        console.log("========list返回数据========");
-        console.log(that.list);
+        //console.log("========list返回数据========");
+        //console.log(that.list);
       } else {
         tip.error(json.data.msg)
       }
