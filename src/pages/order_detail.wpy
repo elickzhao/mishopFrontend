@@ -3,12 +3,13 @@
   <view class="order_detail">
     <navigator class="item_content" url="/pages/logistics?orderNo={{orderNo}}">
       <view class="order_state" wx:if="{{obj.status==2 || obj.status==1}}">
+        <!-- <view class="order_state" > -->
         <view class="left">
           <i class="iconfont icon-complete"></i>
         </view>
         <view class="center">
-          <view class="state_doc">{{expressFlowInfo.flowName}}</view>
-          <view class="state_time">{{expressFlowInfo.updateTime}}</view>
+          <view class="state_doc"> 快件已到达【广东东莞桥头分部】 扫描员是【屈春娥】 {{expressFlowInfo.flowName}}</view>
+          <view class="state_time">2018-08-05 10:20:46 {{expressFlowInfo.updateTime}}</view>
         </view>
         <view class="right">
           <view>&gt;</view>
@@ -62,18 +63,27 @@
         <text class="content">{{ord.payedTime}}</text>
       </view>
     </view>
+    <!-- 快递信息 -->
+    <!-- 以后做个 点击后向下拉伸的组件 再在这里展示这个 其实放在一个页面比较好 -->
+    <!-- <view class="info_block">
+      <view class="item">
+        <wxc-steps steps="{{steps}}" current="{{current}}"></wxc-steps>
+      </view>
+    </view> -->
+    <!-- /快递信息 -->
     <view class="footer">
       <view class="money">应付价格:
         <text class="receive_money">{{ord.amount}}</text>
       </view>
       <view class="btn_group">
-        <view class="btn" @tap="goLogistics" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">查看物流</view>
+        <!-- <view class="btn" @tap="goLogistics" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">查看物流</view> -->
+        <view class="btn" wx:if="{{expressNo != ''}}" @tap="goLogistics({{expressNo}})" data-id="{{ord.orderNo}}">查看物流</view>
         <view class="btn type_pick dsh" @tap="completion" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">待收货</view>
         <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{ord.status==10}}" data-id="{{ord.id}}" data-orderSn="{{ord.order_sn}}">立即付款</view>
         <!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
         <view class="btn type_pick dsh" @tap="refund({{ord.id}})" wx:if="{{ord.status==20 || ord.status==30 && ord.back == 0 }}">申请退货</view>
-        <view class="btn "  wx:if="{{ord.back == 1 }}">已申请退款</view>
-        <view class="btn "  wx:if="{{ord.back == 2 }}">退款完成</view>
+        <view class="btn " wx:if="{{ord.back == 1 }}">已申请退款</view>
+        <view class="btn " wx:if="{{ord.back == 2 }}">退款完成</view>
       </view>
     </view>
   </view>
@@ -91,6 +101,12 @@
   export default class OrderDetail extends wepy.page {
     config = {
       navigationBarTitleText: '订单详情',
+      usingComponents: {
+        'wxc-steps': '../../packages/@minui/wxc-steps/dist/index',
+      }
+    }
+    components = {
+      shopItemList: ShopItemList,
     }
     data = {
       ord: {},
@@ -98,7 +114,9 @@
       flag: "",
       list: [],
       orderExpress: {},
-      expressFlowInfo: {}
+      expressFlowInfo: {},
+      expressNo:"",
+      //steps: []
     }
     async getOrderInfo(currentPage, size) {
       let that = this;
@@ -114,8 +132,51 @@
         that.list = [];
         that.list = [...that.list, ...json.data.pro];
         that.$invoke('shopItemList', 'refreshList', that.list);
+        that.expressNo = json.data.expressNo;
         //console.log("========list返回数据========");
         //console.log(that.list);
+        //that.steps = json.data.steps;
+        // that.steps = [{
+        //     "title": "2018-08-05 12:46:36",
+        //     "desc": "【东莞市】已签收,签收人是同事物管.申行天下义当先,江湖好评是良缘.记得给申通小件员五星好评哦！，如有疑问请联系派件员韦盛华：18098237682 ，感谢使用申通快递，期待再次为您服务"
+        //   },
+        //   {
+        //     "title": "2018-08-05 10:20:46",
+        //     "desc": "【东莞市】广东东莞桥头分部派件员 韦盛华 18098237682正在为您派件"
+        //   },
+        //   {
+        //     "title": "2018-08-05 10:20:46",
+        //     "desc": "【广东东莞桥头分部】已收入"
+        //   },
+        //   {
+        //     "title": "2018-08-05 08:50:01",
+        //     "desc": "快件已到达【广东东莞桥头分部】 扫描员是【屈春娥】"
+        //   },
+        //   {
+        //     "title": "2018-08-04 10:39:22",
+        //     "desc": "由【广东广州转运中心】发往【广东东莞中转部】"
+        //   },
+        //   {
+        //     "title": "2018-08-03 02:10:53",
+        //     "desc": "由【江苏江阴航空部】发往【广东广州转运中心】"
+        //   },
+        //   {
+        //     "title": "2018-08-02 19:51:15",
+        //     "desc": "由【江苏南京浦口公司】发往【江苏江阴航空部】"
+        //   },
+        //   {
+        //     "title": "2018-08-02 19:38:08",
+        //     "desc": "由【江苏南京浦口公司】发往【江苏南京转运中心】"
+        //   },
+        //   {
+        //     "title": "2018-08-02 19:38:08",
+        //     "desc": "【江苏南京浦口公司】正在进行【装袋】扫描"
+        //   },
+        //   {
+        //     "title": "2018-08-02 19:14:27",
+        //     "desc": "【江苏南京浦口公司】的收件员【大华】已收件"
+        //   }
+        // ];
       } else {
         tip.error(json.data.msg)
       }
@@ -133,15 +194,14 @@
         }
       });
       if (json.data.code == 0) {
-        console.log("===========lzz返回数据=========")
-        console.log(json.data);
+        // console.log("===========lzz返回数据=========")
+        // console.log(json.data);
         /*that.list = [...that.list, ...json.data.errerTips.orderItemList];
         that.$invoke('shopItemList', 'refreshList', that.list);
         console.log(json.data.errerTips.orderItemList);
         console.log(that.list);*/
         // if (this.flag==2) {//删除
         // }
-        
         //暂时跳到用户中心 因为没有退款那个栏目
         //this.$emit('refreshOrderList', that.flag); 这有个刷新列表的方法 以后可以留着看看
         tip.success('申请退款成功!');
@@ -165,15 +225,12 @@
       if (json.data.code == 0) {
         that.orderExpress = json.data.orderExpress;
         that.expressFlowInfo = json.data.expressFlowInfo;
-        console.log("========list返回数据========");
-        console.log(that.list);
+        // console.log("========list返回数据========");
+        // console.log(that.list);
       } else {
         tip.error(json.data.msg)
       }
       that.$apply();
-    }
-    components = {
-      shopItemList: ShopItemList
     }
     onLoad(options) {
       let that = this;
@@ -181,13 +238,12 @@
       this.orderNo = options.orderNo;
       that.getOrderInfo();
       //XXX 一会看看这里
-      //that.getOrderExpressInfo();
+      //that.getOrderExpressInfo(); //这是快递??
       //console.log(bb.result.products)
-      console.log("=========options==========");
-      console.log(options.id);
+      // console.log("=========options==========");
+      // console.log(options.id);
     }
-    computed = {
-    }
+    computed = {}
     methods = {
       async refund(e) {
         this.flag = 'refund';
@@ -208,15 +264,23 @@
         this.editOrderInfo(this.orderNo, this.flag);
         console.log("完成")
       },
-      async goLogistics() {
-        tip.confirm('查看物流');
+      async goLogistics(expressNo) {
+        let aa = tip.confirm('查看物流');
+        //console.log(expressNo);
+        //3369785056558"
+        aa.then(function(result) {
+          //console.log(result);
+          wepy.navigateTo({ url: "/pages/logistics?expressNo="+expressNo});
+        }).catch(function(reason) {
+          console.log('取消：' + reason);
+        });
+
       },
       async payMoney(e) {
         this.orderNo = e.currentTarget.dataset.id;
         let order_sn = e.currentTarget.dataset.ordersn; //这个居然大小写敏感
         console.log(order_sn);
         console.log(e);
-        
         let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
         let uid = userSpecialInfo.ID;
         const pay = await api.toPay({
@@ -259,8 +323,7 @@
         }
       }
     }
-    events = {
-    }
+    events = {}
   }
 </script>
 
@@ -350,6 +413,9 @@
     align-items: center;
     padding: 18rpx;
     border-top: 1px solid #e6e6e6;
+    -moz-box-shadow: 0px -2px 10px #999999;
+    -webkit-box-shadow: 0px -2px 10px #999999;
+    box-shadow: 0px -2px 10px #999999;
     .btn_group {
       display: flex;
       margin-right: 30rpx;

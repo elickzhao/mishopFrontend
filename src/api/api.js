@@ -135,7 +135,7 @@ const getPayOrderDetail = (params) => wxRequest(params, jishi + '/api/news/getPa
 const editOrderInfo = (params) => wxRequest(params, jishi + '/api/news/ordersEdit');
 
 //根据订单号查询物流
-//const orderExpressInfo = (params) => wxRequest(params, apiMall + '/api/orderExpress/orderExpressInfo');
+const orderExpressInfo = (params) => wxRequest(params, jishi + '/api/news/orderExpressInfo');
 
 //查询用户的已订购产品
 //const goodsUserOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/goodsUserOrderList');
@@ -213,7 +213,8 @@ module.exports = {
   getCouponList,
   addVoucher,
   getCustCouponList,
-  getOrderCount
+  getOrderCount,
+  orderExpressInfo,
 }
 
 // module.exports = {

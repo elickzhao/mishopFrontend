@@ -13,9 +13,9 @@
       <view class="btn-authorize">
         <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
         <!-- <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
-                    <view class="fz32" style="color:#EF2F23" wx:else>
-                      <button type="warn" lang="zh_CN">请先升级微信版本</button>
-                    </view> -->
+                          <view class="fz32" style="color:#EF2F23" wx:else>
+                            <button type="warn" lang="zh_CN">请先升级微信版本</button>
+                          </view> -->
       </view>
     </block>
   </view>
@@ -43,7 +43,8 @@
     data = {
       $loading: {
         isShow: true,
-        backUrl: ""
+        backUrl: "",
+        backId: ""
       },
       //canIUse: wx.canIUse('button.open-type.getUserInfo')
     };
@@ -70,7 +71,12 @@
         });
         //console.log(ops);
         if (ops.back) {
+          //console.log(ops.back)
           this.backUrl = ops.back
+        }
+        if (ops.id) {
+          //console.log(ops.id)
+          this.backId = ops.id
         }
         this.$loading.isShow = false;
         this.$apply();
@@ -173,8 +179,16 @@
               userSpecialInfo.openid = data.openid
               wepy.setStorageSync(USER_SPECICAL_INFO, userSpecialInfo);
               if (that.backUrl) {
+                //console.log(that.backUrl);
+                let url = ""
+                if (that.backId) {
+                  url = '/pages/' + that.backUrl + '?id=' + that.backId
+                } else {
+                  url = '/pages/' + that.backUrl
+                }
+                //console.log(url)
                 wepy.redirectTo({
-                  url: '/pages/' + that.backUrl
+                  url: url
                 });
               } else {
                 wepy.switchTab({

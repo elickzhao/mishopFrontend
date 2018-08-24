@@ -14,8 +14,8 @@
       <view class="details_pinfo">
         <text class="price">￥{{detail.price_yh}}</text>
         <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
-                                                              <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-                                                            </view> -->
+                                                                    <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+                                                                  </view> -->
         <view class="other-price c999">卖场价:
           <wxc-price status="del" del-color="#999">{{detail.price}}</wxc-price>
         </view>
@@ -152,8 +152,9 @@
   import tip from "../utils/tip";
   import api from "../api/api";
   import WxParse from "../plugins/wxParse/wxParse";
-  import CouponGoodsList from "../components/coupon_goods_list"; 
+  import CouponGoodsList from "../components/coupon_goods_list";
   import GotopMixin from "../utils/gotop-mix";
+  import AuthCheckMixin from "../utils/check-mix";
   export default class goodsDetail extends wepy.page {
     config = {
       navigationBarTitleText: "商品详情",
@@ -168,9 +169,10 @@
     components = {
       couponGoodsList: CouponGoodsList,
     };
-    mixins = [GotopMixin];
+    mixins = [GotopMixin, AuthCheckMixin];
     data = {
-      showCom:'menu',
+      backUrl: '',
+      showCom: 'menu',
       coupons: {},
       shopCartNum: 0, //购物车商品数量
       showGoodsInfo: false, //展示商品详细信息
@@ -201,7 +203,7 @@
       purchaseText: "立即购买",
       special: 0 ////0-正常入库;1-特价专区和换货专区,
     };
-    onLoad(option) {
+    async onLoad(option) {
       let that = this;
       let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
       this.miniNum = systemInfo.miniNum;
@@ -213,9 +215,10 @@
       this.hidden = true;
       this.winHeight = "100%";
       that.detail = {};
-      that.$apply();
+      that.backUrl = 'goods_detail&id=' + option.id //这个路径一定要放在 authorize 前面 要不就不会使用这个返回路径了
       //接收上一个页面传过来的参数
       that.goodsId = option.id;
+      that.$apply();
       if (option.purchasetype != undefined) {
         this.purchasetype = option.purchasetype;
       }
@@ -229,6 +232,8 @@
       }
       that.getGoodsDetail();
       this.couponList();
+      //检测用户信息
+      await this.authorize();
       //that.addUserBrowser();
       //console.log("special===" + this.special);
     }
@@ -263,7 +268,7 @@
       //console.log(this.coupons);
       that.showLoading = false;
     }
-     sortList(array) {
+    sortList(array) {
       //去除掉已经领取和已经领光的优惠券
       let arr = []
       for (let i = 0; i < array.length; i++) {
@@ -1088,7 +1093,7 @@
     color: #ff4856;
     border: 1px solid #ff4856;
   }
-  .myButtons{
-    bottom:150rpx !important;
+  .myButtons {
+    bottom: 150rpx !important;
   }
 </style>

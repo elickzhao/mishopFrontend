@@ -7,6 +7,7 @@
 <script>
   import wepy from 'wepy';
   import ShopCart from '../components/shop_cart'
+  import AuthCheckMixin from "../utils/check-mix";
   export default class shopCart extends wepy.page {
     config = {
       navigationBarTitleText: '购物车',
@@ -17,18 +18,18 @@
     components = {
       shopCart: ShopCart
     }
-    data = {
+    mixins = [AuthCheckMixin];
+    data = {}
+    async onLoad() {
+      //检测用户信息
+      await this.authorize();
     }
-    onLoad() {}
     onShow() {
       this.$invoke('shopCart', 'getCartListMethod');
     }
-    computed = {
-    }
-    methods = {
-    }
-    events = {
-    }
+    computed = {}
+    methods = {}
+    events = {}
   }
 </script>
 
