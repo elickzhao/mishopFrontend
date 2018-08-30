@@ -46,7 +46,7 @@
       loadMsg: '',
       winHeight: 0,
       totalCount: 0,
-      tabList: ["待支付", "待发货", "待收货", "已完成", "退款/售后"],
+      tabList: ["待支付", "待发货", "待收货","已收货",  "已完成", "退款/售后"],
       //tabList: ["待支付", "待发货", "待收货", "已完成"],
       orderList: [],
       currentPage: 1,
@@ -141,10 +141,15 @@
           that.getMyOrder();
         } else if (cur == 3) {
           //console.log("已完成订单类型");
-          that.orderStatus = 50;
+          that.orderStatus = 40;
           //that.receiveFlg=4;
           that.getMyOrder();
         } else if (cur == 4) {
+          //console.log("已完成订单类型");
+          that.orderStatus = 50;
+          //that.receiveFlg=4;
+          that.getMyOrder();
+        } else if (cur == 5) {
           //console.log("退款订单类型");
           that.orderStatus = 'refund';
           //that.receiveFlg=4;

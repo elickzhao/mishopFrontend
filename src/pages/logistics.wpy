@@ -2,7 +2,7 @@
 <template>
   <view class="top-sec">
     <view class="img_box">
-      <image src="http://www.logoquan.com/upload/list/20140325/logoquan13981319539.GIF" />
+      <image src="../images/st.GIF" />
     </view>
     <view class="a-row">
       <view class="label">申通快递</view>
@@ -10,36 +10,38 @@
     </view>
   </view>
   <!-- <view class="sec-wrap">
-    <view class="exp_box">
-      <view class="state">已发货</view>
-      <view class="dot"></view>
-      <view class="address">{{orderExpress.departLocation}}</view>
-    </view>
-    <view class="exp_box" wx:if="{{orderExpress.status==1}}">
-      <view class="state">运输中</view>
-      <view class="dot"></view>
-    </view>
-    <view class="exp_box">
-      <view class="state">派件中</view>
-      <view class="dot"></view>
-    </view>
-    <view class="exp_box">
-      <view class="state_active">签收</view>
-      <view class="dot_active"></view>
-    </view>
-  </view> -->
-  <!-- <view class="state_detail" wx:for="{{list}}" wx:key="item">
-      <view class="time">
-        <view class="days">{{item.title}}</view>
+      <view class="exp_box">
+        <view class="state">已发货</view>
+        <view class="dot"></view>
+        <view class="address">{{orderExpress.departLocation}}</view>
       </view>
-      <view class="state_detail_content">
-        <view class="text active">{{item.desc}}</view>
+      <view class="exp_box" wx:if="{{orderExpress.status==1}}">
+        <view class="state">运输中</view>
+        <view class="dot"></view>
+      </view>
+      <view class="exp_box">
+        <view class="state">派件中</view>
+        <view class="dot"></view>
+      </view>
+      <view class="exp_box">
+        <view class="state_active">签收</view>
+        <view class="dot_active"></view>
       </view>
     </view> -->
-  <view class="state_detail">
+  <!-- <view class="state_detail" wx:for="{{list}}" wx:key="item">
+        <view class="time">
+          <view class="days">{{item.title}}</view>
+        </view>
+        <view class="state_detail_content">
+          <view class="text active">{{item.desc}}</view>
+        </view>
+      </view> -->
+  <view wx:if="{{list == ''}}" style="height: 600rpx;overflow:hidden;">
+    <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+  </view>
+  <view wx:elif class="state_detail">
     <wxc-steps steps="{{list}}" current="0"></wxc-steps>
   </view>
-
 </template>
 <script>
   import tip from "../utils/tip";
@@ -49,7 +51,8 @@
     config = {
       navigationBarTitleText: "订单物流",
       usingComponents: {
-        "wxc-steps": "../../packages/@minui/wxc-steps/dist/index"
+        "wxc-steps": "../../packages/@minui/wxc-steps/dist/index",
+        "wxc-abnor": "../../packages/@minui/wxc-abnor/dist/index"
       }
     };
     data = {
@@ -68,7 +71,7 @@
         }
       });
       if (json.data.code == 0) {
-        that.list=json.data.list;
+        that.list = json.data.list;
         // that.orderExpress = json.data.orderExpress;
         // that.expresses = json.data.expresses;
         // console.log("========list返回数据========");

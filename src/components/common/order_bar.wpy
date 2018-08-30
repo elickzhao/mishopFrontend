@@ -25,11 +25,11 @@
         <text>待收货</text>
         <view class="weui-badge" wx:if="{{count[2] > 0}}">{{count[2]}}</view>
       </view>
-      <view class="column-center" @tap="list(3)">
+      <view class="column-center" @tap="list(4)">
         <icon class="evaluated small" color="gray" />
         <!-- <text>待评论</text> -->
         <text>已完成</text>
-        <view class="weui-badge" wx:if="{{count[3] > 0}}">{{count[3]}}</view>
+        <view class="weui-badge" wx:if="{{count[4] > 0}}">{{count[4]}}</view>
       </view>
       <!-- <view class="column-center" @tap="list(5)">
         <icon class="refund small" color="gray"/>
