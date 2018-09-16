@@ -88,7 +88,7 @@ const getSignDate = (params) => wxRequest(params, jishi + '/api/news/getSignDate
 const favoriteInfo = (params) => wxRequest(params, jishi + '/api/news/favoriteInfo');
 
 //用户消息
-//const messageInfo = (params) => wxRequest(params, apiMall + '/api/systemMessage/messageInfo');
+const messageInfo = (params) => wxRequest(params, jishi + '/api/news/messageInfo');
 
 //用户手机绑定
 //const registerUser = (params) => wxRequest(params, apiMall + '/api/userCenter/register');
@@ -215,6 +215,7 @@ module.exports = {
   getCustCouponList,
   getOrderCount,
   orderExpressInfo,
+  messageInfo
 }
 
 // module.exports = {

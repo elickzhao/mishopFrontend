@@ -14,8 +14,8 @@
       <view class="details_pinfo">
         <text class="price">￥{{detail.price_yh}}</text>
         <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
-                                                                    <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-                                                                  </view> -->
+                                                                        <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+                                                                      </view> -->
         <view class="other-price c999">卖场价:
           <wxc-price status="del" del-color="#999">{{detail.price}}</wxc-price>
         </view>
@@ -24,6 +24,7 @@
           <i class="iconfont icon-share c999"></i>
           <text>分享</text>
         </view>
+        <button class="share-btn" type="primary"  open-type="share" plain="true">  </button>
       </view>
       <view class="baoyou c666">满 {{miniNum}} 元起送</view>
     </view>
@@ -711,6 +712,11 @@
 </script>
 
 <style lang="less">
+  .share-btn {
+    height: 120rpx;
+    left:-80rpx;
+    border: none !important;
+  }
   .user__un-read-msg-count {
     position: absolute;
     top: -10rpx;

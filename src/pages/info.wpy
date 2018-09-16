@@ -25,8 +25,8 @@
         <navigator url="/pages/coupon_customer">
           <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" title="我的优惠券"></wxc-list>
         </navigator>
-        <!-- <navigator url="/pages/coupon_xianxia">
-          <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" title="线下优惠券"></wxc-list>
+        <!-- <navigator url="/pages/test">
+          <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" title="测试"></wxc-list>
         </navigator> -->
         <navigator url="/pages/coupon_center">
           <wxc-list class="item" src="https://s10.mogucdn.com/mlcdn/c45406/170603_7ida8bdc21j18b91aa2ii3lk38b9i_38x38.png" title="领券中心"></wxc-list>
