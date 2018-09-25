@@ -44,8 +44,8 @@
     </view>
     <!-- 热卖商品 -->
     <wxc-panel border="{{false}}">
-      <view class="content tc titleFont">买一送一</view>
-      <scrollXList :list.sync="hotList" :imgUrl.sync="imgUrl" title="买一送一"></scrollXList>
+      <view class="content tc titleFont">1小时达</view>
+      <scrollXList :list.sync="hotList" :imgUrl.sync="imgUrl" title="1小时达"></scrollXList>
     </wxc-panel>
     <!-- /热卖商品 -->
     <!--发现好商品模块-->

@@ -20,33 +20,67 @@
   } from "../utils/constant";
   import api from "../api/api";
   import CommonMixin from "../utils/common-mix";
+  import QQMapWX from '../utils/qqmap-wx-jssdk.min';
   export default class exchangeGoods extends wepy.page {
     config = {
       navigationBarTitleText: '组件测试',
     }
     mixins = [CommonMixin];
-    data = {
-    }
+    data = {}
     computed = {}
+    onLoad() {
+      this.getAdressInfo()
+    }
+    //逆地址解析 通过经纬度解析地址详细信息
+    getAdressInfo() {
+      //这个是QQ地图插件 原本小程序位置不具备此功能
+      let qqmapsdk = new QQMapWX({
+        key: '6QIBZ-NHXR3-KYO3T-YZAGT-4ADW6-NTBF5'
+      });
+      wx.getLocation({
+        type: 'wgs84', //默认为 wgs84 返回 gps 坐标，gcj02 返回可用于wepy.openLocation的坐标,
+        // success: res => {
+        //   console.log(res);
+        // }
+        success: function(res) {
+          var latitude = res.latitude
+          var longitude = res.longitude
+          var speed = res.speed
+          var accuracy = res.accuracy
+          //原本的小程序获取位置 只能在地图标点 不能获取地址详细信息
+          // console.log(res);
+          // wx.openLocation({
+          //   latitude: latitude,
+          //   longitude: longitude,
+          //   scale: 28
+          // })
+          //通过插件可以获取 省市区 等详细信息
+          qqmapsdk.reverseGeocoder({
+            location: {
+              latitude: latitude,
+              longitude: longitude,
+            },
+            success: function(res) {
+              console.log("省: "+res.result.address_component.province);
+              console.log("市: "+res.result.address_component.city);
+              console.log("区: "+res.result.address_component.district);
+              //更多返回信息看这里 https://lbs.qq.com/qqmap_wx_jssdk/method-reverseGeocoder.html
+            },
+            fail: function(res) {
+              console.log(res);
+            },
+            // complete: function(res) {
+            //   console.log(res);
+            // }
+          });
+        }
+      });
+    }
     methods = {
       // orderSign
-     async orderSign(e) {
+      async orderSign(e) {
         var fId = e.detail.formId;
-        // 这个写法已经作废
-        // wepy.setStorageSync(FORM_ID, fId);
-        // let formId = wepy.getStorageSync(FORM_ID) || {};
-        // console.log(formId);
-        this.sendMessage(fId,'2018091298505610',1)
-        // var l = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token='+this.access_token;
-        // console.log(fId);
-        // console.log(l);
-        // let json = await api.messageInfo({
-        //   query: {
-        //     openid: this.openid,
-        //     fid: fId
-        //   }
-        // });
-        //console.log(json.data);
+        this.sendMessage(fId, '2018091298505610', 1)
       }
       // end orderSign
     }
