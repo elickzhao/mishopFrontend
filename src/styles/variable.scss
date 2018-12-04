@@ -1,6 +1,6 @@
 //******字体颜色变量******/
 $color-major: #FF6200;
-$color-primary: #F3514F;
+$color-primary: #FF0077;
 // $color-primary: #1296db;
 // $color-primary: #FEC324;
 $color-primary-darken: darken($color-primary, 5%);
@@ -10,17 +10,19 @@ $color-normal: #262626;
 $color-danger: #e33;
 $color-warn: #f85;
 //******字体大小变量******/
-$text-xxl: 34rpx;
-$text-xl: 32rpx;
-$text-nm: 28rpx;
+$text-xxxl: 40rpx;
+$text-xxl: 36rpx;
+$text-xl: 34rpx;
+$text-ll: 32rpx;
 $text-lg: 30rpx;
+$text-nm: 28rpx;
 $text-sm: 26rpx;
 $text-xs: 24rpx;
 $text-xxs: 22rpx;
 $text-form: 17px;
 //******边框样式******/
 $color-border: #EDEDED;
-$color-line: #EEEEEE;
+$color-line: #EEEEEE;   // 我原本的颜色是 DDD 先用这个试试
 $border: 1px solid $color-border;
 $border-line: 1px solid $color-line;
 $border-dot: 1px dotted #EFF0F2;

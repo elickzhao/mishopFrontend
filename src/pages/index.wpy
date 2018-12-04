@@ -1,0 +1,429 @@
+<style lang="less">
+  .userinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .userinfo-avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+  }
+
+  .userinfo-nickname {
+    color: #aaa;
+  }
+</style>
+<template>
+  <view class="container">
+
+   <view class="row-center-wrap">
+      <icon class="shop icon-xxl"></icon>
+      <icon class="more-dot" color="gray"></icon>
+      <icon class="call icon-sm"></icon>
+      <icon class="receive-coupons icon-xl"></icon>
+      <icon class="more"></icon>
+      <icon class="edit"></icon>
+      <icon class="status-8"></icon>
+      <icon class="error"></icon>
+      <icon class="alert"></icon>
+      <icon class="recommend"></icon>
+      <icon class="payment"></icon>
+      <icon class="scan"></icon>
+      <icon class="privilege"></icon>
+      <icon class="wechart"></icon>
+      <icon class="empty"></icon>
+      <icon class="cart-fill"></icon>
+      <icon class="confirm"></icon>
+      <icon class="status-6"></icon>
+      <icon class="close"></icon>
+      <icon class="cart"></icon>
+      <icon class="delete"></icon>
+      <icon class="home-fill"></icon>
+      <icon class="home"></icon>
+      <icon class="like-fill"></icon>
+      <icon class="like"></icon>
+      <icon class="cart-empty"></icon>
+      <icon class="status-4"></icon>
+      <icon class="back"></icon>
+      <icon class="cart-round"></icon>
+      <icon class="balance"></icon>
+      <icon class="onsale"></icon>
+      <icon class="onclose"></icon>
+      <icon class="bouns"></icon>
+      <icon class="chat"></icon>
+      <icon class="evaluated"></icon>
+      <icon class="service"></icon>
+      <icon class="category"></icon>
+      <icon class="status-2"></icon>
+      <icon class="picked"></icon>
+      <icon class="order"></icon>
+      <icon class="checked"></icon>
+      <icon class="status-7"></icon>
+      <icon class="recharge"></icon>
+      <icon class="reduce"></icon>
+      <icon class="status-1"></icon>
+      <icon class="gift-card"></icon>
+      <icon class="check"></icon>
+      <icon class="customer"></icon>
+      <icon class="bottom"></icon>
+      <icon class="star-fill"></icon>
+      <icon class="plus-square"></icon>
+      <icon class="notice"></icon>
+      <icon class="plus"></icon>
+      <icon class="package"></icon>
+      <icon class="coupon"></icon>
+      <icon class="delivery"></icon>
+      <icon class="share"></icon>
+      <icon class="expiring"></icon>
+      <icon class="order-none"></icon>
+      <icon class="share-round"></icon>
+      <icon class="status-5"></icon>
+      <icon class="status-3"></icon>
+      <icon class="vip-card"></icon>
+      <icon class="inshop"></icon>
+      <icon class="fork"></icon>
+      <icon class="star"></icon>
+      <icon class="idcard"></icon>
+      <icon class="sender"></icon>
+      <icon class="minus"></icon>
+      <icon class="expired xxlarge"></icon>
+      <icon class="used large"></icon>
+      <icon class="new"></icon>
+      <icon class="modify"></icon>
+      <icon class="received"></icon>
+      <icon class="inquire-store"></icon>
+      <icon class="down-arrow"></icon>
+      <icon class="up-arrow"></icon>
+      <icon class="top"></icon>
+      <icon class="groups"></icon>
+      <icon class="qrcode"></icon>
+      <icon class="sign"></icon>
+      <icon class="back-round"></icon>
+      <icon class="vip"></icon>
+      <icon class="sale"></icon>
+      <icon class="address"></icon>
+      <icon class="phone"></icon>
+      <icon class="distribution"></icon>
+      <icon class="refund"></icon>
+      <icon class="camera"></icon>
+      <icon class="payment"></icon>
+      <icon class="question"></icon>
+      <icon class="coin"></icon>
+      <icon class="selected"></icon>
+      <icon class="bar"></icon>
+    </view>
+
+    <!-- 这要怎么滚动呢 -->
+    我是主页
+    <text class="xl cancel">我是主页</text>
+    <text class="ll major">我是主页 -- ll</text>
+    <view class="column">
+      <text class="inline" style="width:120px;">横线应该是折线吧 不过不知道有多长啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</text>
+      <text class="line-clamp danger" style="width:120px;">2行折线吧 不过不知道有多长啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</text>
+    </view>
+    <view class="bg-white">
+      <div class="row">
+        <div class="tab-border">2</div>
+        <view class="left-1px">3333333333</view>
+        <p class="left-1px">22222222222222</p>
+      </div>
+    </view>
+    <div class="hr"></div>
+    <span class="xl">我是主页</span>
+    <view class="weui-cells-show">23213123</view>
+    <view class="panel">panel</view>
+    <view class="label">我是label.......</view>
+    <view class="label">我是label.......</view>
+    <view class="label disabled">我是label disabled.......</view>
+    <view class="label small">我是label small.......</view>
+    <view class="label pain primary">我是label pain.......</view>
+    <view class="btn-panel">
+      ddddddd
+    </view>
+    <view class="btn-panel-bottom">
+      我要沉底
+    </view>
+    <view class="weui-cells-show">
+      <!-- 这个无效不知道为啥-->
+      <div class="weui-cells">
+        <div class="weui-cell">
+          <div class="weui-cell__bd">
+            <p>标题文字</p>
+          </div>
+          <div class="weui-cell__ft">说明文字</div>
+        </div>
+      </div>
+    </view>
+    <!-- weui-cells-show 一定要配合 cells来选 -->
+    <view class="weui-cells weui-cells-show mt10">
+      ddddddddddddddddddd
+    </view>
+    <div class="weui-cells weui-cells-show mt10">
+      ddddddddddddddddddd
+    </div>
+    <view class="weui-footer">
+      <view class="weui-footer__links">
+        <view class="weui-footer__link">乐享启创提供技术支持</view>
+      </view>
+      <view class="weui-footer__text">Copyright © 2018 leshare.shop {{version}}</view>
+    </view>
+    <button>ddddd</button>
+    <button plain="{{true}}">ddddd</button>
+    <button type="primary">ddddd</button>
+    <view class="loading-wrap">我是读取.......</view>
+  </view>
+
+    <view class="userinfo" @tap="handleViewTap">
+      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
+      <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
+    </view>
+
+    <panel>
+      <view class="title" slot="title">测试数据绑定</view>
+
+      <text class="info">{{normalTitle}}</text>
+      <text class="info">{{setTimeoutTitle}}</text>
+      <text class="info">{{mixin}}</text>
+      <text class="info">{{mynum}}</text>
+      <text class="info">{{now}}</text>
+      <text class="info">{{num}}</text>
+      <text class="info">{{asyncNum}}</text>
+      <text class="info">{{sumNum}}</text>
+      <button @tap="plus('a')" size="mini">  +  </button>
+    </panel>
+
+    <panel>
+      <view class="title" slot="title">其它测试</view>
+      <button @tap="toast" size="mini">第三方组件</button>
+      <button @tap="communicate" size="mini">组件通信</button>
+      <button @tap="tap" size="mini">混合TAP事件</button>
+    </panel>
+
+    <panel>
+      <view class="title" slot="title">测试并发网络请求</view>
+      <view>返回结果: <text>{{netrst}}</text></view>
+      <button @tap="request" size="mini"> 点我发起10个请求 </button>
+    </panel>
+
+    <panel>
+      <view class="title" slot="title">测试组件</view>
+
+      <text class="testcounter">计数组件1: </text>
+      <view class="counterview">
+        <counter1 @index-emit.user="counterEmit" />
+      </view>
+
+      <text class="testcounter">计数组件2: </text>
+
+      <view class="counterview">
+        <counter2 :num.sync="mynum"></counter2>
+      </view>
+    </panel>
+
+    <panel>
+      <view class="title" slot="title">测试组件Repeat</view>
+      <repeat for="" index="index" item="item" key="key">
+        <group :grouplist="item" :indexa="index"></group>
+      </repeat>
+    </panel>
+
+    <panel>
+      <view class="title" slot="title">测试列表</view>
+      <list></list>
+    </panel>
+
+    <toast />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { connect } from 'wepy-redux'
+  import Panel from '@/components/panel' // alias example
+  import Counter from 'counter' // alias example
+  import List from '../components/list' // aliasFields example
+  import moduleA from 'module-a' // aliasFields ignore module example
+  import Group from '../components/group'
+  import Toast from 'wepy-com-toast'
+  import testMixin from '../mixins/test'
+
+  console.log('moduleA ignored: ', moduleA) // => moduleA ignored: {}
+
+  @connect({
+    num (state) {
+      return state.counter.num
+    },
+    asyncNum (state) {
+      return state.counter.asyncNum
+    },
+    sumNum (state) {
+      return state.counter.num + state.counter.asyncNum
+    }
+  })
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'test'
+    }
+    components = {
+      panel: Panel,
+      counter1: Counter,
+      counter2: Counter,
+      list: List,
+      group: Group,
+      toast: Toast
+    }
+
+    mixins = [testMixin]
+
+    data = {
+      mynum: 20,
+      userInfo: {
+        nickName: '加载中...'
+      },
+      normalTitle: '原始标题',
+      setTimeoutTitle: '标题三秒后会被修改',
+      count: 0,
+      netrst: '',
+      groupList: [
+        {
+          id: 1,
+          name: '点击改变',
+          list: [
+            {
+              childid: '1.1',
+              childname: '子项，点我改变'
+            }, {
+              childid: '1.2',
+              childname: '子项，点我改变'
+            }, {
+              childid: '1.3',
+              childname: '子项，点我改变'
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: '点击改变',
+          list: [
+            {
+              childid: '2.1',
+              childname: '子项，点我改变'
+            }, {
+              childid: '2.2',
+              childname: '子项，点我改变'
+            }, {
+              childid: '2.3',
+              childname: '子项，点我改变'
+            }
+          ]
+        },
+        {
+          id: 3,
+          name: '点击改变',
+          list: [
+            {
+              childid: '3.1',
+              childname: '子项，点我改变'
+            }
+          ]
+        }
+      ]
+    }
+
+    computed = {
+      now () {
+        return +new Date()
+      }
+    }
+
+    methods = {
+      plus () {
+        this.mynum++
+      },
+      toast () {
+        let promise = this.$invoke('toast', 'show', {
+          title: '自定义标题',
+          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+        })
+
+        promise.then((d) => {
+          console.log('toast done')
+        })
+      },
+      tap () {
+        console.log('do noting from ' + this.$name)
+      },
+      communicate () {
+        console.log(this.$name + ' tap')
+
+        this.$invoke('counter2', 'minus', 45, 6)
+        this.$invoke('counter1', 'plus', 45, 6)
+
+        this.$broadcast('index-broadcast', 1, 3, 4)
+      },
+      request () {
+        let self = this
+        let i = 10
+        let map = ['MA==', 'MQo=', 'Mg==', 'Mw==', 'NA==', 'NQ==', 'Ng==', 'Nw==', 'OA==', 'OQ==']
+        while (i--) {
+          wepy.request({
+            url: 'https://www.madcoder.cn/tests/sleep.php?time=1&t=css&c=' + map[i] + '&i=' + i,
+            success: function (d) {
+              self.netrst += d.data + '.'
+              self.$apply()
+            }
+          })
+        }
+      },
+      counterEmit (...args) {
+        let $event = args[args.length - 1]
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      }
+    }
+
+    events = {
+      'index-emit': (...args) => {
+        let $event = args[args.length - 1]
+        console.log(`${this.$name} receive ${$event.name} from ${$event.source.$name}`)
+      }
+    }
+
+    onLoad() {
+      let self = this
+      this.$parent.getUserInfo(function (userInfo) {
+        if (userInfo) {
+          self.userInfo = userInfo
+        }
+        self.normalTitle = '标题已被修改'
+
+        self.setTimeoutTitle = '标题三秒后会被修改'
+        setTimeout(() => {
+          self.setTimeoutTitle = '到三秒了'
+          self.$apply()
+        }, 3000)
+
+        self.$apply()
+      })
+    }
+  }
+</script>
+
+<style lang='scss'>
+  // @import '../../styles/variable';
+  @import '../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+  @import '../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+  text.ll {
+    font-size: $text-ll;
+  }
+  .row-center-wrap {
+    @extend .row-center;
+    flex-wrap: wrap;
+  } // 引入变量 然后修改
+  .weui-footer {
+    padding: 15rpx 0;
+    background-color: $color-bg-body;
+  }
+</style>

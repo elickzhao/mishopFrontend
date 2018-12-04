@@ -1,0 +1,97 @@
+<!-- 商城主页 -->
+<template lang="wxml" minapp="wepy">
+  <view class='container'>
+    <!-- 这要怎么滚动呢 -->
+    我是主页
+    <text class="xl cancel">我是主页</text>
+    <text class="ll major">我是主页 -- ll</text>
+    <view class="column">
+      <text class="inline" style="width:120px;">横线应该是折线吧 不过不知道有多长啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</text>
+      <text class="line-clamp danger" style="width:120px;">2行折线吧 不过不知道有多长啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</text>
+    </view>
+    <view class="bg-white">
+      <div class="row">
+        <div class="tab-border">2</div>
+        <view class="left-1px">3333333333</view>
+        <p class="left-1px">22222222222222</p>
+      </div>
+    </view>
+    <div class="hr"></div>
+    <span class="xl">我是主页</span>
+    <view class="weui-cells-show">23213123</view>
+    <view class="panel">panel</view>
+    <view class="label">我是label.......</view>
+    <view class="label">我是label.......</view>
+    <view class="label disabled">我是label disabled.......</view>
+    <view class="label small">我是label small.......</view>
+    <view class="label pain primary">我是label pain.......</view>
+    <view class="btn-panel">
+      ddddddd
+    </view>
+    <view class="btn-panel-bottom">
+      我要沉底
+    </view>
+    <view class="weui-cells-show">
+      <!-- 这个无效不知道为啥-->
+      <div class="weui-cells">
+        <div class="weui-cell">
+          <div class="weui-cell__bd">
+            <p>标题文字</p>
+          </div>
+          <div class="weui-cell__ft">说明文字</div>
+        </div>
+      </div>
+    </view>
+    <!-- weui-cells-show 一定要配合 cells来选 -->
+    <view class="weui-cells weui-cells-show mt10">
+      ddddddddddddddddddd
+    </view>
+    <div class="weui-cells weui-cells-show mt10">
+      ddddddddddddddddddd
+    </div>
+    <view class="weui-footer">
+      <view class="weui-footer__links">
+        <view class="weui-footer__link">乐享启创提供技术支持</view>
+      </view>
+      <view class="weui-footer__text">Copyright © 2018 leshare.shop {{version}}</view>
+    </view>
+    <button>ddddd</button>
+    <button plain="{{true}}">ddddd</button>
+    <button type="primary">ddddd</button>
+    <view class="loading-wrap">我是读取.......</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  export default class Example extends wepy.page {
+    config = {
+      navigationBarTitleText: '主页'
+    };
+    data = {};
+    components = {};
+    methods = {};
+    events = {};
+    watch = {};
+    computed = {};
+    onLoad() {}
+    onShow() {}
+  }
+</script>
+
+<style lang='scss'>
+  // @import '../../styles/variable';
+  @import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+  @import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+  text.ll {
+    font-size: $text-ll;
+  }
+  .row-center-wrap {
+    @extend .row-center;
+    flex-wrap: wrap;
+  } // 引入变量 然后修改
+  .weui-footer {
+    padding: 15rpx 0;
+    background-color: $color-bg-body;
+  }
+</style>

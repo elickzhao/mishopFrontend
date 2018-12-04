@@ -1,0 +1,74 @@
+<template>
+  <view class="authorize-contianer {{isShow ? 'bg-img' :'' }}">
+    <block wx:if="{{$loading.isShow}}">
+      <!-- <wxc-loading is-show="{{$loading.isShow}}" image="https://s10.mogucdn.com/mlcdn/c45406/170607_5241335cb37ka3ab7781ddh504ggh_200x200.png" slip="http://s10.mogucdn.com/p1/160715/upload_ifrgmmzwmyydknldhezdambqmeyde_200x200.png"></wxc-loading> -->
+      <!-- <wxc-flex class="wrap" main="center" cross="center">
+        <Loadings1 type="1" />
+      </wxc-flex> -->
+    </block>
+    <block wx:else>
+      <image class="authorize-icon" src="../images/authorize.png"></image>
+      <view class="auth-item">环球集市申请获取以下权限：</view>
+      <view class="auth-item">获取你的公开信息（头像、昵称等）</view>
+      <view class="btn-authorize">
+        <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+        <!-- <button wx:if="{{canIUse}}" open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+                          <view class="fz32" style="color:#EF2F23" wx:else>
+                            <button type="warn" lang="zh_CN">请先升级微信版本</button>
+                          </view> -->
+      </view>
+    </block>
+  </view>
+</template>
+<script>
+  import wepy from "wepy";
+  export default class Authorize extends wepy.page {
+    components = {
+
+    }
+    config = {
+      navigationBarTitleText: "欢迎回来",
+    };
+    data = {
+      isShow:false
+    };
+    async onLoad(ops) {
+
+    }
+   
+    methods = {};
+    events = {};
+  }
+</script>
+<style lang="less">
+  page {
+    height: 100%;
+  }
+  .authorize-contianer {
+    height: 100%;
+    background: #fff;
+    text-align: center;
+    padding-top: 100rpx;
+    .authorize-icon {
+      width: 128rpx;
+      height: 128rpx;
+      display: block;
+      margin: 0 auto;
+      padding-bottom: 10rpx;
+    }
+    .auth-item {
+      padding: 5rpx 0;
+    }
+    .btn-authorize {
+      margin: 100rpx 50rpx;
+    }
+  }
+  .bg-img {
+    background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding-top: 0rpx; // -moz-background-size:100% 100%;
+    // -webkit-background-size: 100% 100%;  
+    //background-size: cover
+  }
+</style>

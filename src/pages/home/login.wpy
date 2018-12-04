@@ -1,0 +1,247 @@
+<!-- 登录页面 -->
+<template>
+  <view class="authorize-contianer {{isShow ? 'bg-img' :'' }}">
+    <block wx:if="{{isShow}}">
+      <!-- <wxc-loading is-show="{{$loading.isShow}}" image="https://s10.mogucdn.com/mlcdn/c45406/170607_5241335cb37ka3ab7781ddh504ggh_200x200.png" slip="http://s10.mogucdn.com/p1/160715/upload_ifrgmmzwmyydknldhezdambqmeyde_200x200.png"></wxc-loading> -->
+      <!-- <wxc-flex class="wrap" main="center" cross="center">
+                                                  <Loadings1 type="1" />
+                                                </wxc-flex> -->
+    </block>
+    <block wx:else>
+      <image class="authorize-icon" src="../../images/authorize.png"></image>
+      <view class="auth-item">环球集市申请获取以下权限：</view>
+      <view class="auth-item">获取你的公开信息（头像、昵称等）</view>
+      <view class="btn-authorize">
+        <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+      </view>
+    </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '@/api/login';
+  import Tips from '@/utils/Tips';
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '欢迎回来'
+    };
+    data = {
+      userInfo: '',
+      openid: '',
+      isShow: true
+    };
+    async onLoad() {
+      /**
+       *  wepy.login(); 和  api.wxJsCode2Session() 可以静默获取openid
+       *  openid 是身份标识   但是此时并没有注册
+       *  注册需要 user2session 这样才能注册 不过注册的时候需要 昵称 头像 性别
+       *  但这些信息需要 getuserinfo 这个是需要权限的   所以会提前授权 然后注册
+       *  --------------------------------
+       *  把openid保存在本地 Storage  没有的时候就查询是否注册过 没有注册的话就提示注册 (或者到买东西的时候注册)
+       */
+      // 如果全局变量有 userinfo就不用登录
+      if (!wepy.$instance.globalData.userInfo) {
+        await this.login()
+      } else {
+        this.showLoading().then(() => {
+          this.jump()
+        })
+      }
+    }
+    /**
+     * 登录检查 已经注册直接登录
+     */
+    async login() {
+      console.info(`[login] login start `);
+      let that = this
+      let res = await wepy.login();
+      if (res.code) {
+        let rlt = await api.wxJsCode2Session({
+          code: res.code
+        });
+        if (rlt.openid) {
+          that.openid = rlt.openid
+          that.$apply()
+          // 老用户登录
+          let json = await api.user2session({
+            openId: rlt.openid
+          });
+          // 登录失败 注册新用户
+          if (json.serverCode) {
+            Tips.error(json.message);
+            await this.register();
+          } else {
+            // 检测登录 并跳转
+            this.onLoad()
+          }
+        } else {
+          await wepy.showModal({
+            title: 'openid 有误',
+            content: '授权失败'
+          });
+        }
+      } else {
+        await wepy.showModal({
+          title: '网络错误,登录失败!',
+          content: res.errMsg
+        });
+      }
+    }
+    /**
+     * 注册
+     */
+    async register() {
+      console.info(`[register] register start `);
+      // 授权会关闭页面 这里重新打开
+      this.isShow = true
+      this.$apply()
+      let that = this;
+      let check = await this.checkSetting();
+      // 检测权限 打开授权页面
+      if (!check) {
+        // 按钮获得权限
+        this.isShow = false
+        this.$apply()
+        return;
+      }
+      // 注册用户
+      wx.getUserInfo({
+        success: function(res) {
+          let userInfo = res.userInfo;
+          let json = api.user2session({
+            openId: that.openid,
+            NickName: userInfo.nickName,
+            avatarUrl: userInfo.avatarUrl,
+            gender: userInfo.gender
+          });
+          // 注册失败
+          if (json.serverCode) {
+            Tips.modal(json.message, '注册失败');
+          }
+        }
+      });
+      console.info(`[register] register end `)
+      // 注册完成后跳转
+      this.jump()
+    }
+    /**
+     * 检查设置权限
+     */
+    async checkSetting() {
+      let scope = await wepy.getSetting();
+      if (scope.authSetting['scope.userInfo']) {
+        console.info(`[scope.userInfo] check userInfo true`);
+        return true;
+      } else {
+        console.info(`[scope.userInfo] check userInfo false`);
+        return false;
+      }
+    }
+    /**
+     * 授权按钮响应
+     */
+    async onGotUserInfo(e) {
+      if (e.detail.errMsg === 'getUserInfo:ok') {
+        // 这样授权会造成 有权限 却无会员信息内容 无法注册 虽然概率很小 但还是用getuserinfo来获取信息吧
+        // 这个先保留 看看 getuserinfo 速度如何 不行再替换
+        // this.userInfo == e.detail.userInfo
+        // this.$apply()
+        console.info(`[register] get userInfo true `);
+        this.register()
+      } else {
+        console.info(`[register] get userInfo false `);
+        await wepy.showModal({
+          title: '授权失败!',
+          content: '拒绝授权,将无法使用小程序!'
+        });
+        console.log(e.detail.errMsg);
+      }
+    }
+    /**
+     * 跳转页面
+     */
+    jump() {
+      console.info(`[login] login end `);
+      // 跳转
+      if (this.backUrl) {
+        wepy.redirectTo({
+          url: '/pages/' + this.backUrl
+        });
+      } else {
+        wepy.redirectTo({
+          url: '/pages/home/home'
+        });
+      }
+      // 这是后期要用到的 因为有跳转 URL
+      // if (that.backUrl) {
+      //   //console.log(that.backUrl);
+      //   let url = ""
+      //   if (that.backId) {
+      //     url = '/pages/' + that.backUrl + '?id=' + that.backId
+      //   } else {
+      //     url = '/pages/' + that.backUrl
+      //   }
+      //   //console.log(url)
+      //   wepy.redirectTo({
+      //     url: url
+      //   });
+      // } else {
+      //   wepy.switchTab({
+      //     url: "/pages/home"
+      //   });
+      // }
+    }
+
+    /**
+     *  跳转等待 展示欢迎页
+     */
+    showLoading() {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({
+            data: 'loading ok'
+          });
+        }, 1000);
+      });
+    }
+    //   明天 应该 mininum 那个 应该用 store.init() 那个同步
+    //    现在的数据是 比如openid这种不会变的 就保存在 Storage
+    //    而 mininum 这种是有临时更新的 所以要保存在 store里的config 这样每个页面调用时 都可以缓存和更新
+    //   购物车和地址这种 就直接保存在 store里 不用与线上更新
+    // 最后有个问题是 下线时必须保存在 Storage里
+    onShow() {}
+  }
+</script>
+<style lang="less">
+  page {
+    height: 100%;
+  }
+  .authorize-contianer {
+    height: 100%;
+    background: #fff;
+    text-align: center;
+    padding-top: 100rpx;
+    .authorize-icon {
+      width: 128rpx;
+      height: 128rpx;
+      display: block;
+      margin: 0 auto;
+      padding-bottom: 10rpx;
+    }
+    .auth-item {
+      padding: 5rpx 0;
+    }
+    .btn-authorize {
+      margin: 100rpx 50rpx;
+    }
+  }
+  .bg-img {
+    background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding-top: 0rpx; // -moz-background-size:100% 100%;
+    // -webkit-background-size: 100% 100%;  
+    //background-size: cover
+  }
+</style>

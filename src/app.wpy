@@ -1,126 +1,97 @@
-<style lang="less">
-  @import "./styles/base";
-  @import "./styles/icon";
-  @import "./styles/style";
+<style lang="scss" src="./styles/weui.scss">
+
 </style>
+<style lang="scss" src="./styles/icons.scss">
+
+</style>
+<style lang="scss" src="./styles/base.scss">
+
+</style>
+
 <script>
-  import wepy from "wepy";
-  import "wepy-async-function";
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  import WxUtils from './utils/WxUtils'
   import {
-    SYSTEM_INFO
-  } from "./utils/constant";
-  import api from "./api/api";
+    baseUrl,
+    hostUrl,
+    imgUrl,
+    minimum
+  } from '@/config'
+  import {
+    setStore
+  } from 'wepy-redux'
+  import configStore from './store'
+  const store = configStore()
+  setStore(store)
   export default class extends wepy.app {
     config = {
       pages: [
-        "pages/authorize",
-        "pages/home",
-        "pages/home_detail",
-        "pages/classify",
-        "pages/shop_cart",
-        "pages/info",
-        "pages/search",
-        "pages/test",
-        "pages/sign_in",
-        "pages/exchange_goods",
-        "pages/wholesale",
-        "pages/replenishment_goods",
-        "pages/register",
-        "pages/order",
-        "pages/reorder",
-        "pages/pay_success",
-        "pages/points",
-        "pages/points_more",
-        "pages/points_rule",
-        "pages/collection",
-        "pages/messages",
-        "pages/setting",
-        "pages/goods_detail",
-        "pages/comfire_order",
-        "pages/address",
-        "pages/order_detail",
-        "pages/filter",
-        "pages/logistics",
-        "pages/comment",
-        "pages/comment_add",
-        "pages/coupon_center",
-        "pages/coupon_customer",
-        "pages/coupon_xianxia"
+        'pages/home/login',
+        'pages/home/authorize',
+        'pages/home/home',
+        'pages/index'
       ],
       window: {
-        backgroundTextStyle: "light",
-        navigationBarBackgroundColor: "#FF0077",
-        navigationBarTitleText: "TFS环球免税店",
-        navigationBarTextStyle: "light",
-        enablePullDownRefresh: false,
-        backgroundColor: "#FFF"
-      },
-      tabBar: {
-        color: "#999999",
-        selectedColor: "#FF0077",
-        backgroundColor: "#ffffff",
-        borderStyle: "black",
-        list: [{
-            pagePath: "pages/home",
-            text: "首页",
-            iconPath: "images/souu.png",
-            selectedIconPath: "images/shou.png"
-          },
-          {
-            pagePath: "pages/classify",
-            text: "分类",
-            iconPath: "images/fei.png",
-            selectedIconPath: "images/feii.png"
-          },
-          {
-            pagePath: "pages/shop_cart",
-            text: "购物车",
-            iconPath: "images/ggg.png",
-            selectedIconPath: "images/gi.png"
-          },
-          {
-            pagePath: "pages/info",
-            text: "我",
-            iconPath: "images/hui.png",
-            selectedIconPath: "images/huiyuan.png"
-          }
-        ]
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#FF0077',
+        navigationBarTitleText: 'TFS环球免税店',
+        navigationBarTextStyle: 'light'
       }
-    };
-    globalData = {
-      hostUrl: "https://small.huanqiujishi.com",
-      imgUrl: "https://small.huanqiujishi.com/Data/",
-      miniNum: "68"
-    };
-    constructor() {
-      super();
-      this.use("requestfix");
-      this.use("promisify");
     }
-    async onLaunch(option) {
-      //暂时还是放到这里 因为起送费随时可变 授权页只有按按钮才会执行
-      // 用这个不用globalData的原因是不用每次启动都请求了
-      // globalData适合写死的数据
-      let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
-      //不能做判断 因为起送费随时会改
-      //if (!systemInfo.miniNum) {
-      let json = await api.getMiniNum({
-        query: {}
-      });
-      if (json.data.code == 0) {
-        systemInfo.miniNum = json.data.data.minimum; //XXX  注意这里曾经的拼写错误 因为老版还在用暂时没改
-        this.miniNum = json.data.data.minimum;
-        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
-        //console.log(systemInfo)
-      } else {
-        console.log(json.data.msg);
+    globalData = {
+      userInfo: null,
+      scene: null,
+      hostUrl: hostUrl,
+      baseUrl: baseUrl,
+      imgUrl: imgUrl,
+      miniNum: minimum
+    }
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+    }
+    onLaunch(param) {
+      // 校验SDK
+      WxUtils.checkSDK()
+      this.syncStoreConfig('miniNum')
+      this.syncStoreConfig('userInfo')
+      // 获取保存场景值
+      if (param && param.scene) {
+        console.info('[scene]onLaunch scene', param.scene);
+        wepy.$instance.globalData.scene = param.scene;
+        console.info('[auth]onLaunch end');
       }
-      //}
-      if (!systemInfo.hostUrl || !systemInfo.imgUrl) {
-        systemInfo.imgUrl = this.globalData.imgUrl;
-        systemInfo.hostUrl = this.globalData.hostUrl;
-        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+    }
+    /**
+     * [syncStoreConfig 如果本地存储有数据就保存到全局变量里]
+     * @param  {[type]} key [description]
+     * @return {[type]}     [description]
+     */
+    syncStoreConfig(key) {
+      try {
+        const value = wepy.getStorageSync(key);
+        if (value !== '') {
+          console.info(`[config]${key} sync success `);
+          // wepy.$instance.globalData.config[key] = value;
+          this.globalData[key] = value
+        }
+      } catch (e) {
+        console.warn(`[config]${key} sync fail `);
       }
+    }
+    getUserInfo(cb) {
+      const that = this
+      if (this.globalData.userInfo) {
+        return this.globalData.userInfo
+      }
+      wepy.getUserInfo({
+        success(res) {
+          that.globalData.userInfo = res.userInfo
+          cb && cb(res.userInfo)
+        }
+      })
     }
   }
 </script>
