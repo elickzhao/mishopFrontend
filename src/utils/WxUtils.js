@@ -121,4 +121,46 @@ export default class WxUtils {
       Tips.modal('您的微信版本太低，为确保正常使用，请尽快升级');
     }
   }
+
+  /**
+   * 检查userinfo版本
+   */
+  static checkUserInfo() {
+    if (!wepy.$instance.globalData.userInfo) {
+        let userInfo = wepy.getStorageSync('userInfo')
+        if(userInfo){
+          wepy.$instance.globalData.userInfo = userInfo
+        }else{
+          return false
+        }
+    }
+    return true
+  }
+
+  /**
+   *  获得当前页面
+   */
+  static getCurrentPages(){
+    let pages = getCurrentPages() //获取加载的页面
+    let currentPage = pages[pages.length - 1] //获取当前页面的对象
+    return currentPage;
+
+  }
+
+  /**
+   *  获得当前页面路径
+   */
+  static getCurrentPagesUrl(){
+    let currentPage = this.getCurrentPages()
+    let url = currentPage.route //当前页面url
+    return url;
+  }
+  /**
+   *  获得当前页面路径
+   */
+  static getCurrentPagesOptions(){
+    let currentPage = this.getCurrentPages()
+    let options = currentPage.options //如果要获取url中所带的参数可以查看options
+    return options
+  }
 }

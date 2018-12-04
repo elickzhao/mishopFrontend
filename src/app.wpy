@@ -28,7 +28,6 @@
     config = {
       pages: [
         'pages/home/login',
-        'pages/home/authorize',
         'pages/home/home',
         'pages/index'
       ],
