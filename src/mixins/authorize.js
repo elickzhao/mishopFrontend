@@ -13,17 +13,12 @@ export default class AuthorizeMixin extends wepy.mixin {
 
   onShow() {}
 
-  async onLoad() {
+  async onLoad(ops) {
     this.currentPage = WxUtils.getCurrentPagesUrl()
-    // console.log(this.currentPage)
-    // 如果全局变量有 userinfo就不用登录
-    // if (!WxUtils.checkUserInfo()) {
-    //   await this.login()
-    // } else {
-    //   this.showLoading().then(() => {
-    //     this.jump()
-    //   })
-    // }
+    // 如果其他页面 权限检查 需要跳转回原页面
+    if (ops.back) {
+      this.backUrl = ops.back
+    }
   }
 
   /**
@@ -55,7 +50,7 @@ export default class AuthorizeMixin extends wepy.mixin {
           }
         } else {
           // 检测登录 并跳转
-          // 这里指向不了mix的onload的 所以只能写在原页面的onload里
+          // 这里指向不了mix的onload的 所以 判断后跳转 只能写在原页面的onload里
           this.onLoad()
         }
       } else {

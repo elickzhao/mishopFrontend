@@ -4,8 +4,8 @@
     <block wx:if="{{isShow}}">
       <!-- <wxc-loading is-show="{{$loading.isShow}}" image="https://s10.mogucdn.com/mlcdn/c45406/170607_5241335cb37ka3ab7781ddh504ggh_200x200.png" slip="http://s10.mogucdn.com/p1/160715/upload_ifrgmmzwmyydknldhezdambqmeyde_200x200.png"></wxc-loading> -->
       <!-- <wxc-flex class="wrap" main="center" cross="center">
-                                                      <Loadings1 type="1" />
-                                                    </wxc-flex> -->
+                                                              <Loadings1 type="1" />
+                                                            </wxc-flex> -->
     </block>
     <block wx:else>
       <image class="authorize-icon" src="../../images/authorize.png"></image>
@@ -19,10 +19,8 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  // import api from '@/api/login';
-  // import Tips from '@/utils/Tips';
-  // import WxUtils from '@/utils/WxUtils';
+  import wepy from 'wepy'
+  import store from '@/store/utils'
   import AuthorizeMixin from '@/mixins/authorize'
   export default class Login extends wepy.page {
     config = {
@@ -35,14 +33,19 @@
     };
     mixins = [AuthorizeMixin];
     async onLoad() {
-      /**
-       *  wepy.login(); 和  api.wxJsCode2Session() 可以静默获取openid
-       *  openid 是身份标识   但是此时并没有注册
-       *  注册需要 user2session 这样才能注册 不过注册的时候需要 昵称 头像 性别
-       *  但这些信息需要 getuserinfo 这个是需要权限的   所以会提前授权 然后注册
-       *  --------------------------------
-       *  把openid保存在本地 Storage  没有的时候就查询是否注册过 没有注册的话就提示注册 (或者到买东西的时候注册)
-       */
+      // store.init 后回调函数
+      // let a = () => {
+      //   console.log('aaaaaaaaaaaaaa')
+      // }
+      // let b = () => {
+      //   console.log('bbbbbbbbbbbbbbbbb')
+      // }
+      // store.setLoadingQueue([a, b])
+      // store.setLoadingQueue(a)
+      // store.setLoadingQueue(b)
+      // let r = store.refresh('config')
+      // store.setLoadingQueue(store.refresh('config')) // 这个单独使用是可以的 这么使用是错误的  因为作为这个需要参数 但是有了参数就会立即执行了 所以不行
+      store.init()
       // 如果全局变量有 userinfo就不用登录
       if (!wepy.$instance.globalData.userInfo) {
         await this.login()
