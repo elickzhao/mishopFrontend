@@ -2,10 +2,6 @@
 <template>
   <view class="authorize-contianer {{isShow ? 'bg-img' :'' }}">
     <block wx:if="{{isShow}}">
-      <!-- <wxc-loading is-show="{{$loading.isShow}}" image="https://s10.mogucdn.com/mlcdn/c45406/170607_5241335cb37ka3ab7781ddh504ggh_200x200.png" slip="http://s10.mogucdn.com/p1/160715/upload_ifrgmmzwmyydknldhezdambqmeyde_200x200.png"></wxc-loading> -->
-      <!-- <wxc-flex class="wrap" main="center" cross="center">
-                                                              <Loadings1 type="1" />
-                                                            </wxc-flex> -->
     </block>
     <block wx:else>
       <image class="authorize-icon" src="../../images/authorize.png"></image>
@@ -33,18 +29,6 @@
     };
     mixins = [AuthorizeMixin];
     async onLoad() {
-      // store.init 后回调函数
-      // let a = () => {
-      //   console.log('aaaaaaaaaaaaaa')
-      // }
-      // let b = () => {
-      //   console.log('bbbbbbbbbbbbbbbbb')
-      // }
-      // store.setLoadingQueue([a, b])
-      // store.setLoadingQueue(a)
-      // store.setLoadingQueue(b)
-      // let r = store.refresh('config')
-      // store.setLoadingQueue(store.refresh('config')) // 这个单独使用是可以的 这么使用是错误的  因为作为这个需要参数 但是有了参数就会立即执行了 所以不行
       store.init()
       // 如果全局变量有 userinfo就不用登录
       if (!wepy.$instance.globalData.userInfo) {
@@ -55,11 +39,6 @@
         })
       }
     }
-    //   明天 应该 mininum 那个 应该用 store.init() 那个同步
-    //    现在的数据是 比如openid这种不会变的 就保存在 Storage
-    //    而 mininum 这种是有临时更新的 所以要保存在 store里的config 这样每个页面调用时 都可以缓存和更新
-    //   购物车和地址这种 就直接保存在 store里 不用与线上更新
-    // 最后有个问题是 下线时必须保存在 Storage里
     onShow() {}
   }
 </script>
@@ -90,8 +69,6 @@
     background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg);
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    padding-top: 0rpx; // -moz-background-size:100% 100%;
-    // -webkit-background-size: 100% 100%;  
-    //background-size: cover
+    padding-top: 0rpx; 
   }
 </style>

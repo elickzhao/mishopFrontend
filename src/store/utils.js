@@ -53,33 +53,17 @@ const save = (key, data) => {
  * 会把需要提前加载的数据 在首页显示前加载完成
  * 并且会保存到reduce里 并且会有一定的缓存时间
  */
-const init = async () => {
-  // 判读是否正在加载，正在加载则等待
-  // if (isLoading) {
-  //   console.info('[store] store is loading, wait completed');
-  //   return new Promise(resolve => {
-  //     const callback = () => {
-  //       resolve();
-  //     };
-  //     loadingQueue.push(callback);
-  //   });
-  // } else {
-  //   // 开始初始化
-  //   console.info('[store] start init store');
-  //   isLoading = true;
-  //   await use(...INIT_KEY);
-  //   // 清空等待队列
-  //   console.info('[store] store init completed');
-  //   isLoading = false;
-  //   loadingQueue.forEach(callback => callback());
-  //   loadingQueue = [];
-  // }
-    
+const init = async () => {  
     // 上面是原本写法 不过好像同步请求不需要那样写了 只要await就可以了
     // 开始初始化
     console.info('[store] start init store');
     // isLoading = true;
     await use(...INIT_KEY);
+
+    //XXX 这里也许会加把本地storage里保存的数据读出来 哦 有个问题 这个是每个页面都会 init一下 用于缓存过期的问题 这样就适合了
+    //XXX 可能需要再单独写一个方法 好像也不对 因为入口不一定只是 login 嗯.... 还得放这里
+    //XXX  现在的状况是 写在了 Cart.js 因为小程序的机制 会提前加载所有文件 而那个文件写了构造函数 所以会提前把storage的cart保存在store里 而且保存购物车时也写入storage
+
     // 清空等待队列
     console.info('[store] store init completed');
     // isLoading = false;

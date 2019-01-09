@@ -402,6 +402,11 @@ button.pain-btn[open-type="share"]::after {
   bottom: 0;
 }
 
+.btn-panel-top {
+  position: fixed;
+  top: 0;
+}
+
 /** loading样式 **/
 .loading-wrap {
   height: 80%;

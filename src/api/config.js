@@ -20,6 +20,11 @@ export default class config extends base {
       }
     })
   }
+
+  static getSwipers(){
+    let url = `${this.baseUrl}/api/news/getSwipers`
+    return this.get(url)
+  }
   // // 折扣
   // static discount = null;
 

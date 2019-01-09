@@ -1,0 +1,60 @@
+<!-- 首页四图标导航 -->
+<template>
+    <view class="nav_list">
+        <navigator open-type="navigate" url="/pages/sign_in">
+            <image src="../../images/icons/icon_nav_01_new.png" class="nav_icon"></image>
+            <view class="nav_text">签到有礼</view>
+        </navigator>
+        <navigator open-type="navigate" url="/pages/wholesale?title=1元面膜&flag=2">
+            <image src="../../images/icons/icon_nav_02_new.gif" class="nav_icon"></image>
+            <view class="nav_text">1元面膜</view>
+        </navigator>
+        <navigator open-type="navigate" url="/pages/wholesale?title=品质奶粉&flag=0">
+            <image src="../../images/icons/icon_nav_03_new.png" class="nav_icon"></image>
+            <view class="nav_text">品质奶粉</view>
+        </navigator>
+        <!-- flag= ['is_hot','type','is_show','is_sale']; -->
+        <navigator open-type="navigate" url="/pages/wholesale?title=明星面膜&flag=1">
+            <image src="../../images/icons/icon_nav_02.png" class="nav_icon"></image>
+            <view class="nav_text">明星面膜</view>
+        </navigator>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    export default class NavList extends wepy.component {
+        props = {};
+        data = {};
+        components = {};
+        methods = {};
+        events = {};
+        watch = {};
+        computed = {};
+        onLoad() {};
+        onShow() {};
+    }
+</script>
+
+<style lang='scss'>
+    .nav_list {
+        background-color: #fff;
+        color: #404040;
+        display: flex;
+        font-size: 26rpx;
+        justify-content: space-between;
+        padding: 17rpx 50rpx;
+        navigator {
+            text-align: center;
+        }
+        .nav_icon {
+            height: 80rpx;
+            margin: 0 auto;
+            width: 80rpx;
+            margin-bottom: 14rpx;
+        }
+        .nav_text {
+            font-size: 26rpx;
+        }
+    }
+</style>
