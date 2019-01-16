@@ -1,6 +1,6 @@
 <!-- 登录页面 -->
 <template>
-  <view class="authorize-contianer {{isShow ? 'bg-img' :'' }}">
+  <view class="authorize-contianer " style="{{comeStyle}}">
     <block wx:if="{{isShow}}">
     </block>
     <block wx:else>
@@ -18,6 +18,7 @@
   import wepy from 'wepy'
   import store from '@/store/utils'
   import AuthorizeMixin from '@/mixins/authorize'
+  import { picRandom } from '@/utils/Common'
   export default class Login extends wepy.page {
     config = {
       navigationBarTitleText: '欢迎回来'
@@ -25,7 +26,8 @@
     data = {
       userInfo: '',
       openid: '',
-      isShow: true
+      isShow: true,
+      comeStyle: ''
     };
     mixins = [AuthorizeMixin];
     async onLoad() {
@@ -38,11 +40,14 @@
           this.jump()
         })
       }
+      if (this.isShow) {
+        this.comeStyle = 'background-image: url(' + picRandom('https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg') + ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;'
+      }
     }
     onShow() {}
   }
 </script>
-<style lang="less">
+<style lang="scss">
   page {
     height: 100%;
   }
@@ -65,10 +70,15 @@
       margin: 100rpx 50rpx;
     }
   }
+  // 这个还是不行 编译后就是静态文件了
+  @function randomPic() {
+    $nth: 'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg?random='+random(10000);
+    @return $nth
+  }
   .bg-img {
-    background-image: url(https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg);
+    background-image: url("#{randomPic()}");
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    padding-top: 0rpx; 
+    padding-top: 0rpx;
   }
 </style>

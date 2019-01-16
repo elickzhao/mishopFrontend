@@ -24,15 +24,8 @@
 <script>
     import wepy from 'wepy';
     export default class NavList extends wepy.component {
-        props = {};
-        data = {};
-        components = {};
-        methods = {};
-        events = {};
-        watch = {};
-        computed = {};
-        onLoad() {};
-        onShow() {};
+  props = {}
+  data = {}
     }
 </script>
 

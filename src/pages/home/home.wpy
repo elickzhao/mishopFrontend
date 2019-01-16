@@ -9,8 +9,16 @@
     <!-- 广告图 以后可以弄成联网的 -->
     <image src="../../images/home/gg.png" mode="widthFix" style="width: 100%;" lazy-load="false"></image>
     <view class="h-gap"></view>
-    <!-- 导航 以后可以弄成联网的 template/image_box.wpy 这个是互联网的-->
+    <!-- 导航 以后可以弄成联网的 template/image_box.wpy 这个是联网的-->
     <NavList></NavList>
+    <view class="h-gap"></view>
+    <!-- 热卖商品 -->
+    <!-- <view class="content tc titleFont">1小时达</view> -->
+    <view class="column-center bg-white">
+      <text class="xxl"> 1小时达</text>
+      <ScrollXList :list.sync='hotList' :imgUrl.sync='imgUrl' title='1小时达'></ScrollXList>
+    </view>
+    <!-- /热卖商品 -->
   </view>
 </template>
 
@@ -21,17 +29,21 @@
   import SearchBar from '@/components/template/search_bar'
   import SwiperBar from '../../components/template/swiper_bar'
   import NavList from '../../components/nav_list'
+  import ScrollXList from '../../components/scroll_x_list'
   export default class Home extends wepy.page {
     config = {};
     data = {
       // 广告列表
-      swipers: []
+      swipers: [],
+      hotList: [],
+      imgUrl: ''
     };
     mixins = [BaseMixin];
     components = {
       SearchBar: SearchBar,
       SwiperBar: SwiperBar,
-      NavList: NavList
+      NavList: NavList,
+      ScrollXList: ScrollXList
     };
     methods = {};
     events = {};
@@ -39,6 +51,7 @@
     computed = {};
     async onLoad() {
       this.swipers = await config.getSwipers()
+      // this.hotList = 
       this.$apply()
     }
     onShow() {}
@@ -59,5 +72,16 @@
   .weui-footer {
     padding: 15rpx 0;
     background-color: $color-bg-body;
+  }
+  .content {
+    padding: 30rpx;
+  }
+  .titleFont {
+    font-size: 40rpx;
+    color: #353535;
+    font-weight: bold;
+  }
+  .tc {
+    text-align: center;
   }
 </style>
