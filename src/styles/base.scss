@@ -132,6 +132,10 @@ view.bg-white {
   background-color: white
 }
 
+.Shadow{
+  -moz-box-shadow:2px 2px 5px #999999; -webkit-box-shadow:2px 2px 5px #999999; box-shadow:2px 2px 5px #999999;
+}
+
 //******布局样式******/
 .row {
   display: flex;
@@ -257,7 +261,7 @@ view.bg-white {
 
 
 //******面板与标签******/
-.panel {
+.tfs-panel {
   background: #fff;
   border-top: $border;
   border-bottom: $border;
@@ -265,7 +269,7 @@ view.bg-white {
   overflow: hidden;
 }
 
-.label {
+.tfs-label {
   display: inline-block;
   font-size: 12px;
   height: 28px;

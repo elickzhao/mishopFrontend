@@ -28,6 +28,7 @@ export default class Pagination {
    * 加载下一页数据
    */
   async next (args) {
+    console.log('page next ------------<<<<<<<<')
     const param = {
       from: this.start,
       limit: this.count

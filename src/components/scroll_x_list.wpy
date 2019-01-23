@@ -30,10 +30,10 @@
 		}
 	}
 	/**
-	.scroll-list:nth-child(odd) {
-		margin-left: 10rpx;
-	}
-	**/
+			.scroll-list:nth-child(odd) {
+				margin-left: 10rpx;
+			}
+			**/
 	.scroll-list {
 		background: #fff;
 		.image_box {
@@ -82,6 +82,7 @@
 </style>
 
 <template lang="wxml">
+
 	<!--水平滚动-->
 	<scroll-view scroll-x="true" style=" white-space: nowrap; display: flex;margin-bottom: 15rpx;">
 		<!--  display: inline-block-->
@@ -104,7 +105,7 @@
 				</view>
 			</block>
 			<view class="item" style="background: #fff;">
-				<navigator class="scroll-list" url="/pages/wholesale?title={{title}}&flag=3">
+				<navigator class="scroll-list " url="/pages/wholesale?title={{title}}&flag=3">
 					<view class="image_box">
 						<!-- 这里存在当列表没有时 图片拉宽的问题 -->
 						<image style="height: 360rpx;" src="../images/more.png"></image>
@@ -116,20 +117,18 @@
 </template>
 
 <script>
-	import wepy from 'wepy'
-	export default class scrollXList extends wepy.component {
-		props = {
-			imgUrl: String,
-			list: [],
-			title:String,
-		};
-		// 事件处理函数（集中保存在 methods 对象中）
-		methods = {}
-		// 声明组件之间的事件处理函数
-		events = {}
-		// 声明页面中将要使用到的组件，或声明组件中所引用的子组件
-		components = {}
-		// 在 Page 和 Component 共用的生命周期函数
-		onLoad() {}
-	}
+import wepy from 'wepy'
+export default class scrollXList extends wepy.component {
+  config = {
+    usingComponents: {
+      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index'
+    }
+  };
+  props = {
+    imgUrl: String,
+    list: [],
+    title: String
+  };
+}
 </script>
