@@ -15,83 +15,88 @@
     <!-- 热卖商品 -->
     <view class="column-center bg-white">
       <text class="xxl" style="font-weight:bold;"> 1小时达</text>
-      <ScrollXList :list.sync='hotList' :imgUrl.sync='imgUrl' title='1小时达'></ScrollXList>
+      <ScrollXList :list.sync='hotList' title='1小时达'></ScrollXList>
     </view>
     <!-- /热卖商品 -->
     <!-- 分割图片 -->
     <image src="{{picUrl}}" mode="widthFix" style="width:100%;margin-top:15rpx;"></image>
     <!-- /分割图片 -->
     <!-- 商品列表 -->
-    <!-- <ShopGridList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list" :imgUrl.sync="imgUrl"></ShopGridList> -->
+    <GoodsList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList>
     <!-- /商品列表 -->
   </view>
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import config from '@/api/config'
-  import goods from '@/api/goods'
-  import BaseMixin from '@/mixins/base'
-  import SearchBar from '@/components/template/search_bar'
-  import SwiperBar from '../../components/template/swiper_bar'
-  import NavList from '../../components/nav_list'
-  import ScrollXList from '../../components/scroll_x_list'
-  import ShopGridList from '../../components/shop_grid_list'
-  import {
-    picRandom
-  } from '@/utils/Common'
-  export default class Home extends wepy.page {
-    config = {
-      usingComponents: {
-        'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
-        'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
-        'wxc-label': '../../packages/@minui/wxc-label/dist/index'
-      }
-    };
-    data = {
-      // 广告列表
-      swipers: [],
-      hotList: [],
-      imgUrl: '',
-      picUrl: ''
-    };
-    mixins = [BaseMixin];
-    components = {
-      SearchBar: SearchBar,
-      SwiperBar: SwiperBar,
-      NavList: NavList,
-      ScrollXList: ScrollXList,
-      ShopGridList: ShopGridList
-    };
-    methods = {};
-    events = {};
-    watch = {};
-    computed = {};
-    async onLoad() {
-      this.imgUrl = this.$parent.globalData.imgUrl
-      this.picUrl = picRandom('https://small.huanqiujishi.com/Data/UploadFiles/logo/jifen.gif')
-      // 所有等待的都放在下面 要不加载组件时 会出现空白变量 比如上面的imgUrl
-      this.swipers = await config.getSwipers()
-      this.hotList = await goods.hotList()
-      this.$apply()
+import wepy from 'wepy';
+import config from '@/api/config';
+import goods from '@/api/goods';
+import BaseMixin from '@/mixins/base';
+import SearchBar from '@/components/template/search_bar';
+import SwiperBar from '../../components/template/swiper_bar';
+import NavList from '../../components/nav_list';
+import ScrollXList from '../../components/scroll_list';
+import GoodsList from '@/components/goods/goods_list';
+// import { connect,getStore } from 'wepy-redux'
+import { picRandom } from '@/utils/Common';
+export default class Home extends wepy.page {
+  config = {
+    usingComponents: {
+      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index'
     }
-    onShow() {}
+  };
+  data = {
+    // 广告列表
+    swipers: [],
+    hotList: [],
+    list: [],
+    picUrl: ''
+  };
+  mixins = [BaseMixin];
+  components = {
+    SearchBar: SearchBar,
+    SwiperBar: SwiperBar,
+    NavList: NavList,
+    ScrollXList: ScrollXList,
+    GoodsList: GoodsList
+  };
+  methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  async onLoad() {
+    // let store = getStore()  // 这个必须引入wepy-redux的方法 getStore方法才可以用 这个方法是获得store对象 有了这个对象才能取得 state的值
+    // console.log(store.getState())
+    // console.log(wepy.$store.getState()) // 这个必须再app.wepy页面赋值才可以 wepy.$store = store
+    this.picUrl = picRandom(
+      'https://small.huanqiujishi.com/Data/UploadFiles/logo/jifen.gif'
+    );
+    // 所有等待的都放在下面 要不加载组件时 会出现空白变量 比如上面的imgUrl
+    this.swipers = await config.getSwipers();
+    this.hotList = await goods.hotList();
+    this.list = await goods.getGoodList();
+    this.$apply();
   }
+  onShow() {}
+}
 </script>
 
 <style lang='scss'>
-  // @import '../../styles/variable';
-  @import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-  @import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-  text.ll {
-    font-size: $text-ll;
-  }
-  .row-center-wrap {
-    @extend .row-center;
-    flex-wrap: wrap;
-  } // 引入变量 然后修改
-  .weui-footer {
-    padding: 15rpx 0;
-    background-color: $color-bg-body;
-  }
+// @import '../../styles/variable';
+@import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+@import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+text.ll {
+  font-size: $text-ll;
+}
+.row-center-wrap {
+  @extend .row-center;
+  flex-wrap: wrap;
+} // 引入变量 然后修改
+.weui-footer {
+  padding: 15rpx 0;
+  background-color: $color-bg-body;
+}
 </style>

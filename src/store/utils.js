@@ -1,5 +1,9 @@
-import { getStore } from 'wepy-redux';
-import { SAVE } from './types';
+import {
+  getStore
+} from 'wepy-redux';
+import {
+  SAVE
+} from './types';
 import config from '../api/config';
 // import shop from '../api/shop';
 // import goods from '../api/goods';
@@ -53,22 +57,22 @@ const save = (key, data) => {
  * 会把需要提前加载的数据 在首页显示前加载完成
  * 并且会保存到reduce里 并且会有一定的缓存时间
  */
-const init = async () => {  
-    // 上面是原本写法 不过好像同步请求不需要那样写了 只要await就可以了
-    // 开始初始化
-    console.info('[store] start init store');
-    // isLoading = true;
-    await use(...INIT_KEY);
+const init = async () => {
+  // 上面是原本写法 不过好像同步请求不需要那样写了 只要await就可以了
+  // 开始初始化
+  console.info('[store] start init store');
+  // isLoading = true;
+  await use(...INIT_KEY);
 
-    //XXX 这里也许会加把本地storage里保存的数据读出来 哦 有个问题 这个是每个页面都会 init一下 用于缓存过期的问题 这样就适合了
-    //XXX 可能需要再单独写一个方法 好像也不对 因为入口不一定只是 login 嗯.... 还得放这里
-    //XXX  现在的状况是 写在了 Cart.js 因为小程序的机制 会提前加载所有文件 而那个文件写了构造函数 所以会提前把storage的cart保存在store里 而且保存购物车时也写入storage
+  // XXX 这里也许会加把本地storage里保存的数据读出来 哦 有个问题 这个是每个页面都会 init一下 用于缓存过期的问题 这样就适合了
+  // XXX 可能需要再单独写一个方法 好像也不对 因为入口不一定只是 login 嗯.... 还得放这里
+  // XXX  现在的状况是 写在了 Cart.js 因为小程序的机制 会提前加载所有文件 而那个文件写了构造函数 所以会提前把storage的cart保存在store里 而且保存购物车时也写入storage
 
-    // 清空等待队列
-    console.info('[store] store init completed');
-    // isLoading = false;
-    loadingQueue.forEach(callback => callback());
-    loadingQueue = [];
+  // 清空等待队列
+  console.info('[store] store init completed');
+  // isLoading = false;
+  loadingQueue.forEach(callback => callback());
+  loadingQueue = [];
 };
 
 /**
@@ -133,22 +137,22 @@ const fetch = (field) => {
   switch (field) {
     case 'config':
       return config.init();
-    // case 'member' :
-    //   return member.info();
-    // case 'notices':
-    //   return shop.notices();
-    // case 'status' :
-    //   return shop.getStatus();
-    // case 'categories' :
-    //   return goods.categories();
-    // case 'coupon' :
-    //   return coupon.all();
-    // case 'reduce' :
-    //   return shop.reduces();
-    // case 'recommend' :
-    //   return goods.recommend().next();
-    // case 'version' :
-    //   return shop.chargeLimit();
+      // case 'member' :
+      //   return member.info();
+      // case 'notices':
+      //   return shop.notices();
+      // case 'status' :
+      //   return shop.getStatus();
+      // case 'categories' :
+      //   return goods.categories();
+      // case 'coupon' :
+      //   return coupon.all();
+      // case 'reduce' :
+      //   return shop.reduces();
+      // case 'recommend' :
+      //   return goods.recommend().next();
+      // case 'version' :
+      //   return shop.chargeLimit();
   }
 };
 
@@ -167,7 +171,7 @@ const updateMeta = (field) => {
  * 判断是否为嵌套字段
  */
 const isNested = field => {
-  return NESTED_KEY.some(key => key == field);
+  return NESTED_KEY.some(key => key === field);
 };
 
 /**
@@ -175,7 +179,7 @@ const isNested = field => {
  */
 const exists = key => {
   // 判断是否初始化过
-  if (meta[key] == null || meta[key].init != true) {
+  if (meta[key] == null || meta[key].init !== true) {
     return false;
   }
   // 判断是否过期
@@ -186,13 +190,20 @@ const exists = key => {
 
 /**
  * 设置回调函数
- * @param {*} callback 
+ * @param {*} 'callback'
  */
 const setLoadingQueue = callback => {
   // console.log(typeof callback)
   // typeof callback 检查数组和对象 都返回 object 而且用isArray来检查返回空 可能参数传过来变对象了
-  loadingQueue = (typeof callback == 'object') ? [...loadingQueue,...callback] : [...loadingQueue,callback]
+  loadingQueue = (typeof callback === 'object') ? [...loadingQueue, ...callback] : [...loadingQueue, callback]
   // console.log('loadingQueue is ->',loadingQueue)
 }
 
-export default {get, save, use, refresh: reflesh, init,setLoadingQueue}
+export default {
+  get,
+  save,
+  use,
+  refresh: reflesh,
+  init,
+  setLoadingQueue
+}

@@ -1,16 +1,23 @@
-import { handleActions } from 'redux-actions'
-import { SAVE } from '../types/cache'
+import {
+  handleActions
+} from 'redux-actions'
+import {
+  SAVE
+} from '../types/cache'
 
 export default handleActions({
-  [SAVE] (state, action) {
-    const {key, value} = action.payload;
+  [SAVE](state, action) {
+    const {
+      key,
+      value
+    } = action.payload;
     return {
       ...state,
       [key]: value
     }
   }
 }, {
-  miniNum:null
+  miniNum: 68
   // member: null,
   // card: null,
   // reduce: null,

@@ -1,84 +1,84 @@
 <style lang="less">
-	.wrap {
-		display: block;
-		padding: 10rpx;
-		background: #696969;
-	}
-	.item {
-		min-width: 32%;
-		min-height: 300rpx;
-		font-size: 22rpx;
-		text-align: center;
-	}
-	.item:nth-of-type(odd) {
-		.scroll-list {
-			margin-left: 15rpx;
-			background: #afdde3;
-		}
-	}
-	.item:nth-of-type(2n) {
-		.scroll-list {
-			margin-left: 15rpx;
-			background: #8FABFF;
-		}
-	}
-	.item:last-of-type {
-		.scroll-list {
-			margin-left: 10rpx;
-			margin-right: 10rpx;
-			background: #FFF;
-		}
-	}
-	/**
+.wrap {
+  display: block;
+  padding: 10rpx;
+  background: #696969;
+}
+.item {
+  min-width: 32%;
+  min-height: 300rpx;
+  font-size: 22rpx;
+  text-align: center;
+}
+.item:nth-of-type(odd) {
+  .scroll-list {
+    margin-left: 15rpx;
+    background: #afdde3;
+  }
+}
+.item:nth-of-type(2n) {
+  .scroll-list {
+    margin-left: 15rpx;
+    background: #8fabff;
+  }
+}
+.item:last-of-type {
+  .scroll-list {
+    margin-left: 10rpx;
+    margin-right: 10rpx;
+    background: #fff;
+  }
+}
+/**
 			.scroll-list:nth-child(odd) {
 				margin-left: 10rpx;
 			}
 			**/
-	.scroll-list {
-		background: #fff;
-		.image_box {
-			image {
-				width: 100%;
-				height: 250rpx;
-				background: #FFF;
-			}
-		}
-		.product_name {
-			display: flex;
-			margin-top: 5rpx;
-			color: #E5E5E5;
-			font-size: 20rpx;
-			overflow: hidden;
-		}
-		.price {
-			color: #FFF;
-			font-size: 28rpx;
-			font-weight: 600;
-		}
-		.cost_price {
-			color: #666666;
-			font-size: 24rpx;
-			text-decoration: line-through;
-			font-weight: 600;
-		}
-		.sale_num {
-			color: #666666;
-			font-size: 22rpx;
-		}
-		.goods {
-			padding: 10rpx 12rpx;
-		}
-		.product_info {
-			display: flex;
-			align-items: flex-end;
-		}
-		.cost_price {
-			padding-left: 20rpx;
-		}
-		.sale_num {
-			padding-left: 20rpx;
-		}
-	}
+.scroll-list {
+  background: #fff;
+  .image_box {
+    image {
+      width: 100%;
+      height: 250rpx;
+      background: #fff;
+    }
+  }
+  .product_name {
+    display: flex;
+    margin-top: 5rpx;
+    color: #e5e5e5;
+    font-size: 20rpx;
+    overflow: hidden;
+  }
+  .price {
+    color: #fff;
+    font-size: 28rpx;
+    font-weight: 600;
+  }
+  .cost_price {
+    color: #666666;
+    font-size: 24rpx;
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+  .sale_num {
+    color: #666666;
+    font-size: 22rpx;
+  }
+  .goods {
+    padding: 10rpx 12rpx;
+  }
+  .product_info {
+    display: flex;
+    align-items: flex-end;
+  }
+  .cost_price {
+    padding-left: 20rpx;
+  }
+  .sale_num {
+    padding-left: 20rpx;
+  }
+}
 </style>
 
 <template lang="wxml">
@@ -117,8 +117,10 @@
 </template>
 
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
+import GlobalData from '@/mixins/globaldata';
 export default class scrollXList extends wepy.component {
+  mixins = [GlobalData];
   config = {
     usingComponents: {
       'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
@@ -126,7 +128,6 @@ export default class scrollXList extends wepy.component {
     }
   };
   props = {
-    imgUrl: String,
     list: [],
     title: String
   };

@@ -88,7 +88,7 @@
     };
     methods = {
       more () {
-        if (this.param.isMore == false) return;
+        if (this.param.isMore === false) return;
         const {sort, by, content, categoryId} = this.param;
         let url = `/pages/goods/search_list?`;
         if (categoryId != null) {

@@ -15,13 +15,13 @@ export default class config extends base {
     return this.get(url).then(data => {
       // 这里看看把miniNum 保存在 StoreConfig里  考虑下有没有这个必要 (想了下好像也没什么必要)
       return {
-        miniNum : data.minimum
+        miniNum: data.minimum
         // freight : data.freight //运费
       }
     })
   }
 
-  static getSwipers(){
+  static getSwipers() {
     let url = `${this.baseUrl}/api/news/getSwipers`
     return this.get(url)
   }

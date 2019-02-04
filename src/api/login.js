@@ -22,8 +22,8 @@ export default class login extends base {
       wepy.$instance.globalData.userInfo = data
       return data
     }).catch(data => {
-        // this.register()
-      //console.log(data)
+      // this.register()
+      // console.log(data)
       return data
     })
   }
