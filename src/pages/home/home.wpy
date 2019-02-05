@@ -24,6 +24,7 @@
     <!-- 商品列表 -->
     <GoodsList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList>
     <!-- /商品列表 -->
+    <wxc-loadmore is-end='{{isPageReachBottom}}' icon='{{true}}'></wxc-loadmore>
   </view>
 </template>
 
@@ -32,6 +33,7 @@ import wepy from 'wepy';
 import config from '@/api/config';
 import goods from '@/api/goods';
 import BaseMixin from '@/mixins/base';
+import Pagination from '@/mixins/pagination.wpy';
 import SearchBar from '@/components/template/search_bar';
 import SwiperBar from '../../components/template/swiper_bar';
 import NavList from '../../components/nav_list';
@@ -45,6 +47,7 @@ export default class Home extends wepy.page {
       'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
       'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index',
       'wxc-label': '../../packages/@minui/wxc-label/dist/index'
     }
   };
@@ -52,10 +55,10 @@ export default class Home extends wepy.page {
     // 广告列表
     swipers: [],
     hotList: [],
-    list: [],
+    page: {},
     picUrl: ''
   };
-  mixins = [BaseMixin];
+  mixins = [BaseMixin, Pagination];
   components = {
     SearchBar: SearchBar,
     SwiperBar: SwiperBar,
@@ -77,7 +80,8 @@ export default class Home extends wepy.page {
     // 所有等待的都放在下面 要不加载组件时 会出现空白变量 比如上面的imgUrl
     this.swipers = await config.getSwipers();
     this.hotList = await goods.hotList();
-    this.list = await goods.getGoodList();
+    this.page = await goods.getGoodList();
+    await this.next();
     this.$apply();
   }
   onShow() {}

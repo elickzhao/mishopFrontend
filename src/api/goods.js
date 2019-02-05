@@ -19,9 +19,10 @@ export default class goods extends base {
    */
   static getGoodList() {
     let url = `${this.baseUrl}/api/news/searchGoodsListNew`;
-    return this.get(url, {
-      page: 1
-    })
+    // return this.get(url, {
+    //   page: 1
+    // })
+    return new Page(url)
   }
   /**
    * 获取推荐
