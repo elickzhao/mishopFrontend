@@ -1,7 +1,7 @@
 import http from './Http'
 
 export default class Pagination {
-  constructor (url, processFunc) {
+  constructor(url, processFunc) {
     // 数据访问地址
     this.url = url;
     // 数据集合
@@ -27,53 +27,53 @@ export default class Pagination {
   /**
    * 加载下一页数据
    */
-  async next (args) {
-    const param = {
-      from: this.start,
-      limit: this.count
-    };
-    if (this.loading) {
-      console.warn('page loading!');
-      return this;
-    }
-    // 附加参数
-    this.loading = true;
-    try {
-      Object.assign(param, args);
-      const data = await http.get(this.url, param);
-      // 底部判断
-      if (data === null || data.length < 1) {
-        if (this.toClear) {
-          this.clear();
-        } else {
-          this.reachBottom = true;
-        }
-        return this;
-      }
-      this.empty = false;
-      // 处理数据
-      this._processData(data);
-      // 设置数据
-      if (this.toClear) {
-        this.list = data;
-        this.toClear = false;
-      } else {
-        this.list = this.list.concat(data);
-      }
-      this.start += this.count;
-      if (data.length < this.count) {
-        this.reachBottom = true;
-      }
-      return this;
-    } finally {
-      this.loading = false;
-    }
-  }
+  // async nextOld (args) {
+  //   const param = {
+  //     from: this.start,
+  //     limit: this.count
+  //   };
+  //   if (this.loading) {
+  //     console.warn('page loading!');
+  //     return this;
+  //   }
+  //   // 附加参数
+  //   this.loading = true;
+  //   try {
+  //     Object.assign(param, args);
+  //     const data = await http.get(this.url, param);
+  //     // 底部判断
+  //     if (data === null || data.length < 1) {
+  //       if (this.toClear) {
+  //         this.clear();
+  //       } else {
+  //         this.reachBottom = true;
+  //       }
+  //       return this;
+  //     }
+  //     this.empty = false;
+  //     // 处理数据
+  //     this._processData(data);
+  //     // 设置数据
+  //     if (this.toClear) {
+  //       this.list = data;
+  //       this.toClear = false;
+  //     } else {
+  //       this.list = this.list.concat(data);
+  //     }
+  //     this.start += this.count;
+  //     if (data.length < this.count) {
+  //       this.reachBottom = true;
+  //     }
+  //     return this;
+  //   } finally {
+  //     this.loading = false;
+  //   }
+  // }
 
   /**
    * 加载下一页数据
    */
-  async nextNew (args) {
+  async next(args) {
     const param = {
       page: this.start
     };
@@ -85,7 +85,9 @@ export default class Pagination {
     this.loading = true;
     try {
       Object.assign(param, args);
-      const data = await http.get(this.url, param);
+      const json = await http.get(this.url, param);
+      const data = json.list
+      const pageTotal = json.page_total
       // 底部判断
       if (data === null || data.length < 1) {
         if (this.toClear) {
@@ -106,7 +108,8 @@ export default class Pagination {
         this.list = this.list.concat(data);
       }
       this.start++;
-      if (data.pageTotal < 2) {
+
+      if (pageTotal < this.start) {
         this.reachBottom = true;
       }
       return this;
@@ -118,13 +121,13 @@ export default class Pagination {
   /**
    * 恢复到第一页
    */
-  reset () {
+  reset() {
     this.empty = true;
     this.toClear = true;
     this.start = 1;
     this.reachBottom = false;
   }
-  clear () {
+  clear() {
     this.toClear = false;
     this.start = 1;
     this.list = [];
@@ -133,7 +136,7 @@ export default class Pagination {
   /**
    * 处理数据（私有）
    */
-  _processData (data) {
+  _processData(data) {
     if (this.processFunc) {
       for (let i in data) {
         const result = this.processFunc(data[i]);

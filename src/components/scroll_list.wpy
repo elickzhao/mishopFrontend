@@ -105,7 +105,7 @@
 				</view>
 			</block>
 			<view class="item" style="background: #fff;">
-				<navigator class="scroll-list " url="/pages/wholesale?title={{title}}&flag=3">
+				<navigator class="scroll-list " url="/pages/home/goods_zone?title={{title}}&flag=3">
 					<view class="image_box">
 						<!-- 这里存在当列表没有时 图片拉宽的问题 -->
 						<image style="height: 360rpx;" src="../images/more.png"></image>

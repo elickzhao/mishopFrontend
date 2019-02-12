@@ -87,20 +87,3 @@ export default class Home extends wepy.page {
   onShow() {}
 }
 </script>
-
-<style lang='scss'>
-// @import '../../styles/variable';
-@import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-@import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-text.ll {
-  font-size: $text-ll;
-}
-.row-center-wrap {
-  @extend .row-center;
-  flex-wrap: wrap;
-} // 引入变量 然后修改
-.weui-footer {
-  padding: 15rpx 0;
-  background-color: $color-bg-body;
-}
-</style>

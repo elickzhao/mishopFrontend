@@ -8,13 +8,16 @@ import {
 import {
   baseUrl,
   hostUrl,
-  imgUrl
+  imgUrl,
+  appName
+
 } from '@/config'
 
 const globaldata = {
   hostUrl: hostUrl,
   baseUrl: baseUrl,
-  imgUrl: imgUrl
+  imgUrl: imgUrl,
+  appName: appName
 }
 
 export default handleActions({

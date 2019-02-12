@@ -1,0 +1,69 @@
+<!--现货批发-->
+<template>
+  <image src="../../images/who_{{flag}}.png" lazy-load mode="scaleToFill" class="Shadow" style="width: 100%">
+  </image>
+  <block wx:if="{{!isPageEmpty}}">
+    <!--矩阵商品列表模块-->
+    <GoodList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list" ></GoodList>
+    <wxc-loadmore is-end="{{isPageReachBottom}}"  icon="{{true}}"></wxc-loadmore>
+  </block>
+  <view wx:if="{{isPageEmpty}}" style="height: 600rpx;overflow:hidden;">
+    <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import BaseMixin from '@/mixins/base';
+import PaginationMixin from '@/mixins/pagination.wpy';
+import GoodList from '@/components/goods/goods_list';
+import api from '@/api/goods';
+export default class goodsZone extends wepy.page {
+  config = {
+    navigationBarTitleText: '特价专区',
+    usingComponents: {
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+      'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index'
+    }
+  };
+  components = {
+    GoodList: GoodList
+  };
+  data = {
+    keyword: '',
+    flag: 0, // 促销分类
+    list: [],
+    purchasetype: 1,
+    special: 1 // 0-正常入库;1-特价专区和换货专区
+  };
+  mixins = [BaseMixin, PaginationMixin];
+  onAbnorTap() {
+    wepy.switchTab({
+      url: 'home'
+    });
+  }
+  params() {
+    return {
+      searchKeyWords: this.keyword
+    };
+  }
+  async doSearchGoods() {
+    this.page = await api.getGoodList();
+    this.next();
+  }
+  onLoad(options) {
+    let that = this;
+    that.list = [];
+    this.flag = options.flag;
+    this.keyword = options.title;
+    this.doSearchGoods();
+    wepy.setNavigationBarTitle({
+      title: options.title
+    });
+  }
+  computed = {};
+  methods = {};
+  events = {};
+}
+</script>
