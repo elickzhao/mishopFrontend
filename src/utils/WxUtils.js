@@ -2,19 +2,19 @@ import Tips from './Tips';
 import wepy from 'wepy';
 
 export default class WxUtils {
-  static tabUrls = ['/pages/home/template', '/pages/goods/category', '/pages/goods/cart', '/pages/customer/index', '/pages/customer/index_template'];
+  static tabUrls = ['/pages/home/home', '/pages/goods/category', '/pages/goods/cart', '/pages/customer/index', '/pages/customer/index_template'];
 
   // 把跳转的位置 转到模版
   static mapUrls = {
-    '/pages/shop/index': '/pages/home/template',
-    '/pages/home/home': '/pages/home/template'
+    '/pages/shop/index': '/pages/home/template'
+    // '/pages/home/home': '/pages/home/template'
   };
 
-  static isTab (url) {
+  static isTab(url) {
     const type = wepy.$instance.globalData.shopType;
     return type == 1 && this.tabUrls.some(path => path == url);
   }
-  static mapUrl (url) {
+  static mapUrl(url) {
     const type = wepy.$instance.globalData.shopType;
     if (type == 1 && this.mapUrls[url]) {
       return this.mapUrls[url];
@@ -109,7 +109,9 @@ export default class WxUtils {
    * 检查SDK版本
    */
   static isSDKExipred() {
-    const {SDKVersion} = wx.getSystemInfoSync();
+    const {
+      SDKVersion
+    } = wx.getSystemInfoSync();
     console.info(`[version]sdk ${SDKVersion}`);
     return SDKVersion == null || SDKVersion < '1.2.0'
   }
@@ -127,12 +129,12 @@ export default class WxUtils {
    */
   static checkUserInfo() {
     if (!wepy.$instance.globalData.userInfo) {
-        let userInfo = wepy.getStorageSync('userInfo')
-        if(userInfo){
-          wepy.$instance.globalData.userInfo = userInfo
-        }else{
-          return false
-        }
+      let userInfo = wepy.getStorageSync('userInfo')
+      if (userInfo) {
+        wepy.$instance.globalData.userInfo = userInfo
+      } else {
+        return false
+      }
     }
     return true
   }
@@ -140,7 +142,7 @@ export default class WxUtils {
   /**
    *  获得当前页面
    */
-  static getCurrentPages(){
+  static getCurrentPages() {
     let pages = getCurrentPages() //获取加载的页面
     let currentPage = pages[pages.length - 1] //获取当前页面的对象
     return currentPage;
@@ -150,7 +152,7 @@ export default class WxUtils {
   /**
    *  获得当前页面路径
    */
-  static getCurrentPagesUrl(){
+  static getCurrentPagesUrl() {
     let currentPage = this.getCurrentPages()
     let url = currentPage.route //当前页面url
     return url;
@@ -158,7 +160,7 @@ export default class WxUtils {
   /**
    *  获得当前页面路径
    */
-  static getCurrentPagesOptions(){
+  static getCurrentPagesOptions() {
     let currentPage = this.getCurrentPages()
     let options = currentPage.options //如果要获取url中所带的参数可以查看options
     return options

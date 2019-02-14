@@ -34,7 +34,7 @@ import config from '@/api/config';
 import goods from '@/api/goods';
 import BaseMixin from '@/mixins/base';
 import Pagination from '@/mixins/pagination.wpy';
-import SearchBar from '@/components/template/search_bar';
+import SearchBar from '@/components/template/home_search_bar';
 import SwiperBar from '../../components/template/swiper_bar';
 import NavList from '../../components/nav_list';
 import ScrollXList from '../../components/scroll_list';

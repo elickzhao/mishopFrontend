@@ -1,0 +1,231 @@
+<template>
+  <view class="wrapper">
+    <view class="top">
+      <SearchBar></SearchBar>
+    </view>
+    <view class="sidebar">
+      <SideTab :tab.sync="rootCate" key="rootCate"/>
+    </view>
+    <view class="main">
+      <ImageBox :list.sync="childcateList"></ImageBox>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import api from '@/api/goods';
+import SearchBar from '@/components/search/search_bar';
+import SideTab from '@/components/common/side_tab';
+import ImageBox from '@/components/common/image_box';
+// import { SEL_CLASS_CODE } from '../utils/constant';   // XXX 这个看看怎么替换
+// import tip from '@/utils/Tips';
+import store from '@/store/utils';
+@connect({
+  rootCate: store.get('rootCate')
+})
+export default class Category extends wepy.page {
+  config = {
+    navigationBarTitleText: '分类'
+  };
+  components = {
+    SearchBar: SearchBar,
+    SideTab: SideTab,
+    ImageBox: ImageBox
+  };
+  data = {
+    imgUrl: '',
+    scrollTop: 100,
+    windowHeight: 0,
+    list: {},
+    // 一级分类数据
+    rootcateList: {},
+    // 二级三级分类数据
+    childcateList: {}
+  };
+  async getChildCate(rootCateCode) {
+    const json = await api.getChildGoodsCatetoryList({
+      cat_id: rootCateCode
+    });
+    console.log(json);
+    this.childcateList = json
+    // if (json.data.code == 0) {
+    //   this.childcateList = json.data.list;
+    // } else {
+    //   tip.error(json.data.msg);
+    // }
+    // this.$apply();
+  }
+  async getRootCateTopLevel() {
+    // store.saveMeta('rootCate')
+    // store.save('rootCate',json)
+    if (!store.exists('rootCate')) {
+      const json = await api.getRootCateTopLevel();
+      store.save('rootCate', json);
+      store.saveMeta('rootCate');
+    }
+    await this.getChildCate(this.rootCate.selectedId);
+    // store.save('rootCate',json)
+    // if (json.data.code == 0) {
+    //   this.rootcateList = json.data.list;
+    //   // console.log(json.data.list)
+    //   if (this.rootcateList.length > 0) {
+    //     let selCode = 'dd'; // wx.getStorageSync(SEL_CLASS_CODE);
+    //     var selRottCateCode = this.rootcateList[0].id;
+    //     // console.log(selCode);
+    //     // console.log(selRottCateCode);
+    //     // 这里如果没有当前打开分类 就默认第一个分类
+    //     if (selCode.length == 0) {
+    //       this.rootcateList[0].active = true;
+    //     } else {
+    //       for (var i = 0; i < this.rootcateList.length; i++) {
+    //         if (selCode == this.rootcateList[i].id) {
+    //           selRottCateCode = this.rootcateList[i].id;
+    //           this.rootcateList[i].active = true;
+    //         }
+    //       }
+    //     }
+    //     // 这里获取子栏目
+    //     this.getChildCate(selRottCateCode);
+    //   } else {
+    //     console.log('一级栏目为空');
+    //   }
+    // } else {
+    //   tip.error(json.data.msg);
+    // }
+    this.$apply();
+  }
+  onLoad() {
+    this.imgUrl = this.$parent.globalData.imgUrl;
+    let systemInfo = wepy.getSystemInfoSync(); // wx.getStorageSync(SYSTEM_INFO);
+    this.windowHeight = systemInfo.windowHeight + 350;
+    this.$apply();
+  }
+  async onShow() {
+    await this.getRootCateTopLevel();
+  }
+  computed = {};
+  methods = {
+    changeCate(e) {
+      let code = e;
+      this.getChildCate(code);
+      // wepy.setStorageSync(SEL_CLASS_CODE, code);
+      // 设置一级分类的选中状态
+      for (var i = 0; i < this.rootcateList.length; i++) {
+        var rootCate = this.rootcateList[i];
+        rootCate.active = false;
+        if (rootCate.id == code) {
+          rootCate.active = true;
+        }
+      }
+    },
+    onShareAppMessage: function(res) {
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+        console.log(res.target);
+      }
+      return {
+        title: this.detail.name,
+        path: '/pages/classify',
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      };
+    }
+  };
+  events = {};
+}
+</script>
+
+<style lang="less">
+.wrapper {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 180rpx 1fr;
+  grid-template-rows: 120rpx 1fr;
+}
+.top {
+  // background-color: antiquewhite;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+.sidebar {
+  // background-color: gray;
+}
+.main {
+  background-color: white;
+}
+page {
+  overflow: hidden;
+}
+// .section {
+//   position: absolute; // height: 91% - 0.8rpx;
+//   height: 90%;
+//   overflow: hidden;
+// }
+// .search_read_only .search_content {
+//   width: 100%;
+// }
+// .classify {
+//   display: flex; // position: relative;
+//   .classify_catetory {
+//     width: 280rpx;
+//     position: relative;
+//     z-index: 1;
+//     .name {
+//       text-align: center;
+//       height: 100rpx;
+//       line-height: 100rpx;
+//       font-size: 28rpx;
+//       color: #666;
+//       overflow: hidden;
+//       white-space: nowrap;
+//       text-overflow: ellipsis;
+//     }
+//     .active {
+//       border-left: 6rpx solid #ff0077;
+//       background: #fff;
+//       color: #ff0077;
+//     }
+//   }
+//   .classify_detail {
+//     overflow: hidden;
+//     position: relative;
+//     z-index: 999; // margin-left: -15rpx;
+//     background: #fff;
+//     padding: 15px 10px 10px 10px;
+//     .classify_item {
+//     }
+//     .title {
+//       font-size: 30rpx;
+//       color: #333;
+//       margin-left: 25rpx;
+//     }
+//     .children {
+//       display: flex;
+//       flex-wrap: wrap; // margin: 20rpx 0rpx;
+//     }
+//     .child_image {
+//       width: 160rpx;
+//       height: 160rpx;
+//     }
+//     .child_name {
+//       font-size: 26rpx;
+//       color: #666;
+//       white-space: nowrap;
+//       overflow: hidden;
+//       text-overflow: ellipsis;
+//       width: 170rpx;
+//     }
+//     .children_item {
+//       height: 200rpx;
+//       width: 170rpx;
+//       text-align: center;
+//     }
+//   }
+// }
+</style>

@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-02-11 15:47:32
+ * @LastEditTime: 2019-02-14 12:57:27
  * @Description:  商品api请求类
  */
 import base from './base';
@@ -31,6 +31,24 @@ export default class goods extends base {
     // })
     return new Page(url)
   }
+
+  static getRootCateTopLevel() {
+    let url = `${this.baseUrl}/api/news/getRootCategoryList`;
+    return this.get(url).then(data => {
+      return {
+        list: data,
+        selectedId: data[0].id
+      }
+    })
+  }
+
+  static getChildGoodsCatetoryList(params) {
+    let url = `${this.baseUrl}/api/news/getChildGoodsCatetoryList`;
+    return this.get(url, params)
+  }
+
+  // ------------------ 以下为老的
+
   /**
    * 获取推荐
    */

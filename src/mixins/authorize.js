@@ -142,9 +142,10 @@ export default class AuthorizeMixin extends wepy.mixin {
   jump() {
     console.info(`[login] login end `);
     // 跳转
-    wepy.redirectTo({
-      url: this.backUrl
-    });
+    WxUtils.backOrRedirect(this.backUrl)
+    // wepy.redirectTo({
+    //   url: this.backUrl
+    // });
     // if (this.backUrl) {
     //   wepy.redirectTo({
     //     url: '/pages/' + this.backUrl

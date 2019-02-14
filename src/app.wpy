@@ -3,90 +3,117 @@
 <style lang="scss" src="./styles/base.scss"></style>
 
 <script>
-  import wepy from 'wepy';
-  import 'wepy-async-function';
-  import WxUtils from './utils/WxUtils';
-  import {
-    baseUrl,
-    hostUrl,
-    imgUrl,
-    minimum
-  } from '@/config';
-  import {
-    setStore
-  } from 'wepy-redux';
-  import configStore from './store';
-  // import { GLOBAL_ADD } from './store/types';
-  const store = configStore();
-  setStore(store);
-  wepy.$store = store;
-  // 原本想添加 全局变量 后来想想还是放到默认里吧
-  // 这种写法很简洁 可以添加 又可以修改 不过按照模式应该分开 类似api 添加 修改 删除 都是单独的action才对
-  // store.dispatch({
-  //   type: GLOBAL_ADD,
-  //   payload: {
-  //     key:'baseUrl',
-  //     value:'zhao'
-  //   }
-  // });
-  // console.log(store.getState(),'<---- app.wpy')
-  export default class extends wepy.app {
-    config = {
-      pages: [
-        'pages/home/login',
-        'pages/home/home',
-        'pages/home/sign_in',
-        'pages/home/goods_zone',
-        'pages/index'
-      ],
-      window: {
-        backgroundTextStyle: 'light',
-        navigationBarBackgroundColor: '#FF0077',
-        navigationBarTitleText: 'TFS环球免税店',
-        navigationBarTextStyle: 'white'
-      }
-    };
-    globalData = {
-      userInfo: null,
-      scene: null,
-      hostUrl: hostUrl,
-      baseUrl: baseUrl,
-      imgUrl: imgUrl,
-      miniNum: minimum
-    };
-    constructor() {
-      super();
-      this.use('requestfix');
-      this.use('promisify');
-    }
-    onLaunch(param) {
-      // 校验SDK
-      WxUtils.checkSDK();
-      this.syncStoreConfig('miniNum');
-      this.syncStoreConfig('userInfo');
-      // 获取保存场景值
-      if (param && param.scene) {
-        console.info('[scene]onLaunch scene', param.scene);
-        wepy.$instance.globalData.scene = param.scene;
-        console.info('[auth]onLaunch end');
-      }
-    }
-    /**
-     * [syncStoreConfig 如果本地存储有数据就保存到全局变量里]
-     * @param  {[type]} key [description]
-     * @return {[type]}     [description]
-     */
-    syncStoreConfig(key) {
-      try {
-        const value = wepy.getStorageSync(key);
-        if (value !== '') {
-          console.info(`[config]${key} sync success `);
-          // wepy.$instance.globalData.config[key] = value;
-          this.globalData[key] = value;
+import wepy from 'wepy';
+import 'wepy-async-function';
+import WxUtils from './utils/WxUtils';
+import { baseUrl, hostUrl, imgUrl, minimum } from '@/config';
+import { setStore } from 'wepy-redux';
+import configStore from './store';
+// import { GLOBAL_ADD } from './store/types';
+const store = configStore();
+setStore(store);
+wepy.$store = store;
+// 原本想添加 全局变量 后来想想还是放到默认里吧
+// 这种写法很简洁 可以添加 又可以修改 不过按照模式应该分开 类似api 添加 修改 删除 都是单独的action才对
+// store.dispatch({
+//   type: GLOBAL_ADD,
+//   payload: {
+//     key:'baseUrl',
+//     value:'zhao'
+//   }
+// });
+// console.log(store.getState(),'<---- app.wpy')
+export default class extends wepy.app {
+  config = {
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#FF0077',
+      navigationBarTitleText: 'TFS环球免税店',
+      navigationBarTextStyle: 'white'
+    },
+    pages: [
+      'pages/home/login',
+      'pages/home/home',
+      'pages/home/sign_in',
+      'pages/home/goods_zone',
+      'pages/goods/category',
+      'pages/index'
+    ],
+    tabBar: {
+      color: '#999999',
+      selectedColor: '#FF0077',
+      backgroundColor: '#ffffff',
+      borderStyle: 'black',
+      list: [
+        {
+          pagePath: 'pages/home/home',
+          text: '首页',
+          iconPath: 'images/tab/souu.png',
+          selectedIconPath: 'images/tab/shou.png'
+        },
+        {
+          pagePath: 'pages/goods/category',
+          text: '分类',
+          iconPath: 'images/tab/fei.png',
+          selectedIconPath: 'images/tab/feii.png'
         }
-      } catch (e) {
-        console.warn(`[config]${key} sync fail `);
-      }
+        // {
+        //   pagePath: 'pages/shop_cart',
+        //   text: '购物车',
+        //   iconPath: 'images/tab/ggg.png',
+        //   selectedIconPath: 'images/tab/gi.png'
+        // },
+        // {
+        //   pagePath: 'pages/info',
+        //   text: '我',
+        //   iconPath: 'images/tab/hui.png',
+        //   selectedIconPath: 'images/tab/huiyuan.png'
+        // }
+      ]
+    }
+  };
+  globalData = {
+    userInfo: null,
+    scene: null,
+    hostUrl: hostUrl,
+    baseUrl: baseUrl,
+    imgUrl: imgUrl,
+    miniNum: minimum,
+    shopType: 1
+  };
+  constructor() {
+    super();
+    this.use('requestfix');
+    this.use('promisify');
+  }
+  onLaunch(param) {
+    // 校验SDK
+    WxUtils.checkSDK();
+    this.syncStoreConfig('miniNum');
+    this.syncStoreConfig('userInfo');
+    // 获取保存场景值
+    if (param && param.scene) {
+      console.info('[scene]onLaunch scene', param.scene);
+      wepy.$instance.globalData.scene = param.scene;
+      console.info('[auth]onLaunch end');
     }
   }
+  /**
+   * [syncStoreConfig 如果本地存储有数据就保存到全局变量里]
+   * @param  {[type]} key [description]
+   * @return {[type]}     [description]
+   */
+  syncStoreConfig(key) {
+    try {
+      const value = wepy.getStorageSync(key);
+      if (value !== '') {
+        console.info(`[config]${key} sync success `);
+        // wepy.$instance.globalData.config[key] = value;
+        this.globalData[key] = value;
+      }
+    } catch (e) {
+      console.warn(`[config]${key} sync fail `);
+    }
+  }
+}
 </script>

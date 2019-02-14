@@ -1,0 +1,64 @@
+<!--  -->
+<template>
+    <view class="top_search">
+        <view class="search_read_only">
+            <navigator class="search_content" url="/pages/search/search">
+                <i class="iconfont icon-search"></i>
+                <view class="search_input">搜索商品</view>
+            </navigator>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class SearchBar extends wepy.component {
+  props = {};
+  data = {};
+  components = {};
+  methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.search_read_only {
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+  width: 650rpx;
+  margin-top: 15rpx;
+  .search_content {
+    display: flex;
+    align-items: center;
+    border-radius: 100rpx;
+    color: #999;
+    width: 500rpx;
+    background: #efefef;
+    padding: 0 30rpx;
+    height: 55rpx;
+    margin: 0 auto;
+    .search_input {
+      font-size: 26rpx;
+      width: 100%;
+    }
+  }
+  .icon-search {
+    font-size: 40rpx;
+  }
+  .icon-message {
+    font-size: 50rpx;
+  }
+}
+.top_search {
+  padding: 20rpx 0rpx 30rpx 0rpx;
+  background: #fff;
+}
+.search_read_only .search_content {
+  width: 100%;
+}
+</style>

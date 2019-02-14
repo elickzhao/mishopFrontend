@@ -52,6 +52,12 @@ const save = (key, data) => {
   });
 };
 
+const saveMeta = key => {
+  updateMeta(key)
+  // 保存元数据
+  save('meta', meta);
+}
+
 /**
  * 初始化
  * 会把需要提前加载的数据 在首页显示前加载完成
@@ -203,6 +209,8 @@ export default {
   get,
   save,
   use,
+  saveMeta,
+  exists,
   refresh: reflesh,
   init,
   setLoadingQueue
