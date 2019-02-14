@@ -7,7 +7,7 @@
         <i class="iconfont icon-search"></i>
         <view class="search_input">搜索商品</view>
       </navigator>
-      <navigator open-type="switchTab" class="message" url="/pages/classify">
+      <navigator open-type="switchTab" class="message" url="/pages/goods/category">
         <icon class="icon-mulu" color="white"></icon>
       </navigator>
     </view>

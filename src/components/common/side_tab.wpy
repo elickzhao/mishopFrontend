@@ -34,17 +34,17 @@ export default class SideTab extends wepy.component {
       // 最终写法
       this.tab.selectedId = selectedId;
       // 因为把store指向这里 这里还是双向绑定 toway 结果只要上面一句就行了 下面保存干脆不用写 这也太方便了 不过有个地方不明白 为什么 saveMeta 也执行了 难道是getRootCateTopLevel执行了一遍?
-      console.log(this.rootCate, '>>>我是RootCate');
+      // console.log(this.rootCate, '>>>我是RootCate');
       // store.save(this.key, this.tab);
       // store.saveMeta(this.key)
       // this.$emit('change', selectedId);
     }
   };
   watch = {
-    rootCate(newValue, oldValue) {
-      console.log(`num value: ${oldValue} -> ${newValue}`);
-      console.log(newValue);
-    }
+    // rootCate(newValue, oldValue) {
+    //   console.log(`num value: ${oldValue} -> ${newValue}`);
+    //   console.log(newValue);
+    // }
   };
   events = {};
   onLoad() {}

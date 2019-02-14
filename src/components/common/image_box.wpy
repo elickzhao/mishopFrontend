@@ -3,137 +3,98 @@
     <scroll-view scroll-y class="goods-box">
       <!--卡券区域（只在推荐的时候展现）-->
       <!-- <scroll-view scroll-x	class="coupon-box" wx:if="{{isCoupon && pickCoupons.length > 0}}">
-                    <repeat for="{{pickCoupons}}" key="index" index="index" item="item">
-                      <CouponItem :coupon.sync="item"/>
-                    </repeat>
-                  </scroll-view> -->
+                      <repeat for="{{pickCoupons}}" key="index" index="index" item="item">
+                        <CouponItem :coupon.sync="item"/>
+                      </repeat>
+                    </scroll-view> -->
       <!--分类名称-->
       <!-- <view class="goods-title row">
-                    <text class="weak">{{selectedCategoryName}}</text>
-                  </view> -->
+                      <text class="weak">{{selectedCategoryName}}</text>
+                    </view> -->
       <!--商品列表-->
       <view class="goods-list">
         <repeat for="{{list}}" key="index" index="index" item="item">
           <view class="item column-center">
-            <image class="item_image" src="{{imgUrl}}/{{item.bz_1}}"></image>
+            <image class="item_image" lazy-load src="{{imgUrl}}/{{item.bz_1}}"></image>
             <view class="item_name">{{item.name}} </view>
           </view>
         </repeat>
       </view>
     </scroll-view>
   </view>
-  <!-- <view class="classify">
-                <scroll-view   scroll-y scroll-with-animation="true">
-                  <view class="children row" >
-                    <navigator hover-class="none" class="children_item" wx:for="{{list}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.id}}&title={{item.name}}">
-                      <image class="child_image" src="{{imgUrl}}/{{item.bz_1}}"></image>
-                      <view class="child_name">{{item.name}} - {{index}} </view>
-                    </navigator>
-                  </view>
-                </scroll-view>
-              </view> -->
 </template>
 
 
 <script>
-import wepy from 'wepy';
-import { connect } from 'wepy-redux';
-import store from '@/store/utils';
-// import GlobalDataMixins from '@/mixins/globaldata';
-@connect({
-  rootCate: store.get('rootCate'),
-  imgUrl: state => {
-    return state.globaldata.imgUrl;
-  }
-  // 这两种写法都可以 下面是简写 注意 GlobalDataMixins 提取的也是 state 里的值 所以如果页面写了 @connect 那么GlobalDataMixins就没用了 会覆盖的
-  // imgUrl(state) {
-  //   return state.globaldata.imgUrl;
-  // }
-})
-export default class ImageBox extends wepy.component {
-  // mixins = [GlobalDataMixins];
-  props = {
-    list: {
-      twoWay: true
+  import wepy from 'wepy';
+  import {
+    connect
+  } from 'wepy-redux';
+  import store from '@/store/utils';
+  // import GlobalDataMixins from '@/mixins/globaldata';
+  @connect({
+    rootCate: store.get('rootCate'),
+    imgUrl: state => {
+      return state.globaldata.imgUrl;
     }
-  };
-  data = {};
-  methods = {};
-  watch = {};
-  events = {};
-  onLoad() {}
-}
+    // 这两种写法都可以 下面是简写 注意 GlobalDataMixins 提取的也是 state 里的值 所以如果页面写了 @connect 那么GlobalDataMixins就没用了 会覆盖的
+    // imgUrl(state) {
+    //   return state.globaldata.imgUrl;
+    // }
+  })
+  export default class ImageBox extends wepy.component {
+    // mixins = [GlobalDataMixins];
+    props = {
+      list: {
+        twoWay: true
+      }
+    };
+    data = {};
+    methods = {};
+    watch = {};
+    events = {};
+    onLoad() {}
+  }
 </script>
 
 <style lang="scss">
-@import '../../styles/variable';
-.main-box {
-  width: 100%;
-  height: 90%;
-  position: absolute;
-  .goods-box {
-    flex: 1;
-    height: 100%;
-    width: 95%;
-    .goods-title {
-      height: 30px;
-      padding-left: 20rpx;
-      align-items: center;
-      border-bottom: $border;
-    }
-    .goods-list {
-      padding-left: 20rpx;
-      display: flex;
-      flex-wrap: wrap;
-      .item {
-        height: 200rpx;
-        width: 170rpx;
-        margin: 5rpx;
-        .item_image {
-          width: 160rpx;
-          height: 160rpx;
-        }
-        .item_name {
-          font-size: 26rpx;
-          color: $color-dimgray;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+  @import '../../styles/variable';
+  .main-box {
+    width: 100%;
+    height: 90%;
+    position: absolute;
+    background-color: #fff;
+    .goods-box {
+      flex: 1;
+      height: 100%;
+      width: 95%;
+      .goods-title {
+        height: 30px;
+        padding-left: 20rpx;
+        align-items: center;
+        border-bottom: $border;
+      }
+      .goods-list {
+        padding-left: 20rpx;
+        display: flex;
+        flex-wrap: wrap;
+        .item {
+          height: 200rpx;
+          width: 170rpx;
+          margin: 5rpx;
+          .item_image {
+            width: 160rpx;
+            height: 160rpx;
+          }
+          .item_name {
+            font-size: 26rpx;
+            color: $color-dimgray;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
     }
   }
-  .inner {
-    height: 200rpx;
-    width: 170rpx;
-    background: #8a4182;
-    margin: 5rpx;
-  }
-  .classify {
-    display: flex;
-    position: absolute; // height: 91% - 0.8rpx;
-    height: 90%;
-    .children {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .child_image {
-      width: 160rpx;
-      height: 160rpx;
-    }
-    .child_name {
-      font-size: 26rpx;
-      color: #666;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 170rpx;
-    }
-    .children_item {
-      height: 200rpx;
-      width: 170rpx;
-      text-align: center;
-    }
-  }
-}
 </style>
