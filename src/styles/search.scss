@@ -1,0 +1,40 @@
+/*
+ * @Author: elick
+ * @Date: 2019-02-18 21:53:11
+ * @LastEditors: elick
+ * @LastEditTime: 2019-02-18 21:58:43
+ * @Description:  搜索框公用样式
+ */
+
+.search_read_only {
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+  width: 650rpx;
+  margin-top: 15rpx;
+
+  .search_content {
+    display: flex;
+    align-items: center;
+    border-radius: 100rpx;
+    color: #999;
+    width: 500rpx;
+    background: #efefef;
+    padding: 0 30rpx;
+    height: 55rpx;
+    margin: 0 auto;
+
+    .search_input {
+      font-size: 26rpx;
+      width: 100%;
+    }
+  }
+
+  .icon-search {
+    font-size: 40rpx;
+  }
+
+  .icon-message {
+    font-size: 50rpx;
+  }
+}

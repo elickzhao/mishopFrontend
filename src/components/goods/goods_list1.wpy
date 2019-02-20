@@ -1,38 +1,32 @@
 <!--商品列表模块-->
 <template>
   <scroll-view scroll-y="true" class="swiper-item-box">
-    <view class="shop_item">
-      <navigator
-        class="list shadow"
-        wx:for="{{list}}"
-        wx:key="item"
-        url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}"
-      >
-        <view class="image_box">
-          <image lazy-load src="{{imgUrl}}{{item.photo_x}}"></image>
-        </view>
-        <view class="goods">
-          <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
-          <view class="product_info">
-            <view class="true_price">
-              <wxc-price class="price-demo" value="{{item.price_yh}}" icon="sup"></wxc-price>
-            </view>
-            <!-- <view class="cost_price">￥{{item.price}}</view> -->
-            <view class="cost_price">
-              <wxc-price status="del" class="del-price" del-color="#999">{{item.price}}</wxc-price>
-            </view>
-            <!-- <view class="sale_num">销量{{item.shiyong}}件</view> -->
-          </view>
-        </view>
-      </navigator>
+    <view class="shop_item" wx:if="{{ searchListView == 'row' }}" >
+      <repeat for="{{list}}" key="index" index="index" item="item">
+        <GoodsListGridItem :item='item'></GoodsListGridItem>
+      </repeat>
+    </view>
+    <view wx:if="{{ searchListView == 'col' }}" >
+      <repeat for="{{list}}" key="index" index="index" item="item">
+        <GoodsListColItem :item='item'></GoodsListColItem>
+      </repeat>
     </view>
   </scroll-view>
 </template>
 <script>
 import wepy from 'wepy';
-import GlobalData from '@/mixins/globaldata';
+import GoodsListGridItem from '@/components/template/goods/goods_list_grid_item';
+import GoodsListColItem from '@/components/template/goods/goods_list_col_item';
+import store from '@/store/utils';
+import { connect } from 'wepy-redux';
+@connect({
+  searchListView: store.get('searchListView')
+})
 export default class ShopGridList extends wepy.component {
-  mixins = [GlobalData];
+  components = {
+    GoodsListGridItem: GoodsListGridItem,
+    GoodsListColItem: GoodsListColItem
+  };
   props = {
     list: [],
     purchasetype: {
@@ -75,7 +69,7 @@ export default class ShopGridList extends wepy.component {
     .goods {
       padding: 15rpx 12rpx;
       .product_name {
-        color: $color-dimgray;
+        color: #1a1a1a;
         font-size: 28rpx;
         overflow: hidden;
         display: -webkit-box;

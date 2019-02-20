@@ -8,6 +8,7 @@ import 'wepy-async-function';
 import WxUtils from './utils/WxUtils';
 import { baseUrl, hostUrl, imgUrl, minimum } from '@/config';
 import { setStore } from 'wepy-redux';
+// import { SAVE } from './store/types';
 import configStore from './store';
 // import { GLOBAL_ADD } from './store/types';
 const store = configStore();
@@ -37,6 +38,9 @@ export default class extends wepy.app {
       'pages/home/sign_in',
       'pages/home/goods_zone',
       'pages/goods/category',
+      'pages/goods/search',
+      'pages/goods/goods_list',
+      'pages/goods/search_goods_list',
       'pages/index'
     ],
     tabBar: {
@@ -79,6 +83,7 @@ export default class extends wepy.app {
     baseUrl: baseUrl,
     imgUrl: imgUrl,
     miniNum: minimum,
+    searchListView: 'row',
     shopType: 1
   };
   constructor() {
@@ -91,6 +96,15 @@ export default class extends wepy.app {
     WxUtils.checkSDK();
     this.syncStoreConfig('miniNum');
     this.syncStoreConfig('userInfo');
+    this.syncStoreConfig('searchListView');
+    // 可以放到redux里不过这些数据好像没那么多高频率 所以先这样
+    // store.dispatch({
+    //   type: SAVE,
+    //   payload: {
+    //     key: 'globalData',
+    //     value: this.globalData
+    //   }
+    // });
     // 获取保存场景值
     if (param && param.scene) {
       console.info('[scene]onLaunch scene', param.scene);
@@ -108,6 +122,8 @@ export default class extends wepy.app {
       const value = wepy.getStorageSync(key);
       if (value !== '') {
         console.info(`[config]${key} sync success `);
+        // 原版是这么写的 看来我改成 this.globalData[key] = value; 要犯错 如果wepy.$instance掉不出变量 这里就得改了
+        // wepy.$instance 可能并不是 wepy自带的
         // wepy.$instance.globalData.config[key] = value;
         this.globalData[key] = value;
       }

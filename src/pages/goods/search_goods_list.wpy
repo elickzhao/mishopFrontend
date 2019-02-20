@@ -1,0 +1,111 @@
+<!--  -->
+<template>
+  <view class='container'>
+    <view class="top showBar shadow">
+      <SearchBar></SearchBar>
+      <FilterBar></FilterBar>
+    </view>
+    <view class="main mt160">
+      <!-- 商品列表 -->
+      <!-- <GoodsList  :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList> -->
+      <GoodsList wx:if="{{ searchListView == 'row' }}" :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList>
+      <GoodsColList wx:if="{{ searchListView == 'col' }}" :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsColList>
+      <!-- /商品列表 -->
+      <view wx:if="{{isPageEmpty}}" style="height: 600rpx;overflow:hidden;">
+        <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+      </view>
+      <wxc-loadmore wx:if="{{!isPageEmpty}}" is-end='{{isPageReachBottom}}' icon='{{true}}'></wxc-loadmore>
+    </view>
+    <!-- 悬浮按钮 -->
+    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked"></wux-floating-button>
+    <!-- /悬浮按钮 -->
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import goods from '@/api/goods';
+import SearchBar from '@/components/goods/goods_search_bar';
+import FilterBar from '@/components/search/filter_bar';
+// import GoodsList from '@/components/goods/goods_list1'; // 这个需要调样式冲突 先放一放
+import GoodsList from '@/components/goods/goods_list';
+import GoodsColList from '@/components/goods/goods_col_list';
+import GotopMixin from '@/mixins/gotop_mix';
+import Pagination from '@/mixins/pagination';
+import { isExist } from '@/utils/Common';
+import store from '@/store/utils';
+import { connect } from 'wepy-redux';
+@connect({
+  searchKeyword: store.get('searchKeyword'),
+  searchListView: store.get('searchListView')
+})
+export default class SearchGoodsList extends wepy.page {
+  config = {
+    navigationBarTitleText: '商品列表',
+    usingComponents: {
+      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+      'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index',
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index',
+      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+      'wux-floating-button': '../../packages/floating-button/index'
+    }
+  };
+  data = {
+    showCom: 'all',
+    sort: -1
+  };
+  mixins = [GotopMixin, Pagination];
+  components = {
+    SearchBar: SearchBar,
+    FilterBar: FilterBar,
+    GoodsList: GoodsList,
+    GoodsColList: GoodsColList
+  };
+  params() {
+    return {
+      uid: this.uid,
+      searchKeyWords: this.searchKeyword,
+      cateCode: this.cateCode || '',
+      sort: this.sort
+    };
+  }
+  setTitle(title) {
+    wepy.setNavigationBarTitle({
+      title: title
+    });
+  }
+  methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  async onLoad() {
+    if (!isExist(this.searchListView)) {
+      let listView = wepy.$instance.globalData.searchListView;
+      store.save('searchListView', listView);
+      // console.log('这个未变的store在这里..............');
+    }
+
+    this.uid = wepy.getStorageSync('userInfo').ID;
+    this.setTitle(this.searchKeyword);
+    this.page = await goods.getGoodsList();
+    await this.next();
+    this.$apply();
+  }
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+@import '../../styles/base';
+.mt160 {
+  @include mt-n(160);
+}
+.showBar {
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  width: 100%;
+}
+</style>

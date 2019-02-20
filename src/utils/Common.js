@@ -1,3 +1,11 @@
+/*
+ * @Author: elick
+ * @Date: 2019-02-06 19:47:55
+ * @LastEditors: elick
+ * @LastEditTime: 2019-02-18 00:51:44
+ * @Description:  公共工具函数
+ */
+
 function getCurrentTime() {
   var keep = '';
   var date = new Date();
@@ -28,20 +36,20 @@ function objLength(input) {
   }
   return length;
 }
-//验证是否是手机号码
+// 验证是否是手机号码
 function vailPhone(number) {
   let flag = false;
   let myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(17[0]{1})|(15[0-3]{1})|(15[5-9]{1})|(18[0-9]{1}))+\d{8})$/;
   if (number.length != 11) {
     flag = flag;
-  }else if (!myreg.test(number)) {
+  } else if (!myreg.test(number)) {
     flag = flag;
-  }else{
+  } else {
     flag = true;
   }
   return flag;
 }
-//验证是否西班牙手机(6开头 9位数)
+// 验证是否西班牙手机(6开头 9位数)
 function ifSpanish(number) {
   let flag = false;
   let myreg = /^([6|7|9]{1}(\d+){8})$/;
@@ -54,19 +62,19 @@ function ifSpanish(number) {
   }
   return flag;
 }
-//浮点型除法
+// 浮点型除法
 function div(a, b) {
   var c, d, e = 0,
     f = 0;
   try {
     e = a.toString().split(".")[1].length;
-  } catch (g) { }
+  } catch (g) {}
   try {
     f = b.toString().split(".")[1].length;
-  } catch (g) { }
+  } catch (g) {}
   return c = Number(a.toString().replace(".", "")), d = Number(b.toString().replace(".", "")), mul(c / d, Math.pow(10, f - e));
 }
-//浮点型加法函数   
+// 浮点型加法函数   
 function accAdd(arg1, arg2) {
   var r1, r2, m;
   try {
@@ -89,10 +97,10 @@ function mul(a, b) {
     e = b.toString();
   try {
     c += d.split(".")[1].length;
-  } catch (f) { }
+  } catch (f) {}
   try {
     c += e.split(".")[1].length;
-  } catch (f) { }
+  } catch (f) {}
   return Number(d.replace(".", "")) * Number(e.replace(".", "")) / Math.pow(10, c);
 }
 
@@ -108,18 +116,18 @@ function displayProp(obj) {
 function sTrim(text) {
   return text.replace(/\s/ig, '')
 }
-//去除所有:
+// 去除所有:
 function replaceMaohao(txt) {
   return txt.replace(/\:/ig, '')
 }
-//转换星星分数
+// 转换星星分数
 function convertStarArray(score) {
-  //1 全星,0 空星,2半星 
+  // 1 全星,0 空星,2半星 
   var arr = []
   for (var i = 1; i <= 5; i++) {
     if (score >= i) {
       arr.push(1)
-    } else if (score > i-1 && score < i + 1) {
+    } else if (score > i - 1 && score < i + 1) {
       arr.push(2)
     } else {
       arr.push(0)
@@ -129,15 +137,23 @@ function convertStarArray(score) {
 }
 
 // 远程图片加随机数
-function picRandom(url){
+function picRandom(url) {
   try {
-    if(!url){
+    if (!url) {
       throw new Error('url is not null');
     }
-    return url+'?r='+Math.random()
+    return url + '?r=' + Math.random()
   } catch (e) {
     // console.warn(e.name + ': ' + e.message);
     console.warn(`[Common/picRandom] url is not null `);
+  }
+}
+// 判断是否存在
+function isExist(exp) {
+  if (typeof exp != 'undefined' && exp != 0) {
+    return true
+  } else {
+    return false;
   }
 }
 module.exports = {
@@ -152,5 +168,6 @@ module.exports = {
   mul: mul,
   accAdd: accAdd,
   convertStarArray: convertStarArray,
-  picRandom:picRandom
+  picRandom: picRandom,
+  isExist: isExist
 }

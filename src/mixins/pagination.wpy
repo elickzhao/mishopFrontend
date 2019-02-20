@@ -1,14 +1,19 @@
 <script>
 import wepy from 'wepy';
 import Tips from '../utils/Tips';
-
 /**
  * 分页通用方法
  */
 export default class pagination extends wepy.mixin {
   config = {};
   components = {};
-  methods = {};
+  methods = {
+    onAbnorTap() {
+      wepy.switchTab({
+        url: '/pages/home/home'
+      });
+    }
+  };
   events = {};
   data = {
     list: [],
@@ -40,14 +45,12 @@ export default class pagination extends wepy.mixin {
       Tips.loaded();
     }
   }
-
   /**
    * 到达底部
    */
   async onReachBottom() {
     await this.next();
   }
-
   /**
    * 重新加载
    */
@@ -58,14 +61,12 @@ export default class pagination extends wepy.mixin {
       wepy.stopPullDownRefresh();
     }
   }
-
   /**
    * 下拉刷新
    */
   async onPullDownRefresh() {
     await this.reload();
   }
-
   /**
    * 更新列表（外部事件）
    */

@@ -1,6 +1,6 @@
 <!--现货批发-->
 <template>
-  <image src="../../images/who_{{flag}}.png" lazy-load mode="scaleToFill" class="Shadow" style="width: 100%">
+  <image src="../../images/who_{{flag}}.png" lazy-load mode="scaleToFill" class="shadow" style="width: 100%">
   </image>
   <block wx:if="{{!isPageEmpty}}">
     <!--矩阵商品列表模块-->
@@ -49,7 +49,7 @@ export default class goodsZone extends wepy.page {
     };
   }
   async doSearchGoods() {
-    this.page = await api.getGoodList();
+    this.page = await api.getGoodsList();
     this.next();
   }
   onLoad(options) {

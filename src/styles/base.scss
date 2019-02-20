@@ -22,6 +22,10 @@ page {
   margin-left: 20rpx
 }
 
+@mixin mt-n($top) {
+  margin-top: $top+rpx
+}
+
 .mt10 {
   margin-top: 10rpx
 }
@@ -65,6 +69,14 @@ view.muted {
 
 text.weak {
   color: $color-weak
+}
+
+text.darkgray {
+  color: $color-darkgray
+}
+
+text.dimgray {
+  color: $color-dimgray
 }
 
 text.primary {
@@ -132,7 +144,7 @@ view.bg-white {
   background-color: white
 }
 
-.Shadow{
+.shadow{
   -moz-box-shadow:2px 2px 5px #999999; -webkit-box-shadow:2px 2px 5px #999999; box-shadow:2px 2px 5px #999999;
 }
 

@@ -16,7 +16,7 @@
 import wepy from 'wepy';
 import { connect } from 'wepy-redux';
 import api from '@/api/goods';
-import SearchBar from '@/components/search/search_bar';
+import SearchBar from '@/components/common/nav_search_bar';
 import SideTab from '@/components/common/side_tab';
 import ImageBox from '@/components/common/image_box';
 import store from '@/store/utils';

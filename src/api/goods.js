@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-02-14 12:57:27
+ * @LastEditTime: 2019-02-17 01:29:56
  * @Description:  商品api请求类
  */
 import base from './base';
@@ -24,7 +24,7 @@ export default class goods extends base {
   /**
    * 首页商品列表
    */
-  static getGoodList() {
+  static getGoodsList() {
     let url = `${this.baseUrl}/api/news/searchGoodsListNew`;
     // return this.get(url, {
     //   page: 1

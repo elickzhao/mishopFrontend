@@ -1,64 +1,60 @@
-<!--  -->
 <template>
-    <view class="top_search">
-        <view class="search_read_only">
-            <navigator class="search_content" url="/pages/search/search">
-                <i class="iconfont icon-search"></i>
-                <view class="search_input">搜索商品</view>
-            </navigator>
+  <view class="weui-search-bar">
+    <view class="weui-search-bar__form" style=' flex: 8;'>
+      <view class="weui-search-bar__box">
+        <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+        <input type="text" class="weui-search-bar__input" placeholder="请输入您搜索的商品" confirm-type="search" value="{{keyword}}" auto-focus focus="true" bindinput="searchValueInput" bindconfirm="doSearch" />
+        <view class="weui-icon-clear" wx:if="{{keyword.length > 0}}" bindtap="clearInput">
+          <icon type="clear" size="14"></icon>
         </view>
+      </view>
     </view>
+    <button size='mini' id="searchBtn" bindtap="doSearch">搜索</button>
+  </view>
 </template>
-
 <script>
 import wepy from 'wepy';
-export default class SearchBar extends wepy.component {
-  props = {};
-  data = {};
-  components = {};
-  methods = {};
+import { isExist } from '@/utils/Common';
+import store from '@/store/utils';
+import { connect } from 'wepy-redux';
+@connect({
+  searchKeyword: store.get('searchKeyword')
+})
+export default class Search extends wepy.component {
+  data = {
+    keyword: ''
+  };
   events = {};
-  watch = {};
-  computed = {};
-  onLoad() {}
-  onShow() {}
+  methods = {
+    doSearch() {
+      if (isExist(this.keyword)) {
+        store.save('searchKeyword', ''); // 监听 searchKeyword 变化就执行 但会出现两次搜索词一样的情况 所以加了这句
+        store.save('searchKeyword', this.keyword);
+      }
+    },
+    clearInput() {
+      this.keyword = '';
+      this.$apply();
+    },
+    searchValueInput(e) {
+      this.keyword = e.detail.value;
+      this.$apply();
+    }
+  };
+  onLoad() {
+    this.keyword = this.searchKeyword;
+  }
 }
 </script>
-
-<style lang='scss'>
-.search_read_only {
-  align-items: center;
-  display: flex;
-  margin: 0 auto;
-  width: 650rpx;
-  margin-top: 15rpx;
-  .search_content {
-    display: flex;
-    align-items: center;
-    border-radius: 100rpx;
-    color: #999;
-    width: 500rpx;
-    background: #efefef;
-    padding: 0 30rpx;
-    height: 55rpx;
-    margin: 0 auto;
-    .search_input {
-      font-size: 26rpx;
-      width: 100%;
-    }
-  }
-  .icon-search {
-    font-size: 40rpx;
-  }
-  .icon-message {
-    font-size: 50rpx;
-  }
-}
-.top_search {
-  padding: 20rpx 0rpx 30rpx 0rpx;
-  background: #fff;
-}
-.search_read_only .search_content {
-  width: 100%;
+<style lang="scss">
+#searchBtn {
+  /* border-left-radius: 50px; */
+  border-top-left-radius: 0rpx;
+  border-bottom-left-radius: 0rpx;
+  border: solid 0rpx;
+  background-color: #ff1d77;
+  color: #fff;
+  left: -5rpx;
+  flex: 1;
 }
 </style>

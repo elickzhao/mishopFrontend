@@ -1,56 +1,48 @@
-<!--商品列表模块-->
+<!--  -->
 <template>
-  <scroll-view scroll-y="true" class="swiper-item-box">
-    <view class="shop_item">
-      <navigator
-        class="list shadow"
-        wx:for="{{list}}"
-        wx:key="item"
-        url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}"
-      >
+    <navigator class="list shadow" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
         <view class="image_box">
-          <image lazy-load src="{{imgUrl}}{{item.photo_x}}"></image>
+            <image lazy-load src="{{imgUrl}}{{item.photo_x}}"></image>
         </view>
         <view class="goods">
-          <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
-          <view class="product_info">
-            <view class="true_price">
-              <wxc-price class="price-demo" value="{{item.price_yh}}" icon="sup"></wxc-price>
+            <view class="product_name" wx:if="{{showTitle}}">{{item.name}}</view>
+            <view class="product_info">
+                <view class="true_price">
+                    <wxc-price class="price-demo" value="{{item.price_yh}}" icon="sup"></wxc-price>
+                </view>
+                <!-- <view class="cost_price">￥{{item.price}}</view> -->
+                <view class="cost_price">
+                    <wxc-price status="del" class="del-price" del-color="#999">{{item.price}}</wxc-price>
+                </view>
+                <!-- <view class="sale_num">销量{{item.shiyong}}件</view> -->
             </view>
-            <!-- <view class="cost_price">￥{{item.price}}</view> -->
-            <view class="cost_price">
-              <wxc-price status="del" class="del-price" del-color="#999">{{item.price}}</wxc-price>
-            </view>
-            <!-- <view class="sale_num">销量{{item.shiyong}}件</view> -->
-          </view>
         </view>
-      </navigator>
-    </view>
-  </scroll-view>
+    </navigator>
 </template>
+
 <script>
 import wepy from 'wepy';
 import GlobalData from '@/mixins/globaldata';
-export default class ShopGridList extends wepy.component {
+export default class GoodsListGridItem extends wepy.component {
   mixins = [GlobalData];
   props = {
-    list: [],
-    purchasetype: {
-      default: 1 // 类型:1-商品订单;2-商品补单;
-    },
-    special: {
-      default: 0 // 0-正常入库;1-特价专区和换货专区
-    },
-    showTitle: {
-      default: true
-    }
+    item: {}
   };
-  events = {};
+  data = {
+    imgUrl: ''
+  };
+  components = {};
   methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
 }
 </script>
-<style lang="scss">
-@import '../../styles/variable';
+
+<style lang='scss'>
+@import '../../../styles/variable';
 .shop_item {
   padding: 0rpx 15rpx;
   background: #f7f7f7;
@@ -75,7 +67,7 @@ export default class ShopGridList extends wepy.component {
     .goods {
       padding: 15rpx 12rpx;
       .product_name {
-        color: $color-dimgray;
+        color: #1a1a1a;
         font-size: 28rpx;
         overflow: hidden;
         display: -webkit-box;
