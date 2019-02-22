@@ -22,18 +22,8 @@
 <script>
 import wepy from 'wepy';
 import api from '@/api/search';
-// import goods from '@/api/goods';
-// import tip from '@/utils/Tips';
-//  import { SYSTEM_INFO, USER_SPECICAL_INFO } from '../utils/constant';
 import SearchBar from '@/components/search/search_bar';
-// import FilterBar from '../components/filter_bar';
-// import ShopGridList from '../components/shop_grid_list';
-// import BottomLoadMore from '../components/common/bottomLoadMore';
-// import Placeholder from '../components/common/placeholder';
-// import FilterSlider from '../components/filterSlider';
-// import ShopList from '../components/shop_list';
 import GotopMixin from '@/mixins/gotop_mix';
-// import { isExist } from '@/utils/Common';
 import { isExist } from '@/utils/Common';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
@@ -57,40 +47,13 @@ export default class Search extends wepy.page {
   mixins = [GotopMixin];
   components = {
     SearchBar: SearchBar
-    // filterBar: FilterBar,
-    // filterSlider: FilterSlider,
-    // shopList: ShopList,
-    // shopGridList: ShopGridList,
-    // bottomLoadMore: BottomLoadMore,
-    // placeholder: Placeholder
   };
   data = {
     showCom: 'all',
-    barMove: false,
     historyKeyList: [],
     hotKeyList: ['面膜', '牙膏'],
-    imgUrl: '',
     list: [],
-    listview: 'row',
-    showLoading: false,
-    purchasetype: 1,
-    is_empty: false,
-    // 是否到底
-    is_end: false,
-    // 加载信息
-    loadMsg: '',
-    is_filter: false,
-    // 当前页面
-    currentPage: 1,
-    // 总页数
-    page_total: 0,
-    keyword: '',
-    keywordhisList: [],
-    cateCode: '',
-    show: true,
-    sort: -1,
-    title: '',
-    skuval: ''
+    keyword: ''
   };
   // 获得搜索词历史
   async getKeyWordHisList() {
@@ -113,80 +76,16 @@ export default class Search extends wepy.page {
     this.$apply();
   }
   // 搜索商品
-  async doSearchGoods(keyword, currentPage, size) {
-    // let that = this;
-    // const json = await goods.getGoodsList({
-    //   uid: this.uid,
-    //   page: currentPage || 1,
-    //   size: size || 10,
-    //   searchKeyWords: keyword,
-    //   cateCode: this.cateCode || '',
-    //   sort: this.sort,
-    //   skuval: this.skuval
-    // });
-    // console.log(json);
-    // that.$apply();
-    // this.searchKeyword = keyword
-    // if (isExist(keyword)) {
-    //   store.save('searchKeyword', keyword);
-    // }
+  async doSearchGoods() {
     wepy.navigateTo({
       url: 'search_goods_list'
     });
-    // if (json.data.code == 0) {
-    //   //  console.log(json);
-    //   that.list = [...that.list, ...json.data.list];
-    //   that.page_total = json.data.page_total;
-    //   if (json.data.page_total == 0) {
-    //     // 暂无数据
-    //     that.is_empty = true;
-    //   }
-    //   if (that.page_total == 1) {
-    //     that.is_end = true;
-    //   }
-    // } else {
-    //   tip.error(json.data.msg);
-    // }
-    // that.showLoading = false;
-    //  if (keyword.length > 0) {
-    //    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    //    let openId = userSpecialInfo.openid;
-    //    const resultJson = await api.addSearchKeyword({
-    //      query: {
-    //        openId: openId,
-    //        keyword: keyword
-    //      }
-    //    });
-    //  }
   }
   async onLoad(option) {
     this.imgUrl = this.$parent.globalData.imgUrl;
     this.uid = wepy.getStorageSync('userInfo').ID;
     await this.getHotKeyList();
     await this.getKeyWordHisList();
-    // this.list = [];
-    // this.skuval = '';
-    // this.cateCode = option.cateCode;
-    // if (this.cateCode != undefined && this.cateCode.length > 0) {
-    //   // 分类进入
-    //   this.$invoke('search', 'show', '0');
-    //   this.show = false;
-    //   this.doSearchGoods(this.cateCode);
-    //   this.title = '' + option.title;
-    //   this.setTitle('' + option.title);
-    // } else {
-    //   // 搜索进入
-    //   this.$invoke('search', 'show', '1');
-    //   this.show = true;
-    //   // 搜索历史
-    //   this.getKeyWordHisList();
-    //   // 热门搜索
-    //   this.getHotKeyList();
-    // }
-    // let systemInfo = wepy.getSystemInfoSync();
-    // if (systemInfo.listview) {
-    //   this.listview = systemInfo.listview;
-    // }
     this.$apply();
   }
   onShow() {}
@@ -208,74 +107,10 @@ export default class Search extends wepy.page {
         }
       }
     },
-    currentType(obj) {
-      //  tip.success("状态:" + obj);
-      var name = obj.name;
-      var type = obj.type;
-      if (name == 'zonghe') {
-        this.sort = 0;
-      } else if (name == 'sale') {
-        this.sort = 3;
-      } else if (name == 'price') {
-        if (type == 'desc') {
-          this.sort = 2;
-        } else if (type == 'asc') {
-          this.sort = 1;
-        }
-      } else if (name == 'sku') {
-        this.skuval = type;
-      } else if (name == 'renqi') {
-        this.sort = 4;
-      }
-      this.list = [];
-      this.is_empty = false;
-      this.showLoading = true;
-      //  this.$invoke('search', 'show', "0");
-      this.show = false;
-      this.doSearchGoods(this.keyword);
-    },
     clearHistory() {
       this.clearUserKeywords();
-    },
-    onShareAppMessage: function(res) {
-      if (res.from === 'button') {
-        //  来自页面内转发按钮
-        console.log(res.target);
-      }
-      return {
-        title: this.detail.name,
-        path:
-          '/pages/search?cateCode=' + this.cateCode + '&title=' + this.title,
-        success: function(res) {
-          //  转发成功
-        },
-        fail: function(res) {
-          //  转发失败
-        }
-      };
     }
   };
-  // 加载更多
-  onReachBottom() {
-    let that = this;
-    that.showLoading = true;
-    console.log(that.page_total + '===' + that.currentPage);
-    // 判断总页数是否大于翻页数
-    if (that.page_total > that.currentPage) {
-      // 防止重复加载
-      if (that.preventRepeatReuqest) {
-        return true;
-      }
-      that.preventRepeatReuqest = true;
-      that.currentPage++;
-      that.doSearchGoods('', that.currentPage);
-      that.preventRepeatReuqest = false;
-    } else {
-      that.showLoading = false;
-      that.is_end = true;
-      that.loadMsg = '到底了～';
-    }
-  }
 }
 </script>
 

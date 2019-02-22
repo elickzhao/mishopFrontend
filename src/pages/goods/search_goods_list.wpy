@@ -37,6 +37,7 @@ import store from '@/store/utils';
 import { connect } from 'wepy-redux';
 @connect({
   searchKeyword: store.get('searchKeyword'),
+  goodsListSort: store.get('goodsListSort'),
   searchListView: store.get('searchListView')
 })
 export default class SearchGoodsList extends wepy.page {
@@ -63,6 +64,11 @@ export default class SearchGoodsList extends wepy.page {
     GoodsList: GoodsList,
     GoodsColList: GoodsColList
   };
+  setTitle(title) {
+    wepy.setNavigationBarTitle({
+      title: title
+    });
+  }
   params() {
     return {
       uid: this.uid,
@@ -71,18 +77,9 @@ export default class SearchGoodsList extends wepy.page {
       sort: this.sort
     };
   }
-  setTitle(title) {
-    wepy.setNavigationBarTitle({
-      title: title
-    });
-  }
-  methods = {};
-  events = {};
-  watch = {};
-  computed = {};
   async onLoad() {
     if (!isExist(this.searchListView)) {
-      let listView = wepy.$instance.globalData.searchListView;
+      let listView = wepy.$instance.globalData.searchListView; // 初始化没关系 全局变量是固定的
       store.save('searchListView', listView);
       // console.log('这个未变的store在这里..............');
     }
@@ -93,7 +90,14 @@ export default class SearchGoodsList extends wepy.page {
     await this.next();
     this.$apply();
   }
-  onShow() {}
+  watch = {
+    async goodsListSort() {
+      this.sort = this.goodsListSort;
+      this.$apply();
+      this.reload();
+      await this.next();
+    }
+  };
 }
 </script>
 

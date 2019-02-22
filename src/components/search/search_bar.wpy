@@ -42,7 +42,7 @@ export default class Search extends wepy.component {
     }
   };
   onLoad() {
-    this.keyword = this.searchKeyword;
+    // this.keyword = this.searchKeyword;
   }
 }
 </script>

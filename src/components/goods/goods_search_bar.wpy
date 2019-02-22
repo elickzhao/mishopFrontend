@@ -39,7 +39,8 @@ export default class goodsSearchBar extends wepy.component {
   };
   computed = {};
   onLoad() {
-    let listview = wepy.$instance.globalData.searchListView;
+    // let listview = wepy.$instance.globalData.searchListView; // 全局变量是固定的 当第二次进入页面会出错的
+    let listview = wepy.getStorageSync('searchListView');
     if (listview) {
       this.listview = listview;
     }

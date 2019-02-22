@@ -20,6 +20,7 @@
 
 <script>
 import wepy from 'wepy';
+import store from '@/store/utils';
 export default class filterBar extends wepy.component {
   data = {
     currentType: 'zonghe',
@@ -28,9 +29,10 @@ export default class filterBar extends wepy.component {
     type: 'desc'
   };
   methods = {
-    filterSearch() {
-      this.$invoke('filterSlider', 'swictchOverlay', true);
-    },
+    // filterSearch() {
+    //   this.$invoke('filterSlider', 'swictchOverlay', true);
+    // },
+    // 设定样式为选定
     orderBy(e) {
       let that = this;
       if (that.data.currentType == e.target.dataset.current) {
@@ -44,6 +46,7 @@ export default class filterBar extends wepy.component {
       that.$apply();
     }
   };
+  // 价格排序样式 双击切换排序方式
   priceOrderBy(orderBy) {
     let that = this;
     // console.log(orderBy)
@@ -57,6 +60,7 @@ export default class filterBar extends wepy.component {
       that.arrowType = '';
     }
   }
+  // 触发事件
   setSkuVal(sku) {
     // this.type = "sku";
     // this.currentType = sku;
@@ -65,32 +69,54 @@ export default class filterBar extends wepy.component {
       type: sku
     });
   }
+  setCurrentType(obj) {
+    //  tip.success("状态:" + obj);
+    var name = obj.name;
+    var type = obj.type;
+    if (name == 'zonghe') {
+      this.sort = 0;
+    } else if (name == 'sale') {
+      this.sort = 3;
+    } else if (name == 'price') {
+      if (type == 'desc') {
+        this.sort = 2;
+      } else if (type == 'asc') {
+        this.sort = 1;
+      }
+    } else if (name == 'sku') {
+      this.skuval = type;
+    } else if (name == 'renqi') {
+      this.sort = 4;
+    }
+    this.$apply();
+    store.save('goodsListSort', this.sort);
+  }
   watch = {
     currentType(newValue) {
-      this.$emit('currentType', {
+      this.setCurrentType({
         name: newValue,
         type: 'desc'
       });
     },
     arrowType(newValue, oldValue) {
       if (oldValue !== '' && newValue !== '') {
-        this.$emit('currentType', {
+        this.setCurrentType({
           name: 'price',
           type: newValue
         });
       }
     }
   };
-  events = {
-    filterSku(sku) {
-      console.log('filterBar.sku....' + sku);
-      this.setSkuVal(sku);
-      // this.$emit("currentType", {
-      //       name: "sku",
-      //       type: sku
-      //     });
-    }
-  };
+  // events = {
+  //   filterSku(sku) {
+  //     console.log('filterBar.sku....' + sku);
+  //     this.setSkuVal(sku);
+  //     // this.$emit("currentType", {
+  //     //       name: "sku",
+  //     //       type: sku
+  //     //     });
+  //   }
+  // };
 }
 </script>
 
