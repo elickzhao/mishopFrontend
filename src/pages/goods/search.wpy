@@ -3,18 +3,38 @@
     <SearchBar></SearchBar>
     <view class="cont mt10">
       <block wx:if="{{historyKeyList.length}}">
-        <text class="lg dimgray">历史搜索</text> <text class="fz24" bindtap="clearHistory" style='float:right;margin-top:15rpx;color:#989898'>清除</text>
+        <text class="lg dimgray">历史搜索</text>
+        <text
+          class="fz24"
+          bindtap="clearHistory"
+          style="float:right;margin-top:15rpx;color:#989898"
+        >清除</text>
         <view class="w100">
-          <button wx:for="{{historyKeyList}}" wx:key="id" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
+          <button
+            wx:for="{{historyKeyList}}"
+            wx:key="id"
+            @tap.stop="doSearch({{item.keyword}})"
+          >{{item.keyword}}</button>
         </view>
       </block>
       <text class="lg dimgray">热门搜索</text>
       <view class="w100">
-        <button wx:for="{{hotKeyList}}" wx:key="keyword" @tap.stop="doSearch({{item.keyword}})">{{item.keyword}}</button>
+        <button
+          wx:for="{{hotKeyList}}"
+          wx:key="keyword"
+          @tap.stop="doSearch({{item.keyword}})"
+        >{{item.keyword}}</button>
       </view>
     </view>
     <!-- 悬浮按钮 -->
-    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked"></wux-floating-button>
+    <wux-floating-button
+      id="wux-floating-button"
+      buttons="{{buttons}}"
+      showGoTop="{{showGoTop}}"
+      showCom="{{showCom}}"
+      theme="royal"
+      bind:click="buttonClicked"
+    ></wux-floating-button>
     <!-- /悬浮按钮 -->
   </view>
 </template>
@@ -24,6 +44,7 @@ import wepy from 'wepy';
 import api from '@/api/search';
 import SearchBar from '@/components/search/search_bar';
 import GotopMixin from '@/mixins/gotop_mix';
+import SearchInitMixin from '@/mixins/search_init';
 import { isExist } from '@/utils/Common';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
@@ -44,7 +65,7 @@ export default class Search extends wepy.page {
       'wux-floating-button': '../../packages/floating-button/index'
     }
   };
-  mixins = [GotopMixin];
+  mixins = [GotopMixin, SearchInitMixin];
   components = {
     SearchBar: SearchBar
   };

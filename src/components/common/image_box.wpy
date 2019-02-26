@@ -3,20 +3,21 @@
     <scroll-view scroll-y class="goods-box">
       <!--卡券区域（只在推荐的时候展现）-->
       <!-- <scroll-view scroll-x	class="coupon-box" wx:if="{{isCoupon && pickCoupons.length > 0}}">
-                      <repeat for="{{pickCoupons}}" key="index" index="index" item="item">
-                        <CouponItem :coupon.sync="item"/>
-                      </repeat>
-                    </scroll-view> -->
+                            <repeat for="{{pickCoupons}}" key="index" index="index" item="item">
+                              <CouponItem :coupon.sync="item"/>
+                            </repeat>
+                          </scroll-view> -->
       <!--分类名称-->
       <!-- <view class="goods-title row">
-                      <text class="weak">{{selectedCategoryName}}</text>
-                    </view> -->
+                            <text class="weak">{{selectedCategoryName}}</text>
+                          </view> -->
       <!--商品列表-->
       <view class="goods-list">
         <repeat for="{{list}}" key="index" index="index" item="item">
-          <view class="item column-center">
+          <!-- XXX 这里应该分裂出去 留着以后再做 -->
+          <view class="item column-center" @tap="setCateCode({{item.id}})">
             <image class="item_image" lazy-load src="{{imgUrl}}/{{item.bz_1}}"></image>
-            <view class="item_name">{{item.name}} </view>
+            <view class="item_name">{{item.name}}</view>
           </view>
         </repeat>
       </view>
@@ -50,7 +51,14 @@
       }
     };
     data = {};
-    methods = {};
+    methods = {
+      setCateCode(cateId) {
+        store.save('cateCode', cateId)
+        wepy.navigateTo({
+          url: 'search_goods_list?cateName='
+        });
+      }
+    };
     watch = {};
     events = {};
     onLoad() {}

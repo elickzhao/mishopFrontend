@@ -151,11 +151,22 @@ function picRandom(url) {
 // 判断是否存在
 function isExist(exp) {
   if (typeof exp != 'undefined' && exp != 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// 参数地址是否是进入页
+function isPrevpage(url) {
+  let pages = getCurrentPages();
+  if (pages[1] && pages[1].route == url) {
     return true
   } else {
     return false;
   }
 }
+
 module.exports = {
   getCurrentTime: getCurrentTime,
   objLength: objLength,
@@ -169,5 +180,6 @@ module.exports = {
   accAdd: accAdd,
   convertStarArray: convertStarArray,
   picRandom: picRandom,
+  isPrevpage: isPrevpage,
   isExist: isExist
 }

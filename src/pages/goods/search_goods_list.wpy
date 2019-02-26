@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <view class='container'>
+  <view class="container">
     <view class="top showBar shadow">
       <SearchBar></SearchBar>
       <FilterBar></FilterBar>
@@ -8,16 +8,38 @@
     <view class="main mt160">
       <!-- 商品列表 -->
       <!-- <GoodsList  :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList> -->
-      <GoodsList wx:if="{{ searchListView == 'row' }}" :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList>
-      <GoodsColList wx:if="{{ searchListView == 'col' }}" :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsColList>
+      <GoodsList
+        wx:if="{{ searchListView == 'row' }}"
+        :purchasetype.sync="purchasetype"
+        :special.sync="special"
+        :list.sync="list"
+      ></GoodsList>
+      <GoodsColList
+        wx:if="{{ searchListView == 'col' }}"
+        :purchasetype.sync="purchasetype"
+        :special.sync="special"
+        :list.sync="list"
+      ></GoodsColList>
       <!-- /商品列表 -->
       <view wx:if="{{isPageEmpty}}" style="height: 600rpx;overflow:hidden;">
-        <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+        <wxc-abnor
+          type="DATA"
+          image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png"
+          button="再去逛逛"
+          bind:abnortap="onAbnorTap"
+        ></wxc-abnor>
       </view>
-      <wxc-loadmore wx:if="{{!isPageEmpty}}" is-end='{{isPageReachBottom}}' icon='{{true}}'></wxc-loadmore>
+      <wxc-loadmore wx:if="{{!isPageEmpty}}" is-end="{{isPageReachBottom}}" icon="{{true}}"></wxc-loadmore>
     </view>
     <!-- 悬浮按钮 -->
-    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked"></wux-floating-button>
+    <wux-floating-button
+      id="wux-floating-button"
+      buttons="{{buttons}}"
+      showGoTop="{{showGoTop}}"
+      showCom="{{showCom}}"
+      theme="royal"
+      bind:click="buttonClicked"
+    ></wux-floating-button>
     <!-- /悬浮按钮 -->
   </view>
 </template>
@@ -33,11 +55,13 @@ import GoodsColList from '@/components/goods/goods_col_list';
 import GotopMixin from '@/mixins/gotop_mix';
 import Pagination from '@/mixins/pagination';
 import { isExist } from '@/utils/Common';
+import WxUtils from '@/utils/WxUtils';
 import store from '@/store/utils';
 import { connect } from 'wepy-redux';
 @connect({
   searchKeyword: store.get('searchKeyword'),
   goodsListSort: store.get('goodsListSort'),
+  cateCode: store.get('cateCode'),
   searchListView: store.get('searchListView')
 })
 export default class SearchGoodsList extends wepy.page {
@@ -55,7 +79,8 @@ export default class SearchGoodsList extends wepy.page {
   };
   data = {
     showCom: 'all',
-    sort: -1
+    sort: -1,
+    searchKeyWords: ''
   };
   mixins = [GotopMixin, Pagination];
   components = {
@@ -72,7 +97,7 @@ export default class SearchGoodsList extends wepy.page {
   params() {
     return {
       uid: this.uid,
-      searchKeyWords: this.searchKeyword,
+      searchKeyWords: this.searchKeyword || '',
       cateCode: this.cateCode || '',
       sort: this.sort
     };
@@ -83,12 +108,22 @@ export default class SearchGoodsList extends wepy.page {
       store.save('searchListView', listView);
       // console.log('这个未变的store在这里..............');
     }
-
     this.uid = wepy.getStorageSync('userInfo').ID;
-    this.setTitle(this.searchKeyword);
+    // 从分类页过来的不设置标题
+    if (isExist(this.searchKeyword)) {
+      this.setTitle(this.searchKeyword);
+    }
     this.page = await goods.getGoodsList();
     await this.next();
     this.$apply();
+    // console.log('go out ................', getCurrentPages());
+    // let route = getCurrentPages();
+    // console.log('pages ................', route[1].route)
+  }
+  onUnload() {
+    // 如果页面被卸载时被执行
+    // 退后两页
+    WxUtils.backToPrevpage();
   }
   watch = {
     async goodsListSort() {

@@ -74,6 +74,21 @@ export default class WxUtils {
       }
     }
   }
+  
+  /**
+   * 跳转两个页面 回到初始进入页面
+   */
+  static backToPrevpage() {
+    if (getCurrentPages().length > 3) {
+      wx.navigateBack({
+        delta: 1
+      })
+    }
+    // else{
+    //   const delta = pages.length - 2;
+    //   wx.navigateBack({delta: delta})
+    // }
+  }
 
   /**
    * [wxPay 封装了下微信支付]

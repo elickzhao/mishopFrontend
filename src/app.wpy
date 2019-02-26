@@ -39,7 +39,6 @@ export default class extends wepy.app {
       'pages/home/goods_zone',
       'pages/goods/category',
       'pages/goods/search',
-      'pages/goods/goods_list',
       'pages/goods/search_goods_list',
       'pages/index'
     ],

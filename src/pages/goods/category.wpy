@@ -13,86 +13,92 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import { connect } from 'wepy-redux';
-import api from '@/api/goods';
-import SearchBar from '@/components/common/nav_search_bar';
-import SideTab from '@/components/common/side_tab';
-import ImageBox from '@/components/common/image_box';
-import store from '@/store/utils';
-@connect({
-  rootCate: store.get('rootCate')
-})
-export default class Category extends wepy.page {
-  config = {
-    navigationBarTitleText: '分类'
-  };
-  components = {
-    SearchBar: SearchBar,
-    SideTab: SideTab,
-    ImageBox: ImageBox
-  };
-  data = {
-    imgUrl: '',
-    scrollTop: 100,
-    windowHeight: 0,
-    list: {},
-    // 一级分类数据
-    rootcateList: {},
-    // 二级三级分类数据
-    childcateList: {}
-  };
-  // 获取一级分类
-  async getRootCateTopLevel() {
-    if (!store.exists('rootCate')) {
-      const json = await api.getRootCateTopLevel();
-      store.save('rootCate', json);
-      store.saveMeta('rootCate');
+  import wepy from 'wepy';
+  import {
+    connect
+  } from 'wepy-redux';
+  import api from '@/api/goods';
+  import SearchInitMixin from '@/mixins/search_init';
+  import SearchBar from '@/components/common/nav_search_bar';
+  import SideTab from '@/components/common/side_tab';
+  import ImageBox from '@/components/common/image_box';
+  import store from '@/store/utils';
+  @connect({
+    searchKeyword: store.get('searchKeyword'),
+    cateCode: store.get('cateCode'),
+    rootCate: store.get('rootCate')
+  })
+  export default class Category extends wepy.page {
+    config = {
+      navigationBarTitleText: '分类'
+    };
+    mixins = [SearchInitMixin];
+    components = {
+      SearchBar: SearchBar,
+      SideTab: SideTab,
+      ImageBox: ImageBox
+    };
+    data = {
+      imgUrl: '',
+      scrollTop: 100,
+      windowHeight: 0,
+      list: {},
+      // 一级分类数据
+      rootcateList: {},
+      // 二级三级分类数据
+      childcateList: {}
+    };
+    // 获取一级分类
+    async getRootCateTopLevel() {
+      if (!store.exists('rootCate')) {
+        const json = await api.getRootCateTopLevel();
+        store.save('rootCate', json);
+        store.saveMeta('rootCate');
+      }
+      this.$apply();
     }
-    this.$apply();
-  }
-  // 获取二级分类
-  async getChildCate(rootCateCode) {
-    const json = await api.getChildGoodsCatetoryList({
-      cat_id: rootCateCode
-    });
-    this.childcateList = json;
-    this.$apply();
-  }
-  onLoad() {
-    this.imgUrl = this.$parent.globalData.imgUrl;
-    this.$apply();
-  }
-  async onShow() {
-    await this.getRootCateTopLevel();
-  }
-  watch = {
-    async rootCate() {
-      await this.getChildCate(this.rootCate.selectedId);
+    // 获取二级分类
+    async getChildCate(rootCateCode) {
+      const json = await api.getChildGoodsCatetoryList({
+        cat_id: rootCateCode
+      });
+      this.childcateList = json;
+      this.$apply();
     }
-  };
-  computed = {};
-  methods = {};
-  events = {};
-}
+    onLoad() {
+      this.imgUrl = this.$parent.globalData.imgUrl;
+      this.$apply();
+    }
+    async onShow() {
+      await this.getRootCateTopLevel();
+    }
+    watch = {
+      async rootCate() {
+        await this.getChildCate(this.rootCate.selectedId);
+      }
+    };
+    computed = {};
+    methods = {};
+    events = {};
+  }
 </script>
 
 <style lang="less">
-.wrapper {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 180rpx 1fr;
-  grid-template-rows: 120rpx 1fr;
-}
-.top {
-  // background-color: antiquewhite;
-  grid-column-start: 1;
-  grid-column-end: 4;
-}
-.sidebar {
-  // background-color: gray;
-}
-.main {
-  background-color: white;
-}
+  .wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 180rpx 1fr;
+    grid-template-rows: 120rpx 1fr;
+  }
+  .top {
+    // background-color: antiquewhite;
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+  .sidebar {
+    // background-color: gray;
+  }
+  .main {
+    background-color: white;
+  }
 </style>

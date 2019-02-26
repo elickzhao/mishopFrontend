@@ -1,0 +1,27 @@
+<!-- 搜索初始化  -->
+
+<script>
+import wepy from 'wepy';
+import { isExist, isPrevpage } from '@/utils/Common';
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  searchKeyword: store.get('searchKeyword'),
+  cateCode: store.get('cateCode')
+})
+export default class SerachInit extends wepy.mixin {
+  onShow() {
+    // 当重新打开页面时 清除上一次搜索词
+    // 从列表页过来的 将不清空 分类id
+    if (isExist(this.cateCode) && !isPrevpage('pages/goods/search_goods_list')) {
+      store.save('cateCode', '');
+    }
+    if (isExist(this.searchKeyword)) {
+      store.save('searchKeyword', '');
+    }
+  }
+}
+</script>
+
+<style lang='scss'>
+</style>
