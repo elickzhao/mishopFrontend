@@ -5,15 +5,29 @@ import wepy from 'wepy';
 import { isExist, isPrevpage } from '@/utils/Common';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
+// 使用官方写法报错依旧
 @connect({
-  searchKeyword: store.get('searchKeyword'),
-  cateCode: store.get('cateCode')
+  searchKeyword(state) {
+    return state.cache.searchKeyword;
+  },
+  cateCode(state) {
+    return state.cache.cateCode;
+  }
 })
 export default class SerachInit extends wepy.mixin {
+  // XXX 这里存在个bug 使用redux后 在mixin定义方法就会报错 找不到方法
+  dd() {
+    console.log('doinit');
+  }
+  onLoad() {}
   onShow() {
+    // this.doInit();
     // 当重新打开页面时 清除上一次搜索词
     // 从列表页过来的 将不清空 分类id
-    if (isExist(this.cateCode) && !isPrevpage('pages/goods/search_goods_list')) {
+    if (
+      isExist(this.cateCode) &&
+      !isPrevpage('pages/goods/search_goods_list')
+    ) {
       store.save('cateCode', '');
     }
     if (isExist(this.searchKeyword)) {
@@ -22,6 +36,3 @@ export default class SerachInit extends wepy.mixin {
   }
 }
 </script>
-
-<style lang='scss'>
-</style>

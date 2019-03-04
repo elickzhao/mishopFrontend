@@ -76,7 +76,9 @@ export default class WxUtils {
   }
   
   /**
-   * 跳转两个页面 回到初始进入页面
+   * [backToPrevpage 跳转两个页面 回到初始进入页面]
+   *
+   * @return  {[type]}  [return description]
    */
   static backToPrevpage() {
     if (getCurrentPages().length > 3) {
@@ -84,10 +86,6 @@ export default class WxUtils {
         delta: 1
       })
     }
-    // else{
-    //   const delta = pages.length - 2;
-    //   wx.navigateBack({delta: delta})
-    // }
   }
 
   /**
@@ -169,7 +167,7 @@ export default class WxUtils {
    */
   static getCurrentPagesUrl() {
     let currentPage = this.getCurrentPages()
-    let url = currentPage.route //当前页面url
+    let url = '/'+currentPage.route //当前页面url
     return url;
   }
   /**

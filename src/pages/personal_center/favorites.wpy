@@ -1,0 +1,111 @@
+<template>
+  <view class="collection">
+    <block wx:if="{{!isPageEmpty}}">
+      <collectionList :list.sync="list" :is_empty="is_empty"></collectionList>
+      <wxc-loadmore is-end="{{isPageReachBottom}}" text="{{loadMsg}}" icon="{{true}}"></wxc-loadmore>
+    </block>
+    <block wx:else>
+      <wxc-abnor type="DATA" image="https:// s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" title='还没有收藏' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+    </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '@/api/goods';
+  import Pagination from '@/mixins/pagination';
+  import CollectionList from '@/components/psersonal_center/collection_list';
+  // import tip from '@/utils/Tips';
+  export default class Favorites extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的收藏',
+      usingComponents: {
+        'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+        'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+        'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index'
+      }
+    };
+    mixins = [Pagination];
+    components = {
+      collectionList: CollectionList
+    };
+    data = {
+      browselist: [],
+      favorlist: [],
+      tabList: ['我的足迹', '我的收藏'],
+      currentTab: 0,
+      winHeight: 0,
+      // 是否有数据
+      is_empty: false,
+      // 是否到底
+      is_end: false,
+      // 加载信息
+      loadMsg: '',
+      // 当前页面
+      currentPage: 1,
+      // 总页数
+      page_total: 0,
+      // 是否显示 底部loading
+      showLoading: true,
+      // 防止重复加载
+      preventRepeatReuqest: false
+    };
+    params() {
+      return {
+        uid: wepy.$instance.globalData.userInfo.ID,
+        page: this.currentPage || 1
+      };
+    }
+    async onLoad(opts) {
+      this.page = await api.favoriteInfo();
+      await this.next()
+      console.log(this.list)
+      this.$apply();
+    }
+    computed = {};
+    methods = {
+      onAbnorTap() {
+        wepy.switchTab({
+          url: '/pages/home/home'
+        });
+      }
+    };
+    events = {};
+    // 加载更多
+    onReachBottom() {
+      console.log('加载更多');
+      let that = this;
+      that.showLoading = true;
+      console.log(that.page_total + '===' + that.currentPage);
+      // 判断总页数是否大于翻页数
+      if (that.page_total > that.currentPage) {
+        // 防止重复加载
+        if (that.preventRepeatReuqest) {
+          return true;
+        }
+        that.preventRepeatReuqest = true;
+        that.currentPage++;
+        console.log(this.currentTab);
+        //  if (this.currentTab == 0) {
+        //    console.log("下拉收藏");
+        //    that.getUserBrowse(that.currentPage);
+        //  } else {
+        //    that.getUserFavorite(that.currentPage);
+        //  }
+        that.getUserFavorite(that.currentPage);
+        that.preventRepeatReuqest = false;
+        that.loadMsg = '正在努力加载中...';
+      } else {
+        that.showLoading = false;
+        that.is_end = true;
+        that.loadMsg = '到底了～';
+      }
+    }
+  }
+</script>
+<style lang='scss'>
+.tab_box {
+  background: #fff;
+  padding: 0 120rpx;
+}
+</style>

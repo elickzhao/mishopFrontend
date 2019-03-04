@@ -36,6 +36,10 @@ export default class base extends wepy.mixin {
   methods = {
     nopen() {
       Tips.alert('尚未开放');
+    },
+    nopic(e) {
+      this.list[e].photo_x = '../../images/no.png';
+      this.$apply();
     }
   };
 }

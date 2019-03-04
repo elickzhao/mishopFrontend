@@ -41,7 +41,7 @@ export default class AuthorizeMixin extends wepy.mixin {
         });
         // 登录失败 注册新用户
         if (json.serverCode) {
-          if (this.currentPage == 'pages/home/login') {
+          if (this.currentPage == '/pages/home/login') {
             Tips.error(json.message);
             await this.register();
           } else {

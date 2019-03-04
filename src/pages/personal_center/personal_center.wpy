@@ -1,0 +1,267 @@
+<!--  -->
+<template lang="wxml" minapp="wepy">
+  <view class="header">
+    <view class="status">
+      <view class="userinfo">
+        <view class="photo">
+          <image src="{{userinfo.photo}}"></image>
+        </view>
+        <view class="info">
+          <view class="username">
+            <open-data type="userNickName"></open-data>
+          </view>
+          <view class="integral">积分: {{userinfo.integral}}</view>
+        </view>
+      </view>
+      <view class="setting" @tap="signIn">
+        <image src="../../images/personal_center/qd.png"></image>
+      </view>
+    </view>
+  </view>
+  <!-- 订单栏 -->
+  <OrderBar></OrderBar>
+  <!-- /订单栏 -->
+  <view class="list" wx:for="{{severList}}" wx:key="list_i" wx:for-item="list">
+    <view class="li" wx:for="{{list}}" @tap="toPage({{li.url}})" v-bind:class="{'noborder':li_i==list.length-1}" hover-class="hover" wx:key="*this" wx:for-item="li">
+      <view class="icon">
+        <image src="../../images/personal_center/sever/{{li.icon}}"></image>
+      </view>
+      <view class="text">{{li.name}}</view>
+      <image class="to" src="../../images/personal_center/to.png"></image>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import CheckLoginMixin from '@/mixins/check_login';
+import api from '@/api/sign_in';
+import OrderBar from '@/components/psersonal_center/order_bar';
+export default class PsersonalCenter extends wepy.page {
+  config = {
+    navigationBarTitleText: '会员中心'
+  };
+  mixins = [CheckLoginMixin];
+  components = {
+    OrderBar: OrderBar
+  };
+  data = {
+    userinfo: {},
+    severList: [
+      [
+        {
+          name: '我的收藏',
+          icon: 'point.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '优惠券',
+          icon: 'quan.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '红包',
+          icon: 'momey.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '任务',
+          icon: 'renw.png',
+          url: '/pages/personal_center/favorites'
+        }
+      ],
+      [
+        {
+          name: '积分明细',
+          icon: 'mingxi.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '抽奖',
+          icon: 'choujiang.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '收货地址',
+          icon: 'addr.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '银行卡',
+          icon: 'bank.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '安全中心',
+          icon: 'security.png',
+          url: '/pages/personal_center/favorites'
+        },
+        {
+          name: '在线客服',
+          icon: 'kefu.png',
+          url: '/pages/personal_center/favorites'
+        }
+      ]
+    ]
+  };
+  // 获取用户头像及昵称信息
+  async getUserInfo() {
+    let that = this;
+    let res = await wepy.getSetting();
+    if (res.authSetting['scope.userInfo']) {
+      wx.getUserInfo({
+        success: function(res) {
+          // console.log(res.userInfo);
+          let userInfo = res.userInfo;
+          that.userinfo = {
+            photo: userInfo.avatarUrl,
+            username: userInfo.nickName
+          };
+          wepy.setStorageSync('UserDetails', that.userinfo);
+          that.$apply();
+        }
+      });
+    }
+  }
+  // 获取用户积分
+  async getUserPoint() {
+    const json = await api.getUserSginInfo({
+      uid: wepy.$instance.globalData.userInfo.ID
+    });
+    return json.score;
+  }
+  async onLoad() {
+    let userDetails = wepy.getStorageSync('UserDetails');
+    if (userDetails) {
+      this.userinfo = userDetails;
+    } else {
+      await this.getUserInfo();
+    }
+    this.userinfo.integral = await this.getUserPoint();
+    this.$apply();
+  }
+  methods = {
+    // 跳转签到页
+    signIn() {
+      wepy.navigateTo({
+        url: '/pages/home/sign_in'
+      });
+    },
+    // 用户点击订单类型
+    toOrderType(index) {
+      console.log(this.orderTypeLise[index].name);
+      // uni.showToast({
+      //   title: this.orderTypeLise[index].name
+      // });
+    },
+    // 用户点击列表项
+    toPage(url) {
+      console.log(url);
+      this.$root.$navigate(url);
+    }
+  };
+}
+</script>
+
+<style lang='scss'>
+@import '../../styles/variable';
+page {
+  background-color: #fff;
+}
+.header {
+  .status {
+    padding-top: var(--status-bar-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  background-color: $color-primary;
+  width: 92%;
+  height: 30vw;
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+  .userinfo {
+    width: 90%;
+    display: flex;
+    .photo {
+      flex-shrink: 0;
+      width: 15vw;
+      height: 15vw;
+      image {
+        width: 100%;
+        height: 100%;
+        border: #fff 4rpx solid;
+        border-radius: 100%;
+      }
+    }
+    .info {
+      display: flex;
+      flex-flow: wrap;
+      padding-left: 30rpx;
+      .username {
+        width: 100%;
+        color: #fff;
+        font-size: 40rpx;
+      }
+      .integral {
+        display: flex;
+        align-items: center;
+        padding: 0 20rpx;
+        height: 40rpx;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 20rpx;
+        font-size: 24rpx;
+      }
+    }
+  }
+  .setting {
+    flex-shrink: 0;
+    width: 6vw;
+    height: 6vw;
+    image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+.hover {
+  background-color: #eee;
+}
+.list {
+  width: 100%;
+  border-bottom: solid 26rpx #f1f1f1;
+  .li {
+    width: 92%;
+    height: 100rpx;
+    padding: 0 4%;
+    border-bottom: solid 1rpx #e7e7e7;
+    display: flex;
+    align-items: center;
+    &.noborder {
+      border-bottom: 0;
+    }
+    .icon {
+      flex-shrink: 0;
+      width: 50rpx;
+      height: 50rpx;
+      image {
+        width: 50rpx;
+        height: 50rpx;
+      }
+    }
+    .text {
+      padding-left: 20rpx;
+      width: 100%;
+      color: #666;
+    }
+    .to {
+      flex-shrink: 0;
+      width: 40rpx;
+      height: 40rpx;
+    }
+  }
+}
+</style>

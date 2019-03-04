@@ -1,0 +1,114 @@
+<!--   -->
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/Tips';
+import BaseMixin from '@/mixins/base';
+import api from '@/api/order';
+export default class Example extends wepy.mixin {
+  mixins = [BaseMixin];
+  data = {};
+  // 编辑订单 目前只是用于退款
+  async editOrderInfo(orderNo, flag) {
+    let uid = wepy.$instance.globalData.userInfo.ID;
+    const json = await api.editOrderInfo({
+      uid: uid,
+      id: orderNo,
+      flag: flag
+    });
+    let msg = {
+      refund: '申请退款成功!',
+      cancel: '取消订单成功!',
+      receive: '确认收货完成!'
+    };
+    tip.success(msg[flag]);
+    wepy.switchTab({
+      url: '/pages/personal_center/personal_center'
+    });
+    this.hasError(json);
+    console.info('[order] ', msg[flag]);
+  }
+  methods = {
+    // 退货操作
+    async refund(e) {
+      this.flag = 'refund';
+      this.editOrderInfo(e, this.flag);
+    },
+    async delOrder(e) {
+      this.flag = 'cancel';
+      this.orderNo = e.currentTarget.dataset.id;
+      await tip.confirm('是否取消订单');
+      //   console.log(this.flag);
+      this.editOrderInfo(this.orderNo, this.flag);
+      console.info('[order] 取消订单成功');
+    },
+    async completion(e) {
+      this.flag = 'receive';
+      this.orderNo = e.currentTarget.dataset.id;
+      await tip.confirm('是否确认收货');
+      this.editOrderInfo(this.orderNo, this.flag);
+      console.info('[order] 确认收货完成');
+    },
+    // 查看物流
+    async goLogistics(expressNo) {
+      let aa = tip.confirm('查看物流');
+      // console.log(expressNo);
+      // 3369785056558"
+      aa.then(function(result) {
+        // console.log(result);
+        wepy.navigateTo({
+          url: '/pages/personal_center/logistics?expressNo=' + expressNo
+        });
+      }).catch(function(reason) {
+        console.info('[order] 取消物流查询：', reason);
+      });
+    },
+    // 支付操作
+    // XXX 立即付款需要验证测试
+    async payMoney(e) {
+      this.orderNo = e.currentTarget.dataset.id;
+      let orderSn = e.currentTarget.dataset.ordersn; // 这个居然大小写敏感
+      // console.log(orderSn);
+      // console.log(e);
+      let uid = wepy.$instance.globalData.userInfo.ID;
+      const pay = await api.toPay({
+        uid: uid,
+        order_sn: orderSn,
+        order_id: this.orderNo
+      });
+      if (pay.status == 1) {
+        let payData = pay.arr;
+        // 以下是微信支付
+        wx.requestPayment({
+          appId: payData.appId,
+          timeStamp: payData.timeStamp,
+          nonceStr: payData.nonceStr,
+          package: payData.package,
+          signType: 'MD5',
+          paySign: payData.paySign,
+          success: function(res) {
+            console.log('pay', res);
+            setTimeout(() => {
+              // 支付成功 关闭loadding 跳转到支付成功页面
+              tip.loaded();
+              wepy.navigateTo({
+                url: '/pages/common/pay_success?orderNo=' + this.orderNo
+              });
+            }, 2000);
+          },
+          fail: function(res) {
+            // console.log("aaaaaaa");
+            // console.log(res);
+            tip.alert('支付失败');
+          }
+        });
+      } else {
+        // console.log("bbbbbbbbbb");
+        // console.log(pay);
+        tip.alert(pay.data.err);
+      }
+    }
+  };
+  onLoad() {}
+  onShow() {}
+}
+</script>

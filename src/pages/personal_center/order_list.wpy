@@ -1,0 +1,139 @@
+<!--  -->
+<template>
+    <wxc-tab bind:tabchange="getCurrentTab" default-index="{{currentTab}}" component-id="c2" animate="{{true}}">
+        <wxc-tab-panel wx:for="{{tabList}}" wx:for-item="tab" wx:key="{{tab.content}}" tab-index="{{index}}" component-id="c2" label="{{tab}}">
+            <block wx:if="{{!isPageEmpty}}">
+                <scroll-view scroll-y="true" class="swiper-item-box" style="height:{{winHeight - 40}}px" bindscrolltolower="onReachBottom">
+                    <OrderItem :orderList.sync="list"></OrderItem>
+                    <wxc-loadmore is-end="{{isPageReachBottom}}" text="{{loadMsg}}" icon="{{true}}"></wxc-loadmore>
+                </scroll-view>
+            </block>
+            <block wx:else>
+                <wxc-abnor type="ORDER" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+            </block>
+        </wxc-tab-panel>
+    </wxc-tab>
+</template>
+
+<script>
+import wepy from 'wepy';
+import api from '@/api/order';
+import OrderItem from '@/components/psersonal_center/order_item';
+import Pagination from '@/mixins/pagination';
+export default class OrderList extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的订单',
+    usingComponents: {
+      'wxc-tab': '../../packages/@minui/wxc-tab/dist/index',
+      'wxc-tab-panel': '../../packages/@minui/wxc-tab/dist/panel',
+      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+      'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index'
+    }
+  };
+  components = {
+    OrderItem: OrderItem
+  };
+  mixins = [Pagination];
+  data = {
+    isPageEmpty: false,
+    isPageReachBottom: false,
+    // 加载信息
+    loadMsg: '',
+    winHeight: 0,
+    totalCount: 0,
+    tabList: ['待支付', '待发货', '待收货', '已收货', '退款/售后', '已完成'],
+    // tabList: ["待支付", "待发货", "待收货", "已完成"],
+    list: [],
+    currentPage: 1,
+    orderStatus: '',
+    currentTab: 0,
+    flag: 0,
+    // 是否显示 底部loading
+    showLoading: true,
+    // 防止重复加载
+    preventRepeatReuqest: false,
+    // 待付款
+    pendingPayCount: 0,
+    // 待发货
+    backrdersCount: 0,
+    // 待收货
+    shippedCount: 0,
+    receiveFlg: 0
+  };
+
+  params() {
+    return {
+      uid: wepy.$instance.globalData.userInfo.ID,
+      order_type: this.orderStatus,
+      page: this.currentPage || 1
+    };
+  }
+  async getMyOrder(currentPage, size, refresh) {
+    this.page = await api.getMyOrderListNew();
+    await this.next();
+    this.$apply();
+  }
+  // 加载更多
+  async onReachBottom() {
+    // console.log('加载更多');
+    await this.next();
+  }
+  async onLoad(opts) {
+    this.currentTab = opts.type;
+    this.winHeight = wepy.getSystemInfoSync().windowHeight;
+    this.$apply();
+  }
+
+  methods = {
+    getCurrentTab: function(e) {
+      let that = this;
+      this.currentPage = 1;
+      this.page_total = 0;
+      this.orderList = [];
+      const cur = e.detail.key;
+      this.currentTab = cur;
+      if (cur == 0) {
+        // console.log("待付款");
+        that.orderStatus = 10;
+        // that.getMyOrder();
+      } else if (cur == 1) {
+        // console.log("待发货");
+        that.orderStatus = 20;
+        // that.getMyOrder();
+      } else if (cur == 2) {
+        // console.log("待收货");
+        that.orderStatus = 30;
+        // that.receiveFlg=2;
+        // that.getMyOrder();
+      } else if (cur == 3) {
+        // console.log("已完成订单类型");
+        that.orderStatus = 40;
+        // that.receiveFlg=4;
+        // that.getMyOrder();
+      } else if (cur == 5) {
+        // console.log("已完成订单类型");
+        that.orderStatus = 50;
+        // that.receiveFlg=4;
+        // that.getMyOrder();
+      } else if (cur == 4) {
+        // console.log("退款订单类型");
+        that.orderStatus = 'refund';
+        // that.receiveFlg=4;
+        // that.getMyOrder();
+      }
+      that.getMyOrder();
+      this.$apply();
+    },
+    onAbnorTap() {
+      wepy.switchTab({
+        url: '/pages/home/home'
+      });
+    }
+  };
+
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+</style>

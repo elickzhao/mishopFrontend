@@ -40,6 +40,12 @@ export default class extends wepy.app {
       'pages/goods/category',
       'pages/goods/search',
       'pages/goods/search_goods_list',
+      'pages/personal_center/personal_center',
+      'pages/personal_center/order_list',
+      'pages/personal_center/order_detail',
+      'pages/personal_center/logistics',
+      'pages/personal_center/favorites',
+      // 'pages/personal_center/index',
       'pages/index'
     ],
     tabBar: {

@@ -1,0 +1,371 @@
+<!--订单详情-->
+<template>
+  <view class="order_detail">
+    <navigator class="item_content" url="/pages/logistics?orderNo={{orderNo}}">
+      <view class="order_state" wx:if="{{obj.status==2 || obj.status==1}}">
+        <!-- <view class="order_state" > -->
+        <view class="left">
+          <i class="iconfont icon-complete"></i>
+        </view>
+        <view class="center">
+          <view class="state_doc"> 快件已到达【广东东莞桥头分部】 扫描员是【屈春娥】 {{expressFlowInfo.flowName}}</view>
+          <view class="state_time">2018-08-05 10:20:46 {{expressFlowInfo.updateTime}}</view>
+        </view>
+        <view class="right">
+          <view>&gt;</view>
+        </view>
+      </view>
+    </navigator>
+    <view class="order_state" wx:if="{{obj.status==0}}">
+      <view class="left">
+        <view class="unpaid">
+          <i class="iconfont icon-wait"></i>
+          <text class="unpaid_doc">等待付款</text>
+        </view>
+      </view>
+      <view class="right">
+        <text class="time_doc">剩余时间:</text>
+        <text class="time_num">59:30:30</text>
+      </view>
+    </view>
+    <view class="address_block">
+      <view class="name">
+        <text class="title"> 收货人:</text>
+        <text class="content">{{ord.receiver}}\t\t{{ord.tel}}</text>
+      </view>
+      <view class="address">
+        <text class="title"> 收货地址:</text>
+        <text class="content">{{ord.address_xq}} </text>
+      </view>
+    </view>
+    <view class="goods_block">
+      <OrderItemList :list.sync="list"></OrderItemList>
+    </view>
+    <view class="info_block">
+      <view class="item">
+        <text class="title">订单编号:</text>
+        <text class="content">{{ord.order_sn}}</text>
+      </view>
+      <view class="item">
+        <text class="title">商品总价:</text>
+        <text class="content">{{ord.price}}</text>
+      </view>
+      <view class="item">
+        <text class="title">提交时间:</text>
+        <text class="content">{{ord.addtime}}</text>
+      </view>
+      <view class="item">
+        <text class="title">支付方式:</text>
+        <text class="content">微信支付</text>
+      </view>
+      <view class="item" wx:if="{{ord.payStatus==1}}">
+        <text class="title">付款时间:</text>
+        <text class="content">{{ord.payedTime}}</text>
+      </view>
+    </view>
+    <!-- 快递信息 -->
+    <!-- 以后做个 点击后向下拉伸的组件 再在这里展示这个 其实放在一个页面比较好 -->
+    <!-- <view class="info_block">
+                          <view class="item">
+                            <wxc-steps steps="{{steps}}" current="{{current}}"></wxc-steps>
+                          </view>
+                        </view> -->
+    <!-- /快递信息 -->
+    <view class="footer">
+      <view class="money">应付价格:
+        <text class="receive_money">{{ord.amount}}</text>
+      </view>
+      <view class="btn_group">
+        <!-- <view class="btn" @tap="goLogistics" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">查看物流</view> -->
+        <view class="btn" wx:if="{{expressNo != ''}}" @tap="goLogistics({{expressNo}})" data-id="{{ord.orderNo}}">查看物流</view>
+        <!-- <view class="btn type_pick dsh" @tap="completion" wx:if="{{ord.status==2}}" data-id="{{ord.orderNo}}">待收货</view> -->
+        <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{ord.status==10}}" data-id="{{ord.id}}" data-orderSn="{{ord.order_sn}}">立即付款</view>
+        <!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
+        <view class="btn type_pick dsh" @tap="refund({{ord.id}})" wx:if="{{ord.status==20 || ord.status==30 && ord.back == 0 }}">申请退货</view>
+        <view class="btn " wx:if="{{ord.back == 1 }}">已申请退款</view>
+        <view class="btn " wx:if="{{ord.back == 2 }}">退款完成</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/Tips';
+import BaseMixin from '@/mixins/base';
+import OrderMixin from '@/mixins/order';
+import OrderItemList from '@/components/psersonal_center/order_item_list';
+import api from '@/api/order';
+export default class OrderDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '订单详情',
+    usingComponents: {
+      'wxc-steps': '../../packages/@minui/wxc-steps/dist/index'
+    }
+  };
+  mixins = [BaseMixin, OrderMixin];
+  components = {
+    OrderItemList: OrderItemList
+  };
+  data = {
+    ord: {},
+    orderNo: '',
+    flag: '',
+    list: [],
+    orderExpress: {},
+    expressFlowInfo: {},
+    expressNo: ''
+    // steps: []
+  };
+  // 获取订单详情
+  async getOrderInfo() {
+    const json = await api.getOrderDetail({
+      order_id: this.orderNo
+    });
+    this.ord = json.ord;
+    this.list = [];
+    this.list = json.pro;
+    // XXX  刷新商品
+    // this.$invoke('shopItemList', 'refreshList', this.list);
+    this.expressNo = json.expressNo;
+    this.$apply();
+  }
+  // 编辑订单 目前只是用于退款
+  // async editOrderInfo(orderNo, flag) {
+  //   let uid = wepy.$instance.globalData.userInfo.ID;
+  //   const json = await api.editOrderInfo({
+  //     uid: uid,
+  //     id: orderNo,
+  //     flag: flag
+  //   });
+  //   let msg = {'refund':'申请退款成功!','cancel':'取消订单成功!','receive':'确认收货完成!'}
+  //   tip.success(msg[flag]);
+  //   wepy.switchTab({
+  //     url: '/pages/personal_center/personal_center'
+  //   });
+  //   this.hasError(json);
+  //   console.info('[order] ', msg[flag]);
+  // }
+  // 快递信息
+  // async getOrderExpressInfo() {
+  //   console.log('orderNo');
+  //   let that = this;
+  //   const json = await api.orderExpressInfo({
+  //     query: {
+  //       orderNo: this.orderNo
+  //     }
+  //   });
+  //   if (json.data.code == 0) {
+  //     that.orderExpress = json.data.orderExpress;
+  //     that.expressFlowInfo = json.data.expressFlowInfo;
+  //     // console.log("========list返回数据========");
+  //     // console.log(that.list);
+  //   } else {
+  //     tip.error(json.data.msg);
+  //   }
+  //   that.$apply();
+  // }
+  async onLoad(options) {
+    this.orderNo = options.orderNo;
+    await this.getOrderInfo();
+  }
+  computed = {};
+  methods = {
+    // 退货操作
+    // async refund(e) {
+    //   this.flag = 'refund';
+    //   this.editOrderInfo(e, this.flag);
+    // },
+    // async delOrder(e) {
+    //   this.flag = 2;
+    //   this.orderNo = e.currentTarget.dataset.id;
+    //   await tip.confirm('是否删除订单');
+    //   console.log(this.flag);
+    //   this.editOrderInfo(this.orderNo, this.flag);
+    //   console.log('删除成功');
+    // },
+    // 确认收货按钮 不过这个功能提到订单列表页上 这里已经没用了
+    // async completion(e) {
+    //   this.flag = 3;
+    //   this.orderNo = e.currentTarget.dataset.id;
+    //   await tip.confirm('是否确认收货');
+    //   this.editOrderInfo(this.orderNo, this.flag);
+    //   console.info('[order_detail]确认收货');
+    // },
+    // 查看物流
+    // async goLogistics(expressNo) {
+    //   let aa = tip.confirm('查看物流');
+    //   // console.log(expressNo);
+    //   // 3369785056558"
+    //   aa.then(function(result) {
+    //     // console.log(result);
+    //     wepy.navigateTo({
+    //       url: '/pages/personal_center/logistics?expressNo=' + expressNo
+    //     });
+    //   }).catch(function(reason) {
+    //     console.info('[order_detail]取消物流查询：', reason);
+    //   });
+    // },
+    // 支付操作
+    // XXX 立即付款需要验证测试
+    // async payMoney(e) {
+    //   this.orderNo = e.currentTarget.dataset.id;
+    //   let orderSn = e.currentTarget.dataset.ordersn; // 这个居然大小写敏感
+    //   // console.log(orderSn);
+    //   // console.log(e);
+    //   let uid = wepy.$instance.globalData.userInfo.ID;
+    //   const pay = await api.toPay({
+    //     uid: uid,
+    //     order_sn: orderSn,
+    //     order_id: this.orderNo
+    //   });
+    //   if (pay.status == 1) {
+    //     let payData = pay.arr;
+    //     // 以下是微信支付
+    //     wx.requestPayment({
+    //       appId: payData.appId,
+    //       timeStamp: payData.timeStamp,
+    //       nonceStr: payData.nonceStr,
+    //       package: payData.package,
+    //       signType: 'MD5',
+    //       paySign: payData.paySign,
+    //       success: function(res) {
+    //         console.log('pay', res);
+    //         setTimeout(() => {
+    //           // 支付成功 关闭loadding 跳转到支付成功页面
+    //           tip.loaded();
+    //           wepy.navigateTo({
+    //             url: '/pages/common/pay_success?orderNo=' + this.orderNo
+    //           });
+    //         }, 2000);
+    //       },
+    //       fail: function(res) {
+    //         // console.log("aaaaaaa");
+    //         // console.log(res);
+    //         tip.alert('支付失败');
+    //       }
+    //     });
+    //   } else {
+    //     // console.log("bbbbbbbbbb");
+    //     // console.log(pay);
+    //     tip.alert(pay.data.err);
+    //   }
+    // }
+  };
+  events = {};
+}
+</script>
+
+<style lang="less">
+.order_detail {
+  position: relative;
+}
+.order_state {
+  padding: 35rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
+  background: #fff;
+  .iconfont {
+    font-size: 40rpx;
+    color: #6a6a6a;
+  }
+  .state_time {
+    padding-top: 24rpx;
+  }
+  .center {
+    flex: 1;
+    margin-left: 50rpx;
+  }
+  .right {
+    display: flex;
+    align-items: center;
+  }
+  .unpaid {
+    margin-left: 50rpx;
+    .unpaid_doc {
+      margin-left: 10rpx;
+    }
+  }
+  .time_doc {
+    font-size: 26rpx;
+    color: #999;
+  }
+  .time_num {
+    font-size: 26rpx;
+    margin-right: 50rpx;
+  }
+}
+.address_block {
+  padding: 30rpx;
+  background: #fff;
+  margin-top: 10rpx;
+  .address {
+    padding-top: 20rpx;
+  }
+  .title {
+    color: #858585;
+  }
+  .content {
+    color: #000;
+    padding-left: 24rpx;
+  }
+}
+.goods_block {
+  margin-top: 10rpx;
+  background: #fff;
+}
+.info_block {
+  margin-top: 10rpx;
+  padding: 18rpx;
+  background: #fff;
+  .item {
+    padding-top: 40rpx;
+    .title {
+      font-size: 28rpx;
+    }
+    .content {
+      color: #808080;
+      font-size: 28rpx;
+    }
+  }
+}
+.footer {
+  position: fixed;
+  bottom: 0rpx;
+  height: 92rpx;
+  background: #fff;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx;
+  border-top: 1px solid #e6e6e6;
+  -moz-box-shadow: 0px -2px 10px #999999;
+  -webkit-box-shadow: 0px -2px 10px #999999;
+  box-shadow: 0px -2px 10px #999999;
+  .btn_group {
+    display: flex;
+    margin-right: 30rpx;
+    .btn {
+      padding: 20rpx 20rpx;
+      border: 1px solid #cccccc;
+      text-align: center;
+      margin: 0 auto;
+      width: 180rpx;
+      -moz-border-radius: 10rpx;
+      /* Firefox */
+      -webkit-border-radius: 10rpx;
+      /* Safari 和 Chrome */
+      border-radius: 10rpx;
+    }
+    .dsh {
+      margin-left: 20rpx;
+    }
+  }
+  .receive_money {
+    color: #ff4856;
+  }
+}
+</style>

@@ -1,0 +1,262 @@
+<!--订单列表模块-->
+<template>
+  <view class="order_item">
+    <repeat for="{{orderList}}">
+      <view class="list" wx:key="index">
+        <navigator class="item_content" url="/pages/personal_center/order_detail?orderNo={{item.id}}">
+          <view class="order_list_top">
+            <image mode="aspectFit" class="sh_slt" src="{{item.photo_x}}" binderror="nopic({{index}})"></image>
+            <view class="left">
+              <view class="title">商品名称：
+                <text class="order_doc ellip"> {{item.name}} </text>
+              </view>
+              <view class="title">订单商品数量：
+                <text class="order_doc">X {{item.pro_count}}</text>
+              </view>
+              <view class="title">订单号：
+                <text class="order_doc">{{item.order_sn}}</text>
+              </view>
+              <view class="title mt10">提交时间：
+                <text class="order_doc">{{item.addtime}}</text>
+              </view>
+            </view>
+            <view class="order_state" wx:if="{{item.auditStatus==5}}">
+              审批中
+            </view>
+            <view class="order_state" wx:elif="{{item.auditStatus==-1}}"> 审批不通过 </view>
+            <view wx:else>
+              <text class="defult" wx:if="{{item.status==0}}">
+                            <view class="order_state">待支付</view>
+                          </text>
+              <view class="order_state" wx:if="{{item.status==10 && item.back==0}}">待付款</view>
+              <view class="order_state" wx:if="{{item.status==20 && item.back==0}}">已付款</view>
+              <view class="order_state" wx:if="{{item.status==30 && item.back==0}}">待收货</view>
+              <view class="order_state" wx:if="{{item.status==50 && item.back==0}}">已完成</view>
+              <view class="order_state" wx:if="{{item.back == 1 }}">退款中</view>
+              <view class="order_state" wx:if="{{item.back == 2}}">已退款</view>
+            </view>
+          </view>
+          <view class="order_list_center">
+            <OrderItemList :list.sync="item.orderItemList"></OrderItemList>
+          </view>
+        </navigator>
+        <view class="order_list_footer">
+          <view class="reveiveMoney c333">应付款：
+            <text class="num">{{item.amount}}</text>
+          </view>
+          <view class="order_state" wx:if="{{item.auditStatus==5}}">
+          </view>
+          <view wx:elif="{{item.auditStatus==-1}}">
+            <view class="btn_group">
+              <view class="btn btn_del" @tap="delOrder" data-id="{{item.orderNo}}">取消订单</view>
+            </view>
+          </view>
+          <view wx:else>
+            <view class="btn_group">
+              <view class="btn btn_del" @tap="delOrder" data-id="{{item.id}}" wx:if="{{item.status==10 || item.status==4}}">取消订单</view>
+              <view class="btn btn_pay" @tap="payMoney" data-id="{{item.id}}" data-orderSn="{{item.order_sn}}" wx:if="{{item.status==10}}">立即付款</view>
+              <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status==30 && item.back ==0}}">确认收货</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/Tips';
+import OrderMixin from '@/mixins/order';
+import OrderItemList from '@/components/psersonal_center/order_item_list';
+import api from '@/api/order';
+// import { SYSTEM_INFO, USER_SPECICAL_INFO } from '../utils/constant';
+export default class orderItem extends wepy.component {
+  props = {
+    orderList: {
+      default: [],
+      flag: '',
+      orderNo: '',
+      list: []
+    }
+  };
+  async editOrderInfo(orderNo, flag) {
+    // console.log("调用方法");
+    let that = this;
+    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let uid = wepy.$instance.globalData.userInfo.ID;
+    const json = await api.editOrderInfo({
+      query: {
+        id: orderNo,
+        flag: flag,
+        uid: uid
+      }
+    });
+    if (json.data.code == 0) {
+      this.$emit('refreshOrderList', that.flag);
+    } else {
+      tip.error(json.data.msg);
+    }
+    that.$apply();
+  }
+  mixins = [OrderMixin];
+  components = {
+    OrderItemList: OrderItemList
+  };
+  events = {};
+  methods = {
+    async nopic(e) {
+      this.orderList[e].photo_x = '../../images/no.png';
+      this.$apply();
+    }
+    // async delOrder(e) {
+    //   this.flag = 'cancel';
+    //   this.orderNo = e.currentTarget.dataset.id;
+    //   await tip.confirm('是否取消订单');
+    //   console.log(this.flag);
+    //   this.editOrderInfo(this.orderNo, this.flag);
+    //   console.info('[order_item] 取消订单成功');
+    // },
+    // async completion(e) {
+    //   this.flag = 'receive';
+    //   this.orderNo = e.currentTarget.dataset.id;
+    //   await tip.confirm('是否确认收货');
+    //   this.editOrderInfo(this.orderNo, this.flag);
+    //   console.info('[order_item] 确认收货完成');
+    // },
+    // async payMoney(e) {
+    //   this.orderNo = e.currentTarget.dataset.id;
+    //   let orderSn = e.currentTarget.dataset.ordersn;
+    //   // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    //   let uid = wepy.$instance.globalData.userInfo.ID;
+    //   const pay = await api.toPay({
+    //     query: {
+    //       uid: uid,
+    //       order_sn: orderSn,
+    //       order_id: this.orderNo
+    //     }
+    //   });
+    //   if (pay.data.status == 1) {
+    //     let payData = pay.data.arr;
+    //     // 以下是微信支付
+    //     wx.requestPayment({
+    //       appId: payData.appId,
+    //       timeStamp: payData.timeStamp,
+    //       nonceStr: payData.nonceStr,
+    //       package: payData.package,
+    //       signType: 'MD5',
+    //       paySign: payData.paySign,
+    //       success: function(res) {
+    //         console.log('pay', res);
+    //         setTimeout(() => {
+    //           // 支付成功 关闭loadding 跳转到支付成功页面
+    //           tip.loaded();
+    //           wepy.navigateTo({
+    //             url: '/pages/pay_success?orderNo=' + this.orderNo
+    //           });
+    //         }, 2000);
+    //       },
+    //       fail: function(res) {
+    //         tip.alert('支付失败');
+    //       }
+    //     });
+    //   } else {
+    //     tip.alert('支付失败');
+    //   }
+    // }
+  };
+  onLoad() {
+    // console.log("===========lzz返回数据lzz=========")
+    // console.log(this.orderList);
+  }
+}
+</script>
+
+<style lang="less">
+.sh_slt {
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 5px;
+  margin-right: 4%;
+  float: left;
+}
+.ellip {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.left {
+  width: 400rpx;
+}
+.order_item {
+  padding: 10rpx 0rpx;
+  background: #f7f7f7;
+  margin-bottom: 30rpx;
+  .title {
+    font-size: 26rpx;
+    color: #333;
+  }
+  .order_doc {
+    font-size: 26rpx;
+    color: #808080;
+  }
+  .mt10 {
+    margin-top: 10rpx;
+  }
+  .order_state {
+    color: #ff4856;
+    font-size: 32rpx;
+  }
+  .order_list_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .order_list_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20rpx;
+    .num {
+      color: #ff4856;
+    }
+  }
+  .order_list_top {
+    padding-bottom: 26rpx;
+    border-bottom: 1px solid #efefef;
+  }
+  .list {
+    background: #fff;
+    padding: 30rpx;
+    margin-top: 15rpx;
+  }
+  .btn_group {
+    display: flex;
+    align-items: center;
+    .btn {
+      font-size: 30rpx;
+      padding: 12rpx 25rpx;
+      text-align: center;
+      margin: 0 auto;
+      width: 100%;
+      -moz-border-radius: 15rpx;
+      /* Firefox */
+      -webkit-border-radius: 15rpx;
+      /* Safari 和 Chrome */
+      border-radius: 15rpx;
+      /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+    }
+    .btn_del {
+      color: #333;
+      border: 1px solid #ccc;
+    }
+    .btn_pay {
+      background: #ff4856;
+      color: #fff;
+      margin-left: 20rpx;
+    }
+  }
+}
+</style>

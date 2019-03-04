@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-02-17 01:29:56
+ * @LastEditTime: 2019-03-04 23:06:31
  * @Description:  商品api请求类
  */
 import base from './base';
@@ -32,6 +32,10 @@ export default class goods extends base {
     return new Page(url)
   }
 
+  /**
+   * 获取根分类
+   * @param {*} params 
+   */
   static getRootCateTopLevel() {
     let url = `${this.baseUrl}/api/news/getRootCategoryList`;
     return this.get(url).then(data => {
@@ -41,10 +45,24 @@ export default class goods extends base {
       }
     })
   }
-
+  
+  /**
+   * 获取子分类
+   * @param {*} params 
+   */
   static getChildGoodsCatetoryList(params) {
     let url = `${this.baseUrl}/api/news/getChildGoodsCatetoryList`;
     return this.get(url, params)
+  }
+
+  /**
+   * [favoriteInfo 收藏信息]
+   *
+   * @return  {[type]}  [return description]
+   */
+  static favoriteInfo() {
+    let url = `${this.baseUrl}/api/news/getFavoriteInfo`;
+    return new Page(url)
   }
 
   // ------------------ 以下为老的

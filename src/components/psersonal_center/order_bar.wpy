@@ -1,0 +1,131 @@
+<!-- 用户中心订单栏 -->
+<template>
+    <view class="orders">
+        <view class="box">
+            <view class="label" wx:for="{{orderTypeLise}}" wx:key="name" wx:for-item="row" hover-class="hover" @tap="toOrderType({{index}})">
+                <view class="icon">
+                    <view class="badge" wx:if="{{row.count>0}}">{{row.count}}</view>
+                    <image src="../../images/personal_center/{{row.icon}}.png"></image>
+                </view>
+                {{row.name}}
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import api from '@/api/order';
+export default class OrderBar extends wepy.component {
+  props = {};
+  data = {
+    orderTypeLise: [
+      // name-标题 icon-图标 count-角标
+      //   {
+      //     name: '待付款',
+      //     icon: 'l1.png',
+      //     count: 1
+      //   },
+      //   {
+      //     name: '待发货',
+      //     icon: 'l2.png',
+      //     count: 2
+      //   },
+      //   {
+      //     name: '待收货',
+      //     icon: 'l3.png',
+      //     count: 6
+      //   },
+      //   {
+      //     name: '待评价',
+      //     icon: 'l4.png',
+      //     count: 9
+      //   },
+      //   {
+      //     name: '退换货',
+      //     icon: 'l5.png',
+      //     count: 0
+      //   }
+    ]
+  };
+  async getOrderCount() {
+    const json = await api.getOrderInfo({
+      uid: wepy.$instance.globalData.userInfo.ID
+    });
+    return json;
+  }
+  async onLoad() {
+    this.orderTypeLise = await this.getOrderCount();
+    this.$apply();
+  }
+  methods = {
+    toOrderType(status) {
+      // console.log(status)
+      this.$root.$navigate(`/pages/personal_center/order_list?type=${status}`);
+    }
+  };
+}
+</script>
+
+<style lang='scss'>
+@import '../../styles/variable';
+.orders {
+  background-color: $color-primary;
+  width: 92%;
+  height: 11vw;
+  padding: 0 4%;
+  margin-bottom: calc(11vw + 40rpx);
+  display: flex;
+  align-items: flex-start;
+  border-radius: 0 0 100% 100%;
+  margin-top: -1rpx;
+  .box {
+    width: 98%;
+    padding: 0 1%;
+    height: 22vw;
+    background-color: #fefefe;
+    border-radius: 24rpx;
+    box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.15);
+    margin-bottom: 40rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-flow: wrap;
+      width: 100%;
+      height: 16vw;
+      color: #666666;
+      font-size: 26rpx;
+      .icon {
+        position: relative;
+        width: 7vw;
+        height: 7vw;
+        margin: 0 1vw;
+        .badge {
+          position: absolute;
+          width: 4vw;
+          height: 4vw;
+          background-color: #ec6d2c;
+          top: -1vw;
+          right: -1vw;
+          border-radius: 100%;
+          font-size: 20rpx;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+        }
+        image {
+          width: 7vw;
+          height: 7vw;
+          z-index: 9;
+        }
+      }
+    }
+  }
+}
+</style>

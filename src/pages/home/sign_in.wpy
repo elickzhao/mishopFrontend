@@ -45,12 +45,7 @@
   import WepySignTime from '@/components/sign_in/wepy-sign-time';
   export default class SignIn extends wepy.page {
     config = {
-      navigationBarTitleText: '签到有礼',
-      backgroundTextStyle: 'dark',
-      navigationBarBackgroundColor: '#FFF',
-      navigationBarTextStyle: 'black',
-      enablePullDownRefresh: false,
-      backgroundColor: '#EFEFEF'
+      navigationBarTitleText: '签到有礼'
     };
     components = {
       tab: Tab,
