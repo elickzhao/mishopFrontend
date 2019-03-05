@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-03-04 23:06:31
+ * @LastEditTime: 2019-03-05 12:46:57
  * @Description:  商品api请求类
  */
 import base from './base';
@@ -63,6 +63,15 @@ export default class goods extends base {
   static favoriteInfo() {
     let url = `${this.baseUrl}/api/news/getFavoriteInfo`;
     return new Page(url)
+  }
+  /**
+   * [favoriteInfo 取消收藏]
+   *
+   * @return  {[type]}  [return description]
+   */
+  static goodsUnFavorite(params) {
+    let url = `${this.baseUrl}/api/news/goodsFavoriteDelete`;
+    return this.get(url, params)
   }
 
   // ------------------ 以下为老的

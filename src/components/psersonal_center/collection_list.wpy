@@ -23,11 +23,6 @@
 
 <script>
 import wepy from 'wepy';
-// import {
-//   SYSTEM_INFO,
-//   USER_SPECICAL_INFO
-// } from '../utils/constant';
-// import tip from '@/utils/Tips';
 import api from '@/api/goods';
 import SwipeDelete from '@/components/common/wepy-swipe-delete';
 export default class CollecntionList extends wepy.component {
@@ -46,85 +41,35 @@ export default class CollecntionList extends wepy.component {
   components = {
     swipeDelete: SwipeDelete
   };
-  onLoad() {
-    // let that = this;
-    // console.log(that.list);
-  }
+  onLoad() {}
   computed = {};
   // 商品取消收藏
   async goodsUnFavorite(goodsId) {
-    let that = this;
-    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    // let uid = userSpecialInfo.ID;
     const json = await api.goodsUnFavorite({
       uid: wepy.$instance.globalData.userInfo.ID,
       goodsId: goodsId
     });
-    console.log(json);
-    // if (json.data.code == 0) {
-    //   // console.log("===========商品取消收藏成功=========")
-    //   // tip.toast("取消收藏成功");
-    //   let retList = [];
-    //   for (var i = 0; i < this.list.length; i++) {
-    //     if (this.list[i].id == goodsId) {
-    //       continue;
-    //     } else {
-    //       retList.push(this.list[i]);
-    //     }
-    //   }
-    //   this.list = retList;
-    //   if (that.list.length < 1) {
-    //     this.is_empty = true;
-    //   }
-    // } else {
-    //   tip.error(json.data.msg);
-    // }
-    that.$apply();
+    this.refreshList(goodsId);
+    this.$apply();
   }
-  // 商品取消收藏
-  async delUserBrowser(goodsId) {
-    let that = this;
-    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    // let openId = userSpecialInfo.openid;
-    // const json = await api.delUserBrowser({
-    //   query: {
-    //     openId: openId,
-    //     goodsId: goodsId
-    //   }
-    // });
-    // if (json.data.code == 0) {
-    //   console.log('===========商品取消收藏成功=========');
-    //   // tip.toast("取消收藏成功");
-    //   let retList = [];
-    //   for (var i = 0; i < this.list.length; i++) {
-    //     if (this.list[i].goodsId == goodsId) {
-    //       continue;
-    //     } else {
-    //       retList.push(this.list[i]);
-    //     }
-    //   }
-    //   this.list = retList;
-    // } else {
-    //   tip.error(json.data.msg);
-    // }
-    that.$apply();
+  refreshList(goodsId) {
+    let reList = [];
+    for (var i = 0; i < this.list.length; i++) {
+      if (this.list[i].id == goodsId) {
+        continue;
+      } else {
+        reList.push(this.list[i]);
+      }
+    }
+    this.list = reList;
+    if (this.list.length < 1) {
+      this.is_empty = true;
+    }
+    this.$apply();
   }
   methods = {
     handleDelItem(itemData) {
-      // console.log(itemData)
-      //  let objType = itemData.type;
-      //  if (objType==1) {
-      //    this.delUserBrowser(itemData.goodsId);
-      //  } else if (objType==2) {
-      //    this.goodsUnFavorite(itemData.goodsId);
-      //  }
       this.goodsUnFavorite(itemData.id);
-    },
-    refreshList(val) {
-      if (val == undefined) return;
-      // console.log("val.....", val);
-      this.list = val;
-      this.$apply();
     }
   };
   events = {};
