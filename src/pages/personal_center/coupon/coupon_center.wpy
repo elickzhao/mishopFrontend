@@ -19,10 +19,10 @@ export default class CouponCenter extends wepy.page {
   config = {
     navigationBarTitleText: '领券中心',
     usingComponents: {
-      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
-      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
-      'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
-      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index'
+      'wxc-panel': '../../../packages/@minui/wxc-panel/dist/index',
+      'wxc-flex': '../../../packages/@minui/wxc-flex/dist/index',
+      'wxc-progress': '../../../packages/@minui/wxc-progress/dist/index',
+      'wxc-abnor': '../../../packages/@minui/wxc-abnor/dist/index'
     }
   };
   data = {

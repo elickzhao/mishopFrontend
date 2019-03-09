@@ -2,7 +2,7 @@ import Tips from './Tips';
 import wepy from 'wepy';
 
 export default class WxUtils {
-  static tabUrls = ['/pages/home/home', '/pages/goods/category', '/pages/goods/cart', '/pages/customer/index', '/pages/customer/index_template'];
+  static tabUrls = ['/pages/home/home', '/pages/personal_center/personal_center', '/pages/goods/category', '/pages/goods/cart', '/pages/customer/index', '/pages/customer/index_template'];
 
   // 把跳转的位置 转到模版
   static mapUrls = {
@@ -74,7 +74,7 @@ export default class WxUtils {
       }
     }
   }
-  
+
   /**
    * [backToPrevpage 跳转两个页面 回到初始进入页面]
    *
@@ -167,7 +167,7 @@ export default class WxUtils {
    */
   static getCurrentPagesUrl() {
     let currentPage = this.getCurrentPages()
-    let url = '/'+currentPage.route //当前页面url
+    let url = '/' + currentPage.route //当前页面url
     return url;
   }
   /**

@@ -3,15 +3,21 @@
  * @LastEditors: elick
  * @Description: 收货地址reduce
  * @Date: 2019-03-08 17:06:34
- * @LastEditTime: 2019-03-09 04:30:15
+ * @LastEditTime: 2019-03-09 14:42:05
  */
-import { handleActions } from 'redux-actions';
-import { ADD_ADDRESS,INIT_ADDRESS } from '../types/address';
+import {
+  handleActions
+} from 'redux-actions';
+import {
+  ADD_ADDRESS,
+  INIT_ADDRESS,
+  SAVE_ADDRESS
+} from '../types/address';
 
 const address = {
-  list:[],
-  default:'',
-  current:''
+  list: [],
+  default: '',
+  current: ''
 }
 
 export default handleActions({
@@ -26,15 +32,30 @@ export default handleActions({
       [key]: value
     }
   },
-  [INIT_ADDRESS](state,action){
+  [INIT_ADDRESS](state, action) {
     let address = action.payload
     state.list = address
-    address.map(item =>{
-      if(item.is_default){
+    address.map(item => {
+      if (item.is_default) {
         state.default = state.current = item.id
       }
     })
-    return {...state}
+    return {
+      ...state
+    }
+  },
+  [SAVE_ADDRESS](state, action) {
+    let address = action.payload
+    state.list = address
+    state.list.map(item => {
+      if (item.is_default == 1) {
+        state.default = state.current = item.id
+      }
+    })
+    // console.log(state)
+    return {
+      ...state
+    }
   }
 }, {
   ...address

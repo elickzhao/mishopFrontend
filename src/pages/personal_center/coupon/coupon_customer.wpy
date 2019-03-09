@@ -22,12 +22,12 @@ export default class couponCustomer extends wepy.page {
   config = {
     navigationBarTitleText: '我的优惠券',
     usingComponents: {
-      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
-      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
-      'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
-      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
-      'wxc-tab': '../../packages/@minui/wxc-tab/dist/index',
-      'wxc-tab-panel': '../../packages/@minui/wxc-tab/dist/panel'
+      'wxc-panel': '../../../packages/@minui/wxc-panel/dist/index',
+      'wxc-flex': '../../../packages/@minui/wxc-flex/dist/index',
+      'wxc-progress': '../../../packages/@minui/wxc-progress/dist/index',
+      'wxc-abnor': '../../../packages/@minui/wxc-abnor/dist/index',
+      'wxc-tab': '../../../packages/@minui/wxc-tab/dist/index',
+      'wxc-tab-panel': '../../../packages/@minui/wxc-tab/dist/panel'
     }
   };
   data = {
@@ -67,7 +67,9 @@ export default class couponCustomer extends wepy.page {
   events = {};
   watch = {};
   computed = {};
-  onLoad() {}
+  onLoad() {
+    console.log('------------------>', wepy.$instance.globalData.userInfo.ID);
+  }
   onShow() {}
 }
 </script>

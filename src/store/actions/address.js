@@ -2,7 +2,8 @@ import api from '@/api/addresses';
 import Tips from '@/utils/Tips';
 import {
   ADD_ADDRESS,
-  INIT_ADDRESS
+  INIT_ADDRESS,
+  SAVE_ADDRESS
 } from '../types/address'
 import {
   createAction
@@ -10,6 +11,7 @@ import {
 
 export const addAddress = createAction(ADD_ADDRESS, globdata => globdata)
 export const initAddress = createAction(INIT_ADDRESS, address => address)
+export const saveAddress = createAction(SAVE_ADDRESS, address => address)
 
 // 远程初始化
 export const initAddressAsync = createAction(INIT_ADDRESS, async uid => {

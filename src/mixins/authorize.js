@@ -9,7 +9,28 @@ export default class AuthorizeMixin extends wepy.mixin {
     currentPage: ''
 
   }
-  methods = {}
+  methods = {
+    /**
+     * 授权按钮响应
+     */
+    async onGotUserInfo(e) {
+      if (e.detail.errMsg === 'getUserInfo:ok') {
+        // 这样授权会造成 有权限 却无会员信息内容 无法注册 虽然概率很小 但还是用getuserinfo来获取信息吧
+        // 这个先保留 看看 getuserinfo 速度如何 不行再替换
+        // this.userInfo == e.detail.userInfo
+        // this.$apply()
+        console.info(`[register] get userInfo true `);
+        this.register()
+      } else {
+        console.info(`[register] get userInfo false `);
+        await wepy.showModal({
+          title: '授权失败!',
+          content: '拒绝授权,将无法使用小程序!'
+        });
+        console.log(e.detail.errMsg);
+      }
+    }
+  }
 
   onShow() {}
 
@@ -49,9 +70,11 @@ export default class AuthorizeMixin extends wepy.mixin {
             WxUtils.backOrRedirect('login')
           }
         } else {
+          // 老用户检查授权 跳转
+          await this.register();
           // 检测登录 并跳转
           // 这里指向不了mix的onload的 所以 判断后跳转 只能写在原页面的onload里
-          this.onLoad()
+          // this.onLoad()
         }
       } else {
         await wepy.showModal({
@@ -114,26 +137,6 @@ export default class AuthorizeMixin extends wepy.mixin {
     } else {
       console.info(`[scope.userInfo] check userInfo false`);
       return false;
-    }
-  }
-  /**
-   * 授权按钮响应
-   */
-  async onGotUserInfo(e) {
-    if (e.detail.errMsg === 'getUserInfo:ok') {
-      // 这样授权会造成 有权限 却无会员信息内容 无法注册 虽然概率很小 但还是用getuserinfo来获取信息吧
-      // 这个先保留 看看 getuserinfo 速度如何 不行再替换
-      // this.userInfo == e.detail.userInfo
-      // this.$apply()
-      console.info(`[register] get userInfo true `);
-      this.register()
-    } else {
-      console.info(`[register] get userInfo false `);
-      await wepy.showModal({
-        title: '授权失败!',
-        content: '拒绝授权,将无法使用小程序!'
-      });
-      console.log(e.detail.errMsg);
     }
   }
   /**

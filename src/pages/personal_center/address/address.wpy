@@ -1,7 +1,7 @@
 <!--地址管理-->
 <template>
   <view class="address">
-    <repeat for="{{addressList}}" key="list[id]" index="index" item="item">
+    <repeat for="{{addressList}}"  index="index" item="item">
       <view class="list_box">
         <SwipeDelete :swipeData="item" @delItem.user="handleDelItem">
           <view class="address_list" @tap="tapSelAddress" data-id="{{item.id}}">
@@ -32,12 +32,12 @@
 <script>
 import wepy from 'wepy';
 import api from '@/api/addresses';
-// import { isExist } from '@/utils/Common';
+import { isExist } from '@/utils/Common';
 import SwipeDelete from '@/components/common/wepy-swipe-delete';
 import BaseMixin from '@/mixins/base';
 import { connect } from 'wepy-redux';
 // import { initAddress, initAddressAsync } from '@/store/actions';
-import { initAddress } from '@/store/actions';
+import { initAddress, saveAddress } from '@/store/actions';
 @connect({
   addressList(state) {
     return state.address.list;
@@ -64,27 +64,25 @@ export default class Address extends wepy.page {
       uid: wepy.$instance.globalData.userInfo.ID
     });
     this.hasError(json);
-    // console.log(json);
-    return json.list;
+    // console.log(json.list);
+    // return json.list;
+    // 目前看来一个 action 就够用了 每次到这个页面都会刷新地址 虽然这样不太好
+    wepy.$store.dispatch(saveAddress(json.list));
+    this.$apply();
   }
+  // 这里的思路是对的 不过下面添加微信地址还需要加ADD action 比较费时间 还是拿最粗暴的方式弄 以后改好了
+  // 因新加入的 地址虽然能直接写入 reduce 里 不过 ID 是没有的所以比较麻烦
+  // 而且这个初始地址 最好一进入程序就初始化 但是由于 页面转发的问题 有可能会出现地址没有初始化的情况 除非每个页面都继承 base.mixin
   async addressInit() {
-    // 无法保存在Storage里 放弃了
-    // let address = wepy.getStorageSync('Address');
-    // if (!isExist(address)) {
-    //   address = await this.getUserAddress();
-    //   console.log(address)
-    //   let ss = JSON.stringify(address);
-    //   console.log(typeof(ss))
-    //   console.log(ss)
-    //   wepy.setStorageSync({
-    //     key: 'address',
-    //     value: ss
-    //   });
-    // } else {
-    //   address = wepy.getStorageInfoSync('Address');
-    // }
+    let address = wepy.getStorageSync('Address');
+    if (!isExist(address)) {
+      address = await this.getUserAddress();
+      wepy.setStorageSync('Address', address);
+    } else {
+      address = wepy.getStorageSync('Address');
+    }
     // this.addressList = address;
-    let address = await this.getUserAddress();
+    // let address = await this.getUserAddress();
     wepy.$store.dispatch(initAddress(address));
     // 可以吧请求数据直接放到 action 里, 不过那样就不够清晰 以后修改起来也不好找 还是单纯的 action 往 store 存数据好了
     // wepy.$store.dispatch(
@@ -94,12 +92,12 @@ export default class Address extends wepy.page {
   }
   // 添加微信地址
   addWechatAddress() {
-    let that = this;
+    // let that = this;
     wx.chooseAddress({
       success: function(res) {
         // console.log(res);
         wx.request({
-          url: 'https:// small.huanqiujishi.com/index.php/Api/Address/add_adds',
+          url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
           data: {
             user_id: wepy.$instance.globalData.userInfo.ID,
             receiver: res.userName,
@@ -124,8 +122,9 @@ export default class Address extends wepy.page {
                 title: '保存成功！',
                 duration: 2000
               });
-              // XXX 这里需要改
-              that.getUserAddress();
+              // XXX 现在不用改了  等改用initadress时 这里需要改
+              // 因为放在 onShow() 里会出现请求两次
+              // that.getUserAddress();
             } else {
               console.log('添加失败:' + res.data.err);
               wx.showToast({
@@ -152,17 +151,19 @@ export default class Address extends wepy.page {
       id: id
     });
     this.hasError(json);
-    // XXX 更新列表这里需要改
+    // XXX 现在不用改了  等改用initadress时 更新列表这里需要改
     this.getUserAddress();
   }
   async onLoad(option) {
     // this.currentPage = 0;
     // await this.getUserAddress();
     this.type = option.type == undefined ? '' : option.type;
-    await this.addressInit();
+    // await this.addressInit();
     // this.$invoke('addressList', 'setOrgType', this.type);
   }
-  onShow() {}
+  async onShow() {
+    await this.getUserAddress();
+  }
   computed = {};
   methods = {
     add() {

@@ -9,7 +9,10 @@ export default class CheckLogin extends wepy.mixin {
     // console.log(wepy.$instance.globalData);
     let res = await wepy.getSetting();
     // 没有用户信息或者没有授权都跳转到登录页
-    if (!wepy.$instance.globalData.userInfo || !res.authSetting['scope.userInfo']) {
+    if (
+      !wepy.$instance.globalData.userInfo ||
+      !res.authSetting['scope.userInfo']
+    ) {
       let url = '/pages/home/login?back=' + WxUtils.getCurrentPagesUrl();
       wx.showModal({
         title: '提示',
