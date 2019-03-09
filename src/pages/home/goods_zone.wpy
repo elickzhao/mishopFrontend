@@ -1,6 +1,6 @@
 <!--现货批发-->
 <template>
-  <image src="../../images/who_{{flag}}.png" lazy-load mode="scaleToFill" class="shadow" style="width: 100%">
+  <image src="../../images/who_{{flag}}.jpg" lazy-load mode="scaleToFill" class="shadow" style="width: 100%">
   </image>
   <block wx:if="{{!isPageEmpty}}">
     <!--矩阵商品列表模块-->

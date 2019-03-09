@@ -58,7 +58,7 @@ export default class PointsDetail extends wepy.component {
 }
 .detail-right {
   text-align: right;
-} // 顶顶顶
+}
 .detail-money {
   color: #eb6623;
   display: block;

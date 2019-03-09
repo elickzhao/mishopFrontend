@@ -1,0 +1,158 @@
+<!--添加收货地址  -->
+<template>
+  <form bindsubmit="formSubmit">
+    <view class="block">
+      <view class="list_item">
+        <view class="title">收货人姓名:</view>
+        <view class="input">
+          <input type="text" name="receiverName" value="" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">联系电话:</view>
+        <view class="input">
+          <input type="text" name="mobile" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">所在地区:</view>
+        <view class="input">
+          <view @tap="openAddressPicker">{{province ? province.name : '省'}} - {{city ? city.name : '市' }} - {{area ? area.name : '区' }}</view>
+          <AreaPicker @areaArray.user="areaPickerArray"></AreaPicker>
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">详细地址:</view>
+        <view class="input">
+          <input type="text" name="addressDetail" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">邮编:</view>
+        <view class="input">
+          <input type="text" name="code" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">设置默认地址:</view>
+        <view class="input tr" @tap="changeCheckBoxState">
+          <icon type="success" size="20" color="{{isDefult? 'red':'#999'}}" />
+        </view>
+      </view>
+    </view>
+    <view class="btn_box">
+      <button type="primary" formType="submit">完成</button>
+    </view>
+  </form>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/Tips';
+import api from '@/api/addresses';
+import BaseMixin from '@/mixins/base';
+import AreaPicker from '@/components/common/wepy-area-picker';
+export default class AdressAdd extends wepy.page {
+  config = {
+    navigationBarTitleText: '添加收货地址'
+  };
+  data = {
+    province: '',
+    city: '',
+    area: '',
+    isDefult: 0
+  };
+  mixins = [BaseMixin];
+  components = {
+    AreaPicker: AreaPicker
+  };
+  async addAddress(address) {
+    let isDefult = 0;
+    if (this.isDefult) {
+      isDefult = 1;
+    }
+    const json = await api.saveAddress({
+      uid: wepy.$instance.globalData.userInfo.ID,
+      receiver: address.receiverName,
+      tel: address.mobile,
+      adds: address.addressDetail,
+      code: address.code,
+      isDef: isDefult,
+      sheng: this.province.name,
+      city: this.city.name,
+      quyu: this.area.name
+    });
+    this.hasError(json);
+    wepy.navigateBack({
+      delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+    });
+  }
+  methods = {
+    changeCheckBoxState() {
+      this.isDefult = !this.isDefult;
+    },
+    formSubmit(e) {
+      let receiverName = e.detail.value.receiverName;
+      let mobile = e.detail.value.mobile;
+      let addressDetail = e.detail.value.addressDetail;
+      if (receiverName == '') {
+        tip.alert('输入收件人姓名');
+        return false;
+      }
+      if (mobile == '') {
+        tip.alert('输入联系电话');
+        return false;
+      }
+      if (addressDetail == '') {
+        tip.alert('输入详细地址');
+        return false;
+      }
+      this.addAddress(e.detail.value);
+    },
+    openAddressPicker() {
+      this.$invoke('AreaPicker', 'openAddressPicker');
+    },
+    areaPickerArray(province, city, area) {
+      // console.log('ddddddddd11111111');
+      this.province = province;
+      this.city = city;
+      this.area = area;
+      this.provinceCode = province.code;
+      this.cityCode = city.code;
+      this.areaCode = area.code;
+      // console.log(this.provinceCode);
+      this.$apply();
+    }
+  };
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.block {
+  background: #fff;
+}
+.list_item {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #efefef;
+  padding: 35rpx 20rpx;
+  .title {
+    margin-right: 20rpx;
+  }
+  .input {
+    flex: 1;
+    input {
+      color: #333;
+    }
+  }
+}
+.btn_box {
+  margin-top: 64rpx;
+  padding: 0 24rpx;
+}
+</style>

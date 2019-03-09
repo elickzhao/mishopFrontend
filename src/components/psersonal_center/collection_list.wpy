@@ -45,7 +45,7 @@ export default class CollecntionList extends wepy.component {
   computed = {};
   // 商品取消收藏
   async goodsUnFavorite(goodsId) {
-    const json = await api.goodsUnFavorite({
+    await api.goodsUnFavorite({
       uid: wepy.$instance.globalData.userInfo.ID,
       goodsId: goodsId
     });

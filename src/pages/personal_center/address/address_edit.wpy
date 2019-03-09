@@ -1,0 +1,201 @@
+<!-- 地址编辑 -->
+<template>
+  <form bindsubmit="formSubmit">
+    <view class="block">
+      <view class="list_item">
+        <view class="title">收货人姓名:</view>
+        <view class="input">
+          <input type="text" name="receiverName" value="{{editInfo.name}}" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">联系电话:</view>
+        <view class="input">
+          <input type="text" name="mobile" value="{{editInfo.tel}}" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">所在地区:</view>
+        <view class="input">
+          <view @tap="openAddressPicker">{{province ? province.name : '省'}} - {{city ? city.name : '市' }} - {{area ? area.name : '区' }}</view>
+          <AreaPicker @areaArray.user="areaPickerArray"></AreaPicker>
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">详细地址:</view>
+        <view class="input">
+          <input type="text" name="addressDetail" value="{{editInfo.addr_xq}}" />
+        </view>
+      </view>
+      <view class="list_item">
+        <view class="title">设置默认地址:</view>
+        <view class="input tr" @tap="changeCheckBoxState">
+          <icon type="success" size="20" color="{{isDefult? 'red':'#999'}}" />
+        </view>
+      </view>
+    </view>
+    <view class="btn_box">
+      <button type="primary" formType="submit">修改</button>
+    </view>
+  </form>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/Tips';
+import api from '@/api/addresses';
+import BaseMixin from '@/mixins/base';
+import AreaPicker from '@/components/common/wepy-area-picker';
+export default class Example extends wepy.page {
+  config = {
+    navigationBarTitleText: '编辑收货地址'
+  };
+  data = {
+    isDefult: false,
+    isCheck: false,
+    editInfo: {},
+    id: '',
+    province: '',
+    city: '',
+    area: '',
+    provinceCode: '',
+    cityCode: '',
+    areaCode: ''
+  };
+  mixins = [BaseMixin];
+  components = {
+    AreaPicker: AreaPicker
+  };
+  async editAddress(address) {
+    // console.log('保存');
+    // let that = this;
+    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let isDefult = 0;
+    if (this.isDefult) {
+      isDefult = 1;
+    }
+    // let uid = userSpecialInfo.ID;
+    // console.log('address:');
+    // console.log(this.id);
+    const json = await api.saveAddress({
+      uid: wepy.$instance.globalData.userInfo.ID,
+      id: this.id,
+      receiver: address.receiverName,
+      tel: address.mobile,
+      adds: address.addressDetail,
+      code: address.code,
+      isDef: isDefult,
+      sheng: this.province.name,
+      city: this.city.name,
+      quyu: this.area.name
+    });
+    this.hasError(json);
+    wepy.navigateBack({
+      delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+    });
+  }
+  // 用户收货地址根据id查询
+  async receiverInf(id) {
+    const json = await api.receiverInfoById({
+      id: id
+    });
+    this.hasError(json);
+    // console.log(json);
+    this.editInfo = json.receiverInfo;
+    this.refresh();
+    this.$apply();
+  }
+  // 设置地址下拉选项
+  refresh(val) {
+    this.id = this.editInfo.id;
+    if (this.editInfo.isDef == 1) {
+      this.isDefult = true;
+    } else {
+      this.isDefult = false;
+    }
+    this.province = {
+      code: this.editInfo.provinceCode,
+      name: this.editInfo.provinceName
+    };
+    this.city = {
+      code: this.editInfo.areaCode,
+      name: this.editInfo.cityName
+    };
+    this.area = {
+      code: this.editInfo.cityCode,
+      name: this.editInfo.areaName
+    };
+    this.$apply();
+  }
+  methods = {
+    changeCheckBoxState() {
+      this.isCheck = !this.isCheck;
+      this.isDefult = !this.isDefult;
+    },
+    formSubmit(e) {
+      let receiverName = e.detail.value.receiverName;
+      let mobile = e.detail.value.mobile;
+      let addressDetail = e.detail.value.addressDetail;
+      if (receiverName == '') {
+        tip.alert('输入收件人姓名');
+        return false;
+      }
+      if (mobile == '') {
+        tip.alert('输入联系电话');
+        return false;
+      }
+      if (addressDetail == '') {
+        tip.alert('输入详细地址');
+        return false;
+      }
+      this.editAddress(e.detail.value);
+      //   console.log('form发生了submit事件，携带数据为：', e.detail.value);
+    },
+    openAddressPicker() {
+      this.$invoke('areaPicker', 'openAddressPicker');
+    },
+    areaPickerArray(province, city, area) {
+      this.province = province;
+      this.city = city;
+      this.area = area;
+      this.provinceCode = province.code;
+      this.cityCode = city.code;
+      this.areaCode = area.code;
+      this.$apply();
+    }
+  };
+  events = {};
+  watch = {};
+  computed = {};
+  async onLoad(ops) {
+    // console.log(ops);
+    await this.receiverInf(ops.id);
+  }
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.block {
+  background: #fff;
+}
+.list_item {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #efefef;
+  padding: 35rpx 20rpx;
+  .title {
+    margin-right: 20rpx;
+  }
+  .input {
+    flex: 1;
+    input {
+      color: #333;
+    }
+  }
+}
+.btn_box {
+  margin-top: 64rpx;
+  padding: 0 24rpx;
+}
+</style>

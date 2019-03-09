@@ -1,0 +1,79 @@
+<!-- 领券中心 -->
+<template>
+    <view class='main'>
+        <repeat for="{{coupons}}" key="index" index="index" item="item">
+            <CouponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></CouponItem>
+        </repeat>
+        <view wx:if="{{coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
+            <wxc-abnor type="COUPON" title='还没有可领取的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import api from '@/api/coupon';
+import BaseMixin from '@/mixins/base';
+import CouponItem from '@/components/psersonal_center/coupon_item';
+export default class CouponCenter extends wepy.page {
+  config = {
+    navigationBarTitleText: '领券中心',
+    usingComponents: {
+      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+      'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
+      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index'
+    }
+  };
+  data = {
+    coupons: {},
+    type: 'cen'
+  };
+  mixins = [BaseMixin];
+  components = {
+    CouponItem: CouponItem
+  };
+  async couponList() {
+    const json = await api.getCouponList({
+      uid: wepy.$instance.globalData.userInfo.ID
+    });
+    this.hasError(json);
+    this.coupons = json.list;
+    this.$apply();
+  }
+  async add(vid) {
+    const json = await api.addVoucher({
+      uid: wepy.$instance.globalData.userInfo.ID,
+      vid: vid
+    });
+    this.hasError(json);
+  }
+  methods = {
+    parentFn(vid) {
+      // console.log("parent received emit event, number is: " + num);
+      this.add(vid);
+    },
+    onAbnorTap() {
+      wepy.switchTab({
+        url: '/pages/home/home'
+      });
+    }
+  };
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {
+    this.couponList();
+  }
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.main {
+  // background-color:#F5F5F5;
+  background-color: #eee;
+  padding: 30rpx 20rpx;
+  height: 95vh;
+}
+</style>

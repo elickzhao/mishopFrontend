@@ -1,0 +1,87 @@
+<!-- 用户优惠券页面 -->
+<template>
+    <wxc-tab bind:tabchange="onClick" component-id="c2" animate="{{true}}" default-index="{{0}}">
+        <wxc-tab-panel wx:for="{{tabs}}" wx:for-item="tab" tab-index="{{index}}" wx:key="*this" component-id="c2" label="{{tab}}">
+            <repeat for="{{coupons}}" key="index" index="index" item="item">
+                <CouponItem @childFn.user="parentFn" :coupon.sync="item" :type="type"></CouponItem>
+            </repeat>
+            <view wx:if="{{coupons.length < 1}}" style="height: 600rpx;overflow:hidden;">
+                <wxc-abnor type="COUPON" title='还没有{{tab}}的优惠券' button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
+            </view>
+        </wxc-tab-panel>
+    </wxc-tab>
+</template>
+
+<script>
+import wepy from 'wepy';
+import api from '@/api/coupon';
+// import tip from '@/utils/Tips';
+import BaseMixin from '@/mixins/base';
+import CouponItem from '@/components/psersonal_center/coupon_item';
+export default class couponCustomer extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的优惠券',
+    usingComponents: {
+      'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
+      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+      'wxc-progress': '../../packages/@minui/wxc-progress/dist/index',
+      'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+      'wxc-tab': '../../packages/@minui/wxc-tab/dist/index',
+      'wxc-tab-panel': '../../packages/@minui/wxc-tab/dist/panel'
+    }
+  };
+  data = {
+    coupons: {},
+    type: 'cus',
+    tabs: ['未使用', '已使用', '已作废']
+  };
+  mixins = [BaseMixin];
+  components = {
+    CouponItem: CouponItem
+  };
+  async couponList(status = 1) {
+    const json = await api.getCustCouponList({
+      uid: wepy.$instance.globalData.userInfo.ID,
+      flag: status,
+      totalPrice: 0
+    });
+    this.coupons = json.list;
+    this.hasError(json);
+    this.$apply();
+  }
+  methods = {
+    parentFn(vid) {
+      wepy.switchTab({
+        url: '/pages/home/home'
+      });
+    },
+    onAbnorTap() {
+      wepy.switchTab({
+        url: '/pages/home/home'
+      });
+    },
+    onClick: function(e) {
+      this.couponList(e.detail.key + 1);
+    }
+  };
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.container {
+  // background-color:#F5F5F5;
+  background-color: #eee;
+  padding: 30rpx 20rpx;
+  height: 95vh;
+}
+.tab__navbar {
+  white-space: nowrap;
+  width: 100%;
+  background-color: #fff;
+}
+</style>

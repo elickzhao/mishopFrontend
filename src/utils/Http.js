@@ -41,7 +41,7 @@ export default class http {
     error.statusCode = res.statusCode;
     const wxData = res.data;
     // const serverData = wxData.data;
-    // console.log(wxData)
+    console.log(wxData)
     if (wxData) {
       error.serverCode = wxData.code;
       error.message = wxData.msg;

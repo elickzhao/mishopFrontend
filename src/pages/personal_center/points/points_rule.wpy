@@ -1,0 +1,22 @@
+
+<template>
+  <PointsRule>
+  </PointsRule>
+</template>
+<script>
+import wepy from 'wepy';
+import PointsRule from '@/components/sign_in/points_rule';
+export default class PointsRules extends wepy.page {
+  config = {
+    navigationBarTitleText: '积分说明'
+  };
+  components = {
+    PointsRule: PointsRule
+  };
+  data = {};
+  onLoad() {}
+  computed = {};
+  methods = {};
+  events = {};
+}
+</script>

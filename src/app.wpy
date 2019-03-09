@@ -45,6 +45,13 @@ export default class extends wepy.app {
       'pages/personal_center/order_detail',
       'pages/personal_center/logistics',
       'pages/personal_center/favorites',
+      'pages/personal_center/coupon/coupon_customer',
+      'pages/personal_center/coupon/coupon_center',
+      'pages/personal_center/points/points',
+      'pages/personal_center/points/points_rule',
+      'pages/personal_center/address/address',
+      'pages/personal_center/address/address_add',
+      'pages/personal_center/address/address_edit',
       // 'pages/personal_center/index',
       'pages/index'
     ],
@@ -65,19 +72,19 @@ export default class extends wepy.app {
           text: '分类',
           iconPath: 'images/tab/fei.png',
           selectedIconPath: 'images/tab/feii.png'
-        }
+        },
         // {
         //   pagePath: 'pages/shop_cart',
         //   text: '购物车',
         //   iconPath: 'images/tab/ggg.png',
         //   selectedIconPath: 'images/tab/gi.png'
         // },
-        // {
-        //   pagePath: 'pages/info',
-        //   text: '我',
-        //   iconPath: 'images/tab/hui.png',
-        //   selectedIconPath: 'images/tab/huiyuan.png'
-        // }
+        {
+          pagePath: 'pages/personal_center/personal_center',
+          text: '我',
+          iconPath: 'images/tab/hui.png',
+          selectedIconPath: 'images/tab/huiyuan.png'
+        }
       ]
     }
   };

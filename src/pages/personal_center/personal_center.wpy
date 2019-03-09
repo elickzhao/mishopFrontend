@@ -22,7 +22,9 @@
   <OrderBar></OrderBar>
   <!-- /订单栏 -->
   <view class="list" wx:for="{{severList}}" wx:key="list_i" wx:for-item="list">
-    <view class="li" wx:for="{{list}}" @tap="toPage({{li.url}})" v-bind:class="{'noborder':li_i==list.length-1}" hover-class="hover" wx:key="*this" wx:for-item="li">
+    <view class="li" wx:for="{{list}}" @tap="toPage({{li.url}})" hover-class="hover" wx:key="{{li.name}}" wx:for-item="li">
+      <contact-button wx:if="{{li.icon == 'kefu.png'}}" class="contact">
+      </contact-button>
       <view class="icon">
         <image src="../../images/personal_center/sever/{{li.icon}}"></image>
       </view>
@@ -55,52 +57,52 @@ export default class PsersonalCenter extends wepy.page {
           url: '/pages/personal_center/favorites'
         },
         {
-          name: '优惠券',
+          name: '我的优惠券',
           icon: 'quan.png',
-          url: '/pages/personal_center/favorites'
+          url: '/pages/personal_center/coupon/coupon_customer'
         },
         {
-          name: '红包',
+          name: '领券中心',
           icon: 'momey.png',
-          url: '/pages/personal_center/favorites'
-        },
-        {
-          name: '任务',
-          icon: 'renw.png',
-          url: '/pages/personal_center/favorites'
+          url: '/pages/personal_center/coupon/coupon_center'
         }
+        // ,{
+        //   name: '任务',
+        //   icon: 'renw.png',
+        //   url: '/pages/personal_center/favorites'
+        // }
       ],
       [
         {
-          name: '积分明细',
-          icon: 'mingxi.png',
-          url: '/pages/personal_center/favorites'
-        },
-        {
-          name: '抽奖',
-          icon: 'choujiang.png',
-          url: '/pages/personal_center/favorites'
-        },
-        {
           name: '收货地址',
           icon: 'addr.png',
-          url: '/pages/personal_center/favorites'
+          url: '/pages/personal_center/address/address'
         },
         {
-          name: '银行卡',
-          icon: 'bank.png',
-          url: '/pages/personal_center/favorites'
-        },
-        {
-          name: '安全中心',
-          icon: 'security.png',
-          url: '/pages/personal_center/favorites'
+          name: '积分明细',
+          icon: 'mingxi.png',
+          url: '/pages/personal_center/points/points'
         },
         {
           name: '在线客服',
-          icon: 'kefu.png',
-          url: '/pages/personal_center/favorites'
+          icon: 'kefu.png'
+          // url: '/pages/personal_center/favorites'
         }
+        // {
+        //   name: '抽奖',
+        //   icon: 'choujiang.png',
+        //   url: '/pages/personal_center/favorites'
+        // },
+        // {
+        //   name: '银行卡',
+        //   icon: 'bank.png',
+        //   url: '/pages/personal_center/favorites'
+        // },
+        // {
+        //   name: '安全中心',
+        //   icon: 'security.png',
+        //   url: '/pages/personal_center/favorites'
+        // },
       ]
     ]
   };
@@ -263,5 +265,16 @@ page {
       height: 40rpx;
     }
   }
+}
+.contact {
+  width: 600rpx;
+  height: 80rpx;
+  margin: 0 auto;
+  position: absolute;
+  text-align: center;
+  line-height: 80rpx;
+  left: 0rpx; // 在客服上面
+  opacity: 0;
+  z-index: 99;
 }
 </style>
