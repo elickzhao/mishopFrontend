@@ -37,7 +37,9 @@ export default class AuthorizeMixin extends wepy.mixin {
   async onLoad(ops) {
     this.currentPage = WxUtils.getCurrentPagesUrl()
     // 如果其他页面 权限检查 需要跳转回原页面
-    if (ops.back) {
+    if (ops.id) {
+      this.backUrl = ops.back + `?id=${ops.id}`
+    } else if (ops.back) {
       this.backUrl = ops.back
     }
   }

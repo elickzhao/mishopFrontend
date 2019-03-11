@@ -67,9 +67,7 @@ export default class couponCustomer extends wepy.page {
   events = {};
   watch = {};
   computed = {};
-  onLoad() {
-    console.log('------------------>', wepy.$instance.globalData.userInfo.ID);
-  }
+  onLoad() {}
   onShow() {}
 }
 </script>

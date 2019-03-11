@@ -1,4 +1,8 @@
 import base from './base';
+import wepy from 'wepy'
+import {
+  getCartNum
+} from '@/utils/Common';
 // import goods from './goods';
 // import shop from './shop';
 // import member from './member';
@@ -17,6 +21,21 @@ export default class config extends base {
       return {
         miniNum: data.minimum
         // freight : data.freight //运费
+      }
+    })
+  }
+  static cart() {
+    let url = `${this.baseUrl}/api/news/GetShopCartList`
+    let params = {
+      uid: wepy.$instance.globalData.userInfo.ID
+    }
+    return this.get(url, params).then(data => {
+      let cartNum = getCartNum(data.list);
+      return {
+        cart: {
+          cartNum: cartNum,
+          list: data.list
+        }
       }
     })
   }

@@ -4,7 +4,7 @@
     <repeat for="{{list}}" key="index" index="index" item="item">
       <view class="list_box">
         <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
-          <navigator class="item_content" url="/pages/goods_detail?id={{item.id}}">
+          <navigator class="item_content" url="/pages/goods/goods_detail?id={{item.id}}">
             <view class="goods-info">
               <view class="img-box">
                 <image src="{{item.photo_x}}" class="img" />

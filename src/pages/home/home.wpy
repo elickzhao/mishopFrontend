@@ -41,6 +41,11 @@ import ScrollXList from '../../components/scroll_list';
 import GoodsList from '@/components/goods/goods_list';
 // import { connect,getStore } from 'wepy-redux'
 import { picRandom } from '@/utils/Common';
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  cart: store.get('cart')
+})
 export default class Home extends wepy.page {
   config = {
     usingComponents: {
@@ -71,6 +76,13 @@ export default class Home extends wepy.page {
   watch = {};
   computed = {};
   async onLoad() {
+    // 可有可无 login直接跳转首页 首页也不能转发 所以初始化与否都行 但测试时会直接打开这个页面 所以先放着
+    await store.init()
+    wx.setTabBarBadge({
+      index: 2,
+      text: `${this.cart.cartNum}`
+    });
+
     // let store = getStore()  // 这个必须引入wepy-redux的方法 getStore方法才可以用 这个方法是获得store对象 有了这个对象才能取得 state的值
     // console.log(store.getState())
     // console.log(wepy.$store.getState()) // 这个必须再app.wepy页面赋值才可以 wepy.$store = store

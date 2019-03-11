@@ -11,6 +11,12 @@ export default class base extends wepy.mixin {
       throw error;
     }
   }
+  hasErrorBack(code, callBack) {
+    if (code.serverCode) {
+      Tips.error(code.message);
+      setTimeout(callBack, 1000);
+    }
+  }
   onLoad() {
     // console.log('<-------------mix base.wepy----------------->')
     // 注入页面参数

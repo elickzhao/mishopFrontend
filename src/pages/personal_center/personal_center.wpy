@@ -133,6 +133,7 @@ export default class PsersonalCenter extends wepy.page {
     return json.score;
   }
   async onLoad() {
+    await this.checkLogin()
     let userDetails = wepy.getStorageSync('UserDetails');
     if (userDetails) {
       this.userinfo = userDetails;
@@ -158,7 +159,7 @@ export default class PsersonalCenter extends wepy.page {
     },
     // 用户点击列表项
     toPage(url) {
-      console.log(url);
+      // console.log(url);
       this.$root.$navigate(url);
     }
   };

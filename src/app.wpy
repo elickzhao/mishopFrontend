@@ -40,6 +40,8 @@ export default class extends wepy.app {
       'pages/goods/category',
       'pages/goods/search',
       'pages/goods/search_goods_list',
+      'pages/goods/goods_detail',
+      'pages/shop_cart/shop_cart',
       'pages/personal_center/personal_center',
       'pages/personal_center/order_list',
       'pages/personal_center/order_detail',
@@ -73,12 +75,12 @@ export default class extends wepy.app {
           iconPath: 'images/tab/fei.png',
           selectedIconPath: 'images/tab/feii.png'
         },
-        // {
-        //   pagePath: 'pages/shop_cart',
-        //   text: '购物车',
-        //   iconPath: 'images/tab/ggg.png',
-        //   selectedIconPath: 'images/tab/gi.png'
-        // },
+        {
+          pagePath: 'pages/shop_cart/shop_cart',
+          text: '购物车',
+          iconPath: 'images/tab/ggg.png',
+          selectedIconPath: 'images/tab/gi.png'
+        },
         {
           pagePath: 'pages/personal_center/personal_center',
           text: '我',

@@ -2,7 +2,7 @@
  * @Author: elick
  * @LastEditors: elick
  * @Date: 2019-02-28 01:44:02
- * @LastEditTime: 2019-03-07 00:21:37
+ * @LastEditTime: 2019-03-11 01:16:07
  * @Description: 优惠券api
  */
 import base from './base';
@@ -45,6 +45,20 @@ export default class coupon extends base {
     })
   }
 
+  /**
+   * 获取优惠券
+   * @param {*} params 
+   */
+  static addVoucher(params) {
+    let url = `${this.baseUrl}/api/news/addVoucherNew`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
+  }
+
+  
 
 
 }

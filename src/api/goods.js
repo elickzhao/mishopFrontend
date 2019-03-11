@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-03-05 12:46:57
+ * @LastEditTime: 2019-03-11 01:01:21
  * @Description:  商品api请求类
  */
 import base from './base';
@@ -45,7 +45,7 @@ export default class goods extends base {
       }
     })
   }
-  
+
   /**
    * 获取子分类
    * @param {*} params 
@@ -53,6 +53,18 @@ export default class goods extends base {
   static getChildGoodsCatetoryList(params) {
     let url = `${this.baseUrl}/api/news/getChildGoodsCatetoryList`;
     return this.get(url, params)
+  }
+  /**
+   * 商品详情
+   * @param {*} params 
+   */
+  static goodsDetail(params) {
+    let url = `${this.baseUrl}/api/news/goods`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
   }
 
   /**
@@ -71,8 +83,67 @@ export default class goods extends base {
    */
   static goodsUnFavorite(params) {
     let url = `${this.baseUrl}/api/news/goodsFavoriteDelete`;
-    return this.get(url, params)
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
   }
+  /**
+   * [favoriteInfo 添加收藏]
+   *
+   * @return  {[type]}  [return description]
+   */
+  static goodsFavorite(params) {
+    let url = `${this.baseUrl}/api/news/goodsFavoriteAdd`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
+  }
+  /**
+   * [favoriteInfo 是否收藏]
+   *
+   * @return  {[type]}  [return description]
+   */
+  static goodsIsFavorite(params) {
+    let url = `${this.baseUrl}/api/news/goodsIsFavorite`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
+  }
+
+  /**
+   * [favoriteInfo 加入购物车]
+   *
+   * @return  {[type]}  [return description]
+   */
+  static addCart(params) {
+    let url = `${this.baseUrl}/api/news/goodsCartAdd`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
+  }
+  /**
+   * [favoriteInfo 购物车商品列表]
+   *
+   * @return  {[type]}  [return description]
+   */
+  static cartList(params) {
+    let url = `${this.baseUrl}/api/news/getGoodsCartList`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
+  }
+
+
 
   // ------------------ 以下为老的
 

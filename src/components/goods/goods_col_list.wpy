@@ -1,7 +1,7 @@
 <!--商品列表模块-->
 <template>
     <scroll-view scroll-y="true" class="swiper-item-box">
-        <navigator wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
+        <navigator wx:for="{{list}}" wx:key="item" url="/pages/goods/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
             <view class="shop_col_item">
                 <image class="image" mode="aspectFill" style="height:150px" src="{{imgUrl}}{{item.photo_x}}"></image>
                 <div class="main">

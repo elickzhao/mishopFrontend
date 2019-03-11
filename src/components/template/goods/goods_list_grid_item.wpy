@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-    <navigator class="list shadow" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
+    <navigator class="list shadow" url="/pages/goods/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
         <view class="image_box">
             <image lazy-load src="{{imgUrl}}{{item.photo_x}}"></image>
         </view>

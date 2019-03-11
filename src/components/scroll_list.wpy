@@ -89,7 +89,7 @@
 		<wxc-flex>
 			<block wx:for="{{list}}" wx:key="item">
 				<view class="item">
-					<navigator class="scroll-list shadow" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
+					<navigator class="scroll-list shadow" url="/pages/goods/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
 						<view class="image_box">
 							<image mode="aspectFit" src="{{imgUrl}}{{item.photo_x}}"></image>
 						</view>

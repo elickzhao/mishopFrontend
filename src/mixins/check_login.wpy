@@ -5,18 +5,45 @@ import wepy from 'wepy';
 import WxUtils from '@/utils/WxUtils';
 export default class CheckLogin extends wepy.mixin {
   data = {};
-  async onLoad() {
-    // console.log(wepy.$instance.globalData);
+  // async onLoad() {
+  //   // console.log(wepy.$instance.globalData);
+  //   let res = await wepy.getSetting();
+  //   // 没有用户信息或者没有授权都跳转到登录页
+  //   if (
+  //     !wepy.$instance.globalData.userInfo ||
+  //     !res.authSetting['scope.userInfo']
+  //   ) {
+  //     let url = '/pages/home/login?back=' + WxUtils.getCurrentPagesUrl();
+  //     wx.showModal({
+  //       title: '提示',
+  //       content: '请先授权!否则无法购买商品!',
+  //       showCancel: false, // 是否显示取消按钮,
+  //       confirmText: '授权', // 确定按钮的文字，默认为取消，最多 4 个字符,
+  //       confirmColor: '#3CC51F', // 确定按钮的文字颜色,
+  //       success: function(res) {
+  //         if (res.confirm) {
+  //           wepy.redirectTo({
+  //             url: url
+  //           });
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
+
+  // 检验登录
+  async checkLogin() {
     let res = await wepy.getSetting();
     // 没有用户信息或者没有授权都跳转到登录页
     if (
       !wepy.$instance.globalData.userInfo ||
       !res.authSetting['scope.userInfo']
     ) {
-      let url = '/pages/home/login?back=' + WxUtils.getCurrentPagesUrl();
+      let back = this.backUrl ? this.backUrl : WxUtils.getCurrentPagesUrl();
+      let url = '/pages/home/login?back=' + back;
       wx.showModal({
         title: '提示',
-        content: '请先授权!否则无法购买商品!',
+        content: '请先授权!否则无法使用!',
         showCancel: false, // 是否显示取消按钮,
         confirmText: '授权', // 确定按钮的文字，默认为取消，最多 4 个字符,
         confirmColor: '#3CC51F', // 确定按钮的文字颜色,

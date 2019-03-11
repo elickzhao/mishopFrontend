@@ -6,7 +6,7 @@
         <image src="{{item.photo_x}}" binderror="nopic({{index}})"></image>
       </view>
       <view class="goods">
-        <navigator class="item_content" url="/pages/goods_detail?id={{item.pid}}">
+        <navigator class="item_content" url="/pages/goods/goods_detail?id={{item.pid}}">
           <view class="product_name">{{item.name}}</view>
           <!-- <view class="product_rule">规格:{{item.goodsSkuVals}}</view> -->
           <view class="product_info">

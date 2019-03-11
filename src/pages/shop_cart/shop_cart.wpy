@@ -1,0 +1,43 @@
+
+<!-- 购物车 -->
+<template>
+  <view class="shop_cart">
+    <ShopCart></ShopCart>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import ShopCart from '@/components/shop_cart/shop_cart';
+// import BaseMixin from '@/mixins/base';
+import CheckLoginMixin from '@/mixins/check_login';
+export default class shopCart extends wepy.page {
+  config = {
+    navigationBarTitleText: '购物车',
+    usingComponents: {
+      'wxc-elip': '../../packages/@minui/wxc-elip/dist/index'
+    }
+  };
+  components = {
+    ShopCart: ShopCart
+  };
+  mixins = [CheckLoginMixin];
+  data = {};
+  async onLoad() {
+    // 检测用户信息
+    await this.checkLogin();
+  }
+  onShow() {
+    this.$invoke('ShopCart', 'getCartListMethod');
+  }
+  computed = {};
+  methods = {};
+  events = {};
+}
+</script>
+
+<style lang="less">
+.shop_cart {
+  background: #f7f7f7;
+}
+</style>
