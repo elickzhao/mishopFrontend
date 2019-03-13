@@ -1,3 +1,4 @@
 export const ADD_ADDRESS = 'ADD_ADDRESS'
 export const INIT_ADDRESS = 'INIT_ADDRESS'
 export const SAVE_ADDRESS = 'SAVE_ADDRESS'
+export const CHANGE_ADDRESS = 'CHANGE_ADDRESS'

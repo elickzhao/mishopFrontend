@@ -37,7 +37,7 @@ import SwipeDelete from '@/components/common/wepy-swipe-delete';
 import BaseMixin from '@/mixins/base';
 import { connect } from 'wepy-redux';
 // import { initAddress, initAddressAsync } from '@/store/actions';
-import { initAddress, saveAddress } from '@/store/actions';
+import { initAddress, saveAddress, changeAddress } from '@/store/actions';
 @connect({
   addressList(state) {
     return state.address.list;
@@ -183,15 +183,13 @@ export default class Address extends wepy.page {
     // 左滑删除
     handleDelItem(itemData) {
       this.delUserAddress(itemData.id);
-      // console.log('左滑删除');
-      // console.log(itemData.id);
     },
-    refreshList(val) {
-      if (val == undefined) return;
-      console.log('val.....', val);
-      this.addressList = val;
-      this.$apply();
-    },
+    // refreshList(val) {
+    //   if (val == undefined) return;
+    //   console.log('val.....', val);
+    //   this.addressList = val;
+    //   this.$apply();
+    // },
     setOrgType(type) {
       this.type = type;
     },
@@ -201,9 +199,8 @@ export default class Address extends wepy.page {
         return;
       }
       var id = e.currentTarget.dataset.id;
-      console.log('id==' + id);
-      // 存储地址ID
-      // wepy.setStorageSync(ADDRESS_ID, id);
+      wepy.$store.dispatch(changeAddress(id));
+      // console.log('id==' + id);
       wepy.navigateBack({
         url: '/pages/comfire_order?from=selAdd'
       });

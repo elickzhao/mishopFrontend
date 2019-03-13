@@ -66,11 +66,10 @@
 
 <script>
 import wepy from 'wepy';
-import tip from '@/utils/Tips';
+// import tip from '@/utils/Tips';
+// import api from '@/api/order';
 import OrderMixin from '@/mixins/order';
 import OrderItemList from '@/components/psersonal_center/order_item_list';
-import api from '@/api/order';
-// import { SYSTEM_INFO, USER_SPECICAL_INFO } from '../utils/constant';
 export default class orderItem extends wepy.component {
   props = {
     orderList: {
@@ -80,25 +79,25 @@ export default class orderItem extends wepy.component {
       list: []
     }
   };
-  async editOrderInfo(orderNo, flag) {
-    // console.log("调用方法");
-    let that = this;
-    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let uid = wepy.$instance.globalData.userInfo.ID;
-    const json = await api.editOrderInfo({
-      query: {
-        id: orderNo,
-        flag: flag,
-        uid: uid
-      }
-    });
-    if (json.data.code == 0) {
-      this.$emit('refreshOrderList', that.flag);
-    } else {
-      tip.error(json.data.msg);
-    }
-    that.$apply();
-  }
+  // async editOrderInfo(orderNo, flag) {
+  //   // console.log("调用方法");
+  //   let that = this;
+  //   // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+  //   let uid = wepy.$instance.globalData.userInfo.ID;
+  //   const json = await api.editOrderInfo({
+  //     query: {
+  //       id: orderNo,
+  //       flag: flag,
+  //       uid: uid
+  //     }
+  //   });
+  //   if (json.code == 0) {
+  //     this.$emit('refreshOrderList', that.flag);
+  //   } else {
+  //     tip.error(json.data.msg);
+  //   }
+  //   that.$apply();
+  // }
   mixins = [OrderMixin];
   components = {
     OrderItemList: OrderItemList

@@ -119,7 +119,7 @@ export default class PsersonalCenter extends wepy.page {
             photo: userInfo.avatarUrl,
             username: userInfo.nickName
           };
-          wepy.setStorageSync('UserDetails', that.userinfo);
+          wepy.setStorageSync('UserDetails', that.userInfo);
           that.$apply();
         }
       });

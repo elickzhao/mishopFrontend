@@ -2,7 +2,7 @@
  * @Author: elick
  * @LastEditors: elick
  * @Date: 2019-02-28 01:44:02
- * @LastEditTime: 2019-03-04 16:39:52
+ * @LastEditTime: 2019-03-12 23:48:42
  * @Description: 订单api
  */
 import base from './base';
@@ -67,8 +67,56 @@ export default class order extends base {
    * @param {*} params 
    */
   static getPayOrderDetail(params) {
-    let url = `${this.baseUrl}/api/news/getPayOrderDetail`;
+    let url = `${this.baseUrl}/api/news/getPayOrderDetailNew`;
     return this.get(url, params)
+  }
+  /**
+   * 购物车提交订单
+   * @param {*} params 
+   */
+  static preOrder(params) {
+    let url = `${this.baseUrl}/api/news/placeOrder`;
+    return this.get(url, params)
+  }
+  /**
+   * 购物车提交订单
+   * @param {*} params 
+   */
+  static getShop(params) {
+    let url = `${this.baseUrl}/api/Address/getShops`;
+    return this.get(url)
+  }
+  /**
+   * 购物车提交订单
+   * @param {*} params 
+   */
+  static messageInfo(params) {
+    let url = `${this.baseUrl}/api/news/messageInfo`;
+    return this.get(url,params)
+  }
+  /**
+   * 保存订单
+   * @param {*} params 
+   */
+  static saveBuyCart(params) {
+    let url = `${this.baseUrl}/api/Payment/saveBuyCart`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
+  }
+  /**
+   * 保存订单
+   * @param {*} params 
+   */
+  static toPay(params) {
+    let url = `${this.baseUrl}/api/Wxpay/wxpayNew`;
+    return this.get(url, params).then(data => {
+      return data
+    }).catch(error => {
+      return error
+    })
   }
 
 

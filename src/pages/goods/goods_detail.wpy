@@ -145,17 +145,20 @@
 
 <script>
 import wepy from 'wepy';
-import store from '@/store/utils';
 import api from '@/api/goods';
 import coupon from '@/api/coupon';
 import tip from '@/utils/Tips';
-import { getCartNum } from '@/utils/Common';
+// import { getCartNum } from '@/utils/Common';
 import WxParse from '@/utils/wxParse/wxParse';
 import BaseMixin from '@/mixins/base';
 import GotopMixin from '@/mixins/gotop_mix';
 import CheckLoginMixin from '@/mixins/check_login';
 import CouponGoodsList from '@/components/goods/coupon_goods_list';
-
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  cart: store.get('cart')
+})
 export default class GoodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情',
@@ -206,8 +209,9 @@ export default class GoodsDetail extends wepy.page {
     special: 0 // //  0-正常入库;1-特价专区和换货专区,
   };
   async onLoad(option) {
-    store.init();
+    await store.init();
     this.miniNum = wepy.$store.getState().cache.miniNum;
+    this.shopCartNum = this.cart.cartNum;
     this.backUrl = '/pages/goods/goods_detail&id=' + option.id; // 这个路径一定要放在 authorize 前面 要不就不会使用这个返
     this.goodsId = option.id;
     this.$apply();
@@ -226,7 +230,8 @@ export default class GoodsDetail extends wepy.page {
       delay: 0
     });
     this.animation = animation;
-    this.getShopCartNum();
+    // this.getShopCartNum();
+    // this.shopCartNum = this.cart.cartNum
   }
   methods = {
     // 显示图片
@@ -300,6 +305,12 @@ export default class GoodsDetail extends wepy.page {
       this.takeCoupon(vid);
     }
   };
+  watch = {
+    shopCartNum(newValue, oldValue) {
+      this.cart.cartNum = newValue
+      store.save('cart', this.cart)
+    }
+  };
   // 商品详情
   async getGoodsDetail() {
     const json = await api.goodsDetail({
@@ -338,6 +349,7 @@ export default class GoodsDetail extends wepy.page {
   }
   // 优惠券列表
   async couponList() {
+    console.log(wepy.$instance.globalData.userInfo.ID, '<--------------------------------')
     const json = await coupon.getCouponList({
       uid: wepy.$instance.globalData.userInfo.ID
     });
@@ -406,19 +418,19 @@ export default class GoodsDetail extends wepy.page {
   }
 
   // 购物车商品数量
-  async getShopCartNum() {
-    const json = await api.cartList({
-      uid: wepy.$instance.globalData.userInfo.ID
-    });
-    this.hasError(json);
-    let cartNum = getCartNum(json.list);
-    // let cartNum = 0;
-    // for (var i = 0; i < data.list.length; i++) {
-    //   cartNum += parseInt(data.list[i].num);
-    // }
-    this.shopCartNum = cartNum;
-    this.$apply();
-  }
+  // async getShopCartNum() {
+  //   const json = await api.cartList({
+  //     uid: wepy.$instance.globalData.userInfo.ID
+  //   });
+  //   this.hasError(json);
+  //   let cartNum = getCartNum(json.list);
+  //   // let cartNum = 0;
+  //   // for (var i = 0; i < data.list.length; i++) {
+  //   //   cartNum += parseInt(data.list[i].num);
+  //   // }
+  //   this.shopCartNum = cartNum;
+  //   this.$apply();
+  // }
 
   async doTakeCart() {
     const json = await api.addCart({

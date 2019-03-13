@@ -2,10 +2,8 @@
 <script>
 import wepy from 'wepy';
 import tip from '@/utils/Tips';
-import BaseMixin from '@/mixins/base';
 import api from '@/api/order';
-export default class Example extends wepy.mixin {
-  mixins = [BaseMixin];
+export default class Order extends wepy.mixin {
   data = {};
   // 编辑订单 目前只是用于退款
   async editOrderInfo(orderNo, flag) {
@@ -15,17 +13,35 @@ export default class Example extends wepy.mixin {
       id: orderNo,
       flag: flag
     });
+    this.hasError(json);
     let msg = {
       refund: '申请退款成功!',
       cancel: '取消订单成功!',
       receive: '确认收货完成!'
     };
+    let refreshFlag = {
+      refund: 4,
+      cancel: 0,
+      receive: 3
+    };
     tip.success(msg[flag]);
-    wepy.switchTab({
-      url: '/pages/personal_center/personal_center'
-    });
-    this.hasError(json);
+    this.$root.$navigate(`/pages/personal_center/order_list?type=${refreshFlag[flag]}`);
+    // this.$invoke('OrderList','refreshOrderList', refreshFlag);
+    // this.$emit('refreshOrderList', refreshFlag);
+    // this.$root.$navigate(`/pages/personal_center/order_list?type=${status}`);
+    // wepy.switchTab({
+    //   url: '/pages/personal_center/personal_center'
+    // });
     console.info('[order] ', msg[flag]);
+  }
+  hasError(code) {
+    if (code.serverCode) {
+      tip.error(code.message);
+      const error = {};
+      error.title = '错误信息';
+      error.message = code.message;
+      throw error;
+    }
   }
   methods = {
     // 退货操作

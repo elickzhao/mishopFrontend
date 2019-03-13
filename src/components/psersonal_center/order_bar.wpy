@@ -58,6 +58,10 @@ export default class OrderBar extends wepy.component {
     this.orderTypeLise = await this.getOrderCount();
     this.$apply();
   }
+  async onShow() {
+    this.orderTypeLise = await this.getOrderCount();
+    this.$apply();
+  }
   methods = {
     toOrderType(status) {
       // console.log(status)

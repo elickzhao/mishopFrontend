@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-03-11 21:54:00
+ * @LastEditTime: 2019-03-11 23:59:13
  * @Description:  公共工具函数
  */
 
@@ -168,12 +168,21 @@ function isPrevpage(url) {
 }
 
 // 购物车商品数量
-function getCartNum(list){
+function getCartNum(list) {
   let cartNum = 0;
   for (var i = 0; i < list.length; i++) {
     cartNum += parseInt(list[i].num);
   }
   return cartNum;
+}
+
+// 获取角标
+function getBadge(cartNum) {
+  let badge = '';
+  if (cartNum != 0) {
+    badge = `${cartNum}`;
+  }
+  return badge;
 }
 
 module.exports = {
@@ -191,5 +200,6 @@ module.exports = {
   picRandom: picRandom,
   isPrevpage: isPrevpage,
   isExist: isExist,
-  getCartNum:getCartNum
+  getCartNum: getCartNum,
+  getBadge: getBadge
 }

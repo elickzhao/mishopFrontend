@@ -17,9 +17,9 @@
               </view>
               <!--  -->
               <!-- <view class="lable">
-                  <view class="goods-lable">{{item.goodsSkuValName}}</view>
-                  <view class="bo-label" wx:if="{{item.type==2}}">补货</view>
-                </view> -->
+                    <view class="goods-lable">{{item.goodsSkuValName}}</view>
+                    <view class="bo-label" wx:if="{{item.type==2}}">补货</view>
+                  </view> -->
               <view class="goods-price">¥ {{item.price}}</view>
               <view class="buy-num">
                 <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
@@ -58,14 +58,22 @@
 import wepy from 'wepy';
 import api from '@/api/shop_cart';
 import tip from '@/utils/Tips';
+import { getCartNum, getBadge } from '@/utils/Common';
 import BaseMixin from '@/mixins/base';
+import CheckLoginMixin from '@/mixins/check_login';
 import SwipeDelete from '@/components/common/wepy-swipe-delete';
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  cart: store.get('cart')
+})
 export default class ShopCart extends wepy.component {
-  mixins = [BaseMixin];
+  mixins = [BaseMixin, CheckLoginMixin];
   components = {
     SwipeDelete
   };
   data = {
+    cart: {},
     list: [],
     noSelect: false,
     saveHidden: true,
@@ -78,7 +86,7 @@ export default class ShopCart extends wepy.component {
       uid: wepy.$instance.globalData.userInfo.ID
     });
     this.hasError(json);
-    console.log(json);
+    // console.log(json);
     this.list = json.list;
     this.totalPrice = json.totalPrice;
     for (var i = 0; i < this.list.length; i++) {
@@ -87,7 +95,7 @@ export default class ShopCart extends wepy.component {
         break;
       }
     }
-    console.log(this.list);
+    // console.log(this.list);
     this.$apply();
   }
   // 选择商品
@@ -160,12 +168,39 @@ export default class ShopCart extends wepy.component {
     this.allChecked = !this.allChecked;
     this.$apply();
   }
-  onLoad() {
+  async onLoad() {
+    this.checkLogin();
     this.operating = false;
+    await store.init();
+    if (this.cart.cartNum > 0) {
+      let badge = getBadge(this.cart.cartNum);
+      wx.setTabBarBadge({
+        index: 2,
+        text: badge
+      });
+    }
     // that.list = bb.result.products;
     // console.log(bb.result.products)
     // that.getCartList();
   }
+  watch = {
+    cart(newValue, oldValue) {
+      let badge = getBadge(this.cart.cartNum);
+      wx.setTabBarBadge({
+        index: 2,
+        text: badge
+      });
+      // getBadge()
+    },
+    list(newValue, oldValue) {
+      // console.log(`num value: ${oldValue} -> ${newValue}`);
+      // console.log('oldValue:', oldValue);
+      // console.log('newValue:', newValue);
+      this.cart.cartNum = getCartNum(newValue);
+      this.cart.list = newValue;
+      store.save('cart', this.cart);
+    }
+  };
   computed = {
     totalPrice() {
       let all = 0;
@@ -194,8 +229,8 @@ export default class ShopCart extends wepy.component {
       this.checkAllGoods();
     },
     // 获取购物车商品列表 父页面执行的方法
-    getCartListMethod() {
-      this.getCartList();
+    async getCartListMethod() {
+      await this.getCartList();
     },
     // 减商品
     jianBtnTap(e) {
@@ -260,7 +295,11 @@ export default class ShopCart extends wepy.component {
         return;
       }
       wepy.navigateTo({
-        url: '/pages/comfire_order?purchasetype=' + purType + '&ids=' + toastStr
+        url:
+          '/pages/shop_cart/comfire_order?purchasetype=' +
+          purType +
+          '&ids=' +
+          toastStr
       });
     },
     // 会首页
@@ -275,6 +314,9 @@ export default class ShopCart extends wepy.component {
 </script>
 
 <style lang="less">
+page {
+  height: 80%;
+}
 .goods-info {
   border-bottom: 1px solid #eee;
   display: flex;

@@ -130,6 +130,11 @@ export default class OrderList extends wepy.page {
       });
     }
   };
+  events = {
+    refreshOrderList(msg) {
+      this.getMyOrder();
+    }
+  };
 
   onShow() {}
 }

@@ -3,7 +3,7 @@
  * @LastEditors: elick
  * @Description: 收货地址reduce
  * @Date: 2019-03-08 17:06:34
- * @LastEditTime: 2019-03-09 14:42:05
+ * @LastEditTime: 2019-03-12 01:48:44
  */
 import {
   handleActions
@@ -11,7 +11,8 @@ import {
 import {
   ADD_ADDRESS,
   INIT_ADDRESS,
-  SAVE_ADDRESS
+  SAVE_ADDRESS,
+  CHANGE_ADDRESS
 } from '../types/address';
 
 const address = {
@@ -52,6 +53,13 @@ export default handleActions({
         state.default = state.current = item.id
       }
     })
+    // console.log(state)
+    return {
+      ...state
+    }
+  },
+  [CHANGE_ADDRESS](state, action) {
+    state.current = action.payload
     // console.log(state)
     return {
       ...state
