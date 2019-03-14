@@ -83,7 +83,7 @@ export default class orderItem extends wepy.component {
   //   // console.log("调用方法");
   //   let that = this;
   //   // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-  //   let uid = wepy.$instance.globalData.userInfo.ID;
+  //   let uid = wepy.$instance.globalData.userIDS.ID;
   //   const json = await api.editOrderInfo({
   //     query: {
   //       id: orderNo,
@@ -127,7 +127,7 @@ export default class orderItem extends wepy.component {
     //   this.orderNo = e.currentTarget.dataset.id;
     //   let orderSn = e.currentTarget.dataset.ordersn;
     //   // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    //   let uid = wepy.$instance.globalData.userInfo.ID;
+    //   let uid = wepy.$instance.globalData.userIDS.ID;
     //   const pay = await api.toPay({
     //     query: {
     //       uid: uid,

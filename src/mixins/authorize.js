@@ -112,6 +112,8 @@ export default class AuthorizeMixin extends wepy.mixin {
     wx.getUserInfo({
       success: function (res) {
         let userInfo = res.userInfo;
+        // 保存用户信息
+        wepy.setStorageSync('userInfo', userInfo);
         let json = api.user2session({
           openId: that.openid,
           NickName: userInfo.nickName,
@@ -128,7 +130,7 @@ export default class AuthorizeMixin extends wepy.mixin {
     // 注册完成后跳转
     this.jump()
   }
-  /**
+    /**
    * 检查设置权限
    */
   async checkSetting() {
@@ -146,6 +148,8 @@ export default class AuthorizeMixin extends wepy.mixin {
    */
   jump() {
     console.info(`[login] login end `);
+    console.info(`[login] jump`, this.backUrl);
+
     // 跳转
     WxUtils.backOrRedirect(this.backUrl)
     // wepy.redirectTo({

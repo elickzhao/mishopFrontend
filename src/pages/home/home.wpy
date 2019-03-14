@@ -25,6 +25,9 @@
     <GoodsList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodsList>
     <!-- /商品列表 -->
     <wxc-loadmore is-end='{{isPageReachBottom}}' icon='{{true}}'></wxc-loadmore>
+    <!-- 悬浮按钮 -->
+    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
+    <!-- /悬浮按钮 -->
   </view>
 </template>
 
@@ -32,8 +35,10 @@
 import wepy from 'wepy';
 import config from '@/api/config';
 import goods from '@/api/goods';
+import { getBadge } from '@/utils/Common';
 import BaseMixin from '@/mixins/base';
 import Pagination from '@/mixins/pagination';
+import GotopMixin from '@/mixins/gotop_mix';
 import SearchBar from '@/components/template/home_search_bar';
 import SwiperBar from '../../components/template/swiper_bar';
 import NavList from '../../components/nav_list';
@@ -53,17 +58,19 @@ export default class Home extends wepy.page {
       'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index',
-      'wxc-label': '../../packages/@minui/wxc-label/dist/index'
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index',
+      'wux-floating-button': '../../packages/floating-button/index'
     }
   };
   data = {
+    showCom: 'gotop',
     // 广告列表
     swipers: [],
     hotList: [],
     page: {},
     picUrl: ''
   };
-  mixins = [BaseMixin, Pagination];
+  mixins = [BaseMixin, Pagination, GotopMixin];
   components = {
     SearchBar: SearchBar,
     SwiperBar: SwiperBar,
@@ -78,13 +85,8 @@ export default class Home extends wepy.page {
   async onLoad() {
     // 可有可无 login直接跳转首页 首页也不能转发 所以初始化与否都行 但测试时会直接打开这个页面 所以先放着
     await store.init();
-    if (this.cart.cartNum > 0) {
-      let badge = getBadge(this.cart.cartNum);
-      wx.setTabBarBadge({
-        index: 2,
-        text: badge
-      });
-    }
+    // 处理购物车下标
+    getBadge(this.cart.cartNum);
     // let store = getStore()  // 这个必须引入wepy-redux的方法 getStore方法才可以用 这个方法是获得store对象 有了这个对象才能取得 state的值
     // console.log(store.getState())
     // console.log(wepy.$store.getState()) // 这个必须再app.wepy页面赋值才可以 wepy.$store = store

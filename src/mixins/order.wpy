@@ -7,7 +7,7 @@ export default class Order extends wepy.mixin {
   data = {};
   // 编辑订单 目前只是用于退款
   async editOrderInfo(orderNo, flag) {
-    let uid = wepy.$instance.globalData.userInfo.ID;
+    let uid = wepy.$instance.globalData.userIDS.ID;
     const json = await api.editOrderInfo({
       uid: uid,
       id: orderNo,
@@ -25,13 +25,24 @@ export default class Order extends wepy.mixin {
       receive: 3
     };
     tip.success(msg[flag]);
-    this.$root.$navigate(`/pages/personal_center/order_list?type=${refreshFlag[flag]}`);
-    // this.$invoke('OrderList','refreshOrderList', refreshFlag);
-    // this.$emit('refreshOrderList', refreshFlag);
+
+    wepy.redirectTo({
+      url: `/pages/personal_center/order_list?type=${refreshFlag[flag]}`
+    });
+
+    // this.$root.$navigate(
+    //   `/pages/personal_center/order_list?type=${refreshFlag[flag]}`
+    // );
+
+    // this.$emit('refreshOrderList', refreshFlag[flag]);
+    // if (flag == 'refund') {
+    //   // 退款这里还是有问题 不能刷新页面
+    //   wepy.navigateBack({
+    //     delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+    //   });
+    // }
     // this.$root.$navigate(`/pages/personal_center/order_list?type=${status}`);
-    // wepy.switchTab({
-    //   url: '/pages/personal_center/personal_center'
-    // });
+
     console.info('[order] ', msg[flag]);
   }
   hasError(code) {
@@ -81,11 +92,12 @@ export default class Order extends wepy.mixin {
     // 支付操作
     // XXX 立即付款需要验证测试
     async payMoney(e) {
+      let that = this;
       this.orderNo = e.currentTarget.dataset.id;
       let orderSn = e.currentTarget.dataset.ordersn; // 这个居然大小写敏感
       // console.log(orderSn);
       // console.log(e);
-      let uid = wepy.$instance.globalData.userInfo.ID;
+      let uid = wepy.$instance.globalData.userIDS.ID;
       const pay = await api.toPay({
         uid: uid,
         order_sn: orderSn,
@@ -106,8 +118,8 @@ export default class Order extends wepy.mixin {
             setTimeout(() => {
               // 支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();
-              wepy.navigateTo({
-                url: '/pages/common/pay_success?orderNo=' + this.orderNo
+              wepy.redirectTo({
+                url: '/pages/shop_cart/pay_success?orderNo=' + that.orderNo
               });
             }, 2000);
           },
@@ -118,8 +130,6 @@ export default class Order extends wepy.mixin {
           }
         });
       } else {
-        // console.log("bbbbbbbbbb");
-        // console.log(pay);
         tip.alert(pay.data.err);
       }
     }

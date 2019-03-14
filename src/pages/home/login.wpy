@@ -37,7 +37,7 @@
       store.init()
       // 如果全局变量有 userinfo就不用登录
       let res = await wepy.getSetting();
-      if (!wepy.$instance.globalData.userInfo || !res.authSetting['scope.userInfo']) {
+      if (!wepy.$instance.globalData.userIDS || !res.authSetting['scope.userInfo']) {
         await this.login()
       } else {
         this.showLoading().then(() => {

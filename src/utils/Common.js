@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-03-11 23:59:13
+ * @LastEditTime: 2019-03-15 01:56:58
  * @Description:  公共工具函数
  */
 
@@ -178,11 +178,17 @@ function getCartNum(list) {
 
 // 获取角标
 function getBadge(cartNum) {
-  let badge = '';
-  if (cartNum != 0) {
-    badge = `${cartNum}`;
+  if (cartNum > 0) {
+    wx.setTabBarBadge({
+      index: 2,
+      text: `${cartNum}`
+    });
+  }else{
+    wx.removeTabBarBadge({
+      index: 2 //tabBar的哪一项，从左边算起,
+    });
+    
   }
-  return badge;
 }
 
 module.exports = {

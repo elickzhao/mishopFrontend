@@ -22,10 +22,10 @@
     };
     async getSignDate() {
       let that = this;
-      let userInfo = wepy.getStorageSync('userInfo');
-      let uid = userInfo.ID;
+      // let userInfo = wepy.getStorageSync('userInfo');
+      // let uid = userInfo.ID;
       const json = await api.getSignDate({
-        uid: uid
+        uid: wepy.$instance.globalData.userIDS.ID
       });
       this.list = json;
       that.showLoading = false;

@@ -49,7 +49,7 @@ export default class ShopItemList extends wepy.component {
   };
   // XXX 这个暂时未使用
   async applyRefund(itemId) {
-    let openId = wepy.$instance.globalData.userInfo.ID;
+    let openId = wepy.$instance.globalData.userIDS.ID;
     const json = await api.refundApply({
       query: {
         openId: openId,

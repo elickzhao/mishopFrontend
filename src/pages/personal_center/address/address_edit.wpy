@@ -78,7 +78,7 @@ export default class Example extends wepy.page {
     // console.log('address:');
     // console.log(this.id);
     const json = await api.saveAddress({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       id: this.id,
       receiver: address.receiverName,
       tel: address.mobile,

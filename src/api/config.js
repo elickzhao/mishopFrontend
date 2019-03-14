@@ -1,7 +1,8 @@
 import base from './base';
 import wepy from 'wepy'
 import {
-  getCartNum
+  getCartNum,
+  isExist
 } from '@/utils/Common';
 // import goods from './goods';
 // import shop from './shop';
@@ -25,19 +26,31 @@ export default class config extends base {
     })
   }
   static cart() {
-    let url = `${this.baseUrl}/api/news/GetShopCartList`
-    let params = {
-      uid: wepy.$instance.globalData.userInfo.ID
-    }
-    return this.get(url, params).then(data => {
-      let cartNum = getCartNum(data.list);
-      return {
+    let cartData = {}
+    // 当没有用户ID时就初始化cart
+    if (isExist(wepy.$instance.globalData.userIDS)) {
+      let url = `${this.baseUrl}/api/news/GetShopCartList`
+      let params = {
+        uid: wepy.$instance.globalData.userIDS.ID
+      }
+      cartData = this.get(url, params).then(data => {
+        let cartNum = getCartNum(data.list);
+        return {
+          cart: {
+            cartNum: cartNum,
+            list: data.list
+          }
+        }
+      })
+    } else {
+      cartData = {
         cart: {
-          cartNum: cartNum,
-          list: data.list
+          cartNum: '',
+          list: {}
         }
       }
-    })
+    }
+    return cartData
   }
 
   static getSwipers() {

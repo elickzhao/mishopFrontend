@@ -2,7 +2,7 @@ import Tips from './Tips';
 import wepy from 'wepy';
 
 export default class WxUtils {
-  static tabUrls = ['/pages/home/home', '/pages/personal_center/personal_center', '/pages/goods/category', '/pages/goods/cart', '/pages/customer/index', '/pages/customer/index_template'];
+  static tabUrls = ['/pages/home/home', '/pages/personal_center/personal_center', '/pages/goods/category', '/pages/shop_cart/shop_cart', '/pages/customer/index', '/pages/customer/index_template'];
 
   // 把跳转的位置 转到模版
   static mapUrls = {

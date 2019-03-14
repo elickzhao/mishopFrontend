@@ -111,7 +111,7 @@ export default class extends wepy.app {
     // 校验SDK
     WxUtils.checkSDK();
     this.syncStoreConfig('miniNum');
-    this.syncStoreConfig('userInfo');
+    this.syncStoreConfig('userIDS');
     this.syncStoreConfig('searchListView');
     // 可以放到redux里不过这些数据好像没那么多高频率 所以先这样
     // store.dispatch({

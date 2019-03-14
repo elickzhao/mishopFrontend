@@ -2,7 +2,7 @@
  * @Author: elick
  * @LastEditors: elick
  * @Date: 2019-02-16 12:07:59
- * @LastEditTime: 2019-03-12 16:48:20
+ * @LastEditTime: 2019-03-14 01:13:55
  * @Description:  悬浮按钮栏
  */
 import wepy from 'wepy';

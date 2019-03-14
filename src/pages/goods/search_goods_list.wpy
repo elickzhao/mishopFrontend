@@ -89,7 +89,8 @@
         let listView = wepy.$instance.globalData.searchListView; // 初始化没关系 全局变量是固定的
         store.save('searchListView', listView);
       }
-      this.uid = wepy.getStorageSync('userInfo').ID;
+      // this.uid = wepy.getStorageSync('userInfo').ID;
+      this.uid = wepy.$instance.globalData.userIDS ? wepy.$instance.globalData.userIDS.ID : 0;
       // 从分类页过来的不设置标题
       if (isExist(this.searchKeyword)) {
         this.setTitle(this.searchKeyword);

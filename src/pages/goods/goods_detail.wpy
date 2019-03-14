@@ -209,18 +209,19 @@ export default class GoodsDetail extends wepy.page {
     special: 0 // //  0-正常入库;1-特价专区和换货专区,
   };
   async onLoad(option) {
+    this.goodsId = option.id;
+    this.$apply();
     await store.init();
     this.miniNum = wepy.$store.getState().cache.miniNum;
     this.shopCartNum = this.cart.cartNum;
     this.backUrl = '/pages/goods/goods_detail&id=' + option.id; // 这个路径一定要放在 authorize 前面 要不就不会使用这个返
-    this.goodsId = option.id;
     this.$apply();
     await this.getGoodsDetail();
-    await this.couponList();
+    this.couponList();
     // 检测用户信息
     //   await this.authorize();
   }
-  onShow() {
+  onShow(option) {
     this.goodsIsFavorite();
     // 创建动画
     var animation = wx.createAnimation({
@@ -307,8 +308,8 @@ export default class GoodsDetail extends wepy.page {
   };
   watch = {
     shopCartNum(newValue, oldValue) {
-      this.cart.cartNum = newValue
-      store.save('cart', this.cart)
+      this.cart.cartNum = newValue;
+      store.save('cart', this.cart);
     }
   };
   // 商品详情
@@ -349,9 +350,8 @@ export default class GoodsDetail extends wepy.page {
   }
   // 优惠券列表
   async couponList() {
-    console.log(wepy.$instance.globalData.userInfo.ID, '<--------------------------------')
     const json = await coupon.getCouponList({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
     this.canTakeList(json.list);
@@ -373,7 +373,7 @@ export default class GoodsDetail extends wepy.page {
   // 获取优惠券
   async takeCoupon(vid) {
     const json = await coupon.addVoucher({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       vid: vid
     });
     this.hasError(json);
@@ -382,7 +382,7 @@ export default class GoodsDetail extends wepy.page {
   // 查看商品收藏状态
   async goodsIsFavorite() {
     const json = await api.goodsIsFavorite({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       goodsId: this.goodsId
     });
     this.hasError(json);
@@ -397,7 +397,7 @@ export default class GoodsDetail extends wepy.page {
   // 商品收藏
   async goodsFavorite() {
     const json = await api.goodsFavorite({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       goodsId: this.goodsId
     });
     this.hasError(json);
@@ -408,7 +408,7 @@ export default class GoodsDetail extends wepy.page {
   // 商品取消收藏
   async goodsUnFavorite() {
     const json = await api.goodsUnFavorite({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       goodsId: this.goodsId
     });
     this.hasError(json);
@@ -420,7 +420,7 @@ export default class GoodsDetail extends wepy.page {
   // 购物车商品数量
   // async getShopCartNum() {
   //   const json = await api.cartList({
-  //     uid: wepy.$instance.globalData.userInfo.ID
+  //     uid: wepy.$instance.globalData.userIDS.ID
   //   });
   //   this.hasError(json);
   //   let cartNum = getCartNum(json.list);
@@ -434,7 +434,7 @@ export default class GoodsDetail extends wepy.page {
 
   async doTakeCart() {
     const json = await api.addCart({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       pid: this.goodsId,
       num: this.orderNum
     });

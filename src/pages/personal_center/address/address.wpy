@@ -61,7 +61,7 @@ export default class Address extends wepy.page {
   // 获得用户地址
   async getUserAddress(phone, code) {
     const json = await api.getUserAddress({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
     // console.log(json.list);
@@ -86,7 +86,7 @@ export default class Address extends wepy.page {
     wepy.$store.dispatch(initAddress(address));
     // 可以吧请求数据直接放到 action 里, 不过那样就不够清晰 以后修改起来也不好找 还是单纯的 action 往 store 存数据好了
     // wepy.$store.dispatch(
-    //   initAddressAsync(wepy.$instance.globalData.userInfo.ID)
+    //   initAddressAsync(wepy.$instance.globalData.userIDS.ID)
     // );
     this.$apply();
   }
@@ -99,7 +99,7 @@ export default class Address extends wepy.page {
         wx.request({
           url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
           data: {
-            user_id: wepy.$instance.globalData.userInfo.ID,
+            user_id: wepy.$instance.globalData.userIDS.ID,
             receiver: res.userName,
             tel: res.telNumber,
             sheng: res.provinceName,
@@ -147,7 +147,7 @@ export default class Address extends wepy.page {
   // 删除地址
   async delUserAddress(id) {
     const json = await api.delUserAddress({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       id: id
     });
     this.hasError(json);

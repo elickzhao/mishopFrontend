@@ -52,7 +52,7 @@
     };
     params() {
       return {
-        uid: wepy.$instance.globalData.userInfo.ID,
+        uid: wepy.$instance.globalData.userIDS.ID,
         page: this.currentPage || 1
       };
     }

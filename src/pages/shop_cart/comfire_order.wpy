@@ -169,7 +169,7 @@ export default class ComfireOrder extends wepy.page {
   // 获取订单详情
   async getOrderDetailInfo() {
     const json = await api.preOrder({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       cart_id: this.cartId
     });
     // console.log(json);
@@ -188,9 +188,8 @@ export default class ComfireOrder extends wepy.page {
   }
   // 获得用户地址
   async getUserAddress() {
-    console.log(wepy.$instance.globalData, '+++++++++++++++++++++++')
     const json = await addresses.getUserAddress({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
     wepy.$store.dispatch(saveAddress(json.list));
@@ -239,7 +238,7 @@ export default class ComfireOrder extends wepy.page {
   }
   // 发送消息
   async sendMessage(formId, orderId, flag, msg) {
-    let openid = wepy.getStorageSync('userInfo').openid;
+    let openid = wepy.$instance.globalData.userIDS.openid;
     // console.log(formId+'--'+orderId+'--'+flag+'--'+openid+'--'+msg)
     // 必须有openid
     if (openid) {
@@ -282,7 +281,7 @@ export default class ComfireOrder extends wepy.page {
     // 测试调用接口用，可注释
     tip.loading('提交订单中');
     const json = await api.saveBuyCart({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       cart_id: this.cartId,
       aid: this.address.id,
       remark: this.sellerMessage,
@@ -302,7 +301,7 @@ export default class ComfireOrder extends wepy.page {
       const pay = await api.toPay({
         order_id: order.order_id,
         order_sn: order.order_sn,
-        uid: wepy.$instance.globalData.userInfo.ID
+        uid: wepy.$instance.globalData.userIDS.ID
       });
       // console.log(pay);
       if (pay.status == 1) {
@@ -364,7 +363,7 @@ export default class ComfireOrder extends wepy.page {
         wx.request({
           url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
           data: {
-            user_id: wepy.$instance.globalData.userInfo.ID,
+            user_id: wepy.$instance.globalData.userIDS.ID,
             receiver: res.userName,
             tel: res.telNumber,
             sheng: res.provinceName,
@@ -411,7 +410,7 @@ export default class ComfireOrder extends wepy.page {
   async couponList() {
     let that = this;
     const json = await coupon.getCustCouponList({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       flag: 1,
       totalPrice: this.limitPrice // 这个价格是去掉特价商品的总价
     });

@@ -132,7 +132,7 @@ export default class OrderDetail extends wepy.page {
   }
   // 编辑订单 目前只是用于退款
   // async editOrderInfo(orderNo, flag) {
-  //   let uid = wepy.$instance.globalData.userInfo.ID;
+  //   let uid = wepy.$instance.globalData.userIDS.ID;
   //   const json = await api.editOrderInfo({
   //     uid: uid,
   //     id: orderNo,
@@ -213,7 +213,7 @@ export default class OrderDetail extends wepy.page {
     //   let orderSn = e.currentTarget.dataset.ordersn; // 这个居然大小写敏感
     //   // console.log(orderSn);
     //   // console.log(e);
-    //   let uid = wepy.$instance.globalData.userInfo.ID;
+    //   let uid = wepy.$instance.globalData.userIDS.ID;
     //   const pay = await api.toPay({
     //     uid: uid,
     //     order_sn: orderSn,

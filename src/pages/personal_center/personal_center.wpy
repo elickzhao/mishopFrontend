@@ -4,7 +4,7 @@
     <view class="status">
       <view class="userinfo">
         <view class="photo">
-          <image src="{{userinfo.photo}}"></image>
+          <image src="{{userinfo.avatarUrl}}"></image>
         </view>
         <view class="info">
           <view class="username">
@@ -36,9 +36,15 @@
 
 <script>
 import wepy from 'wepy';
+import { getBadge } from '@/utils/Common';
 import CheckLoginMixin from '@/mixins/check_login';
 import api from '@/api/sign_in';
 import OrderBar from '@/components/psersonal_center/order_bar';
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  cart: store.get('cart')
+})
 export default class PsersonalCenter extends wepy.page {
   config = {
     navigationBarTitleText: '会员中心'
@@ -116,10 +122,10 @@ export default class PsersonalCenter extends wepy.page {
           // console.log(res.userInfo);
           let userInfo = res.userInfo;
           that.userinfo = {
-            photo: userInfo.avatarUrl,
-            username: userInfo.nickName
+            avatarUrl: userInfo.avatarUrl,
+            nickName: userInfo.nickName
           };
-          wepy.setStorageSync('UserDetails', that.userInfo);
+          wepy.setStorageSync('userInfo', userInfo);
           that.$apply();
         }
       });
@@ -128,20 +134,25 @@ export default class PsersonalCenter extends wepy.page {
   // 获取用户积分
   async getUserPoint() {
     const json = await api.getUserSginInfo({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     return json.score;
   }
   async onLoad() {
-    await this.checkLogin()
-    let userDetails = wepy.getStorageSync('UserDetails');
-    if (userDetails) {
-      this.userinfo = userDetails;
+    await this.checkLogin();
+    // 处理购物车下标
+    getBadge(this.cart.cartNum);
+    let userInfo = wepy.getStorageSync('userInfo');
+    if (userInfo) {
+      this.userinfo = userInfo;
     } else {
       await this.getUserInfo();
     }
     this.userinfo.integral = await this.getUserPoint();
     this.$apply();
+  }
+  onShow() {
+    this.$invoke('OrderBar', 'getOrderCount');
   }
   methods = {
     // 跳转签到页

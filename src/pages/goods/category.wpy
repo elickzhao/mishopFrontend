@@ -4,7 +4,7 @@
       <SearchBar></SearchBar>
     </view>
     <view class="sidebar">
-      <SideTab :tab.sync="rootCate" key="rootCate"/>
+      <SideTab :tab.sync="rootCate" key="rootCate" />
     </view>
     <view class="main">
       <ImageBox :list.sync="childcateList"></ImageBox>

@@ -35,7 +35,7 @@ export default class CouponCenter extends wepy.page {
   };
   async couponList() {
     const json = await api.getCouponList({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
     this.coupons = json.list;
@@ -43,7 +43,7 @@ export default class CouponCenter extends wepy.page {
   }
   async add(vid) {
     const json = await api.addVoucher({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       vid: vid
     });
     this.hasError(json);

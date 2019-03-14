@@ -41,7 +41,7 @@ export default class couponCustomer extends wepy.page {
   };
   async couponList(status = 1) {
     const json = await api.getCustCouponList({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       flag: status,
       totalPrice: 0
     });

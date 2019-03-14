@@ -104,7 +104,9 @@ export default class Search extends wepy.page {
   }
   async onLoad(option) {
     this.imgUrl = this.$parent.globalData.imgUrl;
-    this.uid = wepy.getStorageSync('userInfo').ID;
+    // this.uid = wepy.getStorageSync('userInfo').ID;
+    // this.uid = wepy.$instance.globalData.userIDS.ID;
+    this.uid = wepy.$instance.globalData.userIDS ? wepy.$instance.globalData.userIDS.ID : 0;
     await this.getHotKeyList();
     await this.getKeyWordHisList();
     this.$apply();

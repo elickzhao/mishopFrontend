@@ -83,7 +83,7 @@ export default class ShopCart extends wepy.component {
   // 获取购物车商品列表
   async getCartList() {
     const json = await api.cartList({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
     // console.log(json);
@@ -101,7 +101,7 @@ export default class ShopCart extends wepy.component {
   // 选择商品
   async checkGoods(id, index, ischecked) {
     const json = await api.cartCheck({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       pid: id
     });
     this.hasError(json);
@@ -111,7 +111,7 @@ export default class ShopCart extends wepy.component {
   // 这是减按钮使用方法 其实和加一样  以后再合并呵
   async reduceGoodNum(id, num, index) {
     const json = await api.cartUpdateNum({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       cid: id,
       num: num
     });
@@ -123,7 +123,7 @@ export default class ShopCart extends wepy.component {
   // 加按钮加数量
   async addGoodNum(id, num, index) {
     const json = await api.cartUpdateNum({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       cid: id,
       num: num
     });
@@ -136,7 +136,7 @@ export default class ShopCart extends wepy.component {
   async deleteGoods(itemData) {
     var id = itemData.id;
     const json = await api.cartDel({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       cid: id
     });
     this.hasError(json);
@@ -158,7 +158,7 @@ export default class ShopCart extends wepy.component {
   // 全选商品
   async checkAllGoods() {
     const json = await api.cartCheckAll({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
     this.totalPrice = 0;
@@ -172,33 +172,20 @@ export default class ShopCart extends wepy.component {
     this.checkLogin();
     this.operating = false;
     await store.init();
-    if (this.cart.cartNum > 0) {
-      let badge = getBadge(this.cart.cartNum);
-      wx.setTabBarBadge({
-        index: 2,
-        text: badge
-      });
-    }
-    // that.list = bb.result.products;
-    // console.log(bb.result.products)
+    // if (this.cart.cartNum > 0) {
+    //   getBadge(this.cart.cartNum);
+    // }
     // that.getCartList();
   }
   watch = {
     cart(newValue, oldValue) {
-      let badge = getBadge(this.cart.cartNum);
-      wx.setTabBarBadge({
-        index: 2,
-        text: badge
-      });
-      // getBadge()
+       getBadge(this.cart.cartNum);
     },
     list(newValue, oldValue) {
-      // console.log(`num value: ${oldValue} -> ${newValue}`);
-      // console.log('oldValue:', oldValue);
-      // console.log('newValue:', newValue);
-      this.cart.cartNum = getCartNum(newValue);
-      this.cart.list = newValue;
-      store.save('cart', this.cart);
+      let newCart = {}
+      newCart.cartNum = getCartNum(newValue);
+      newCart.list = newValue;
+      store.save('cart', newCart);
     }
   };
   computed = {

@@ -72,7 +72,7 @@ export default class AdressAdd extends wepy.page {
       isDefult = 1;
     }
     const json = await api.saveAddress({
-      uid: wepy.$instance.globalData.userInfo.ID,
+      uid: wepy.$instance.globalData.userIDS.ID,
       receiver: address.receiverName,
       tel: address.mobile,
       adds: address.addressDetail,

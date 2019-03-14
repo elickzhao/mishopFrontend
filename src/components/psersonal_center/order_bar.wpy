@@ -50,18 +50,12 @@ export default class OrderBar extends wepy.component {
   };
   async getOrderCount() {
     const json = await api.getOrderInfo({
-      uid: wepy.$instance.globalData.userInfo.ID
+      uid: wepy.$instance.globalData.userIDS.ID
     });
-    return json;
-  }
-  async onLoad() {
-    this.orderTypeLise = await this.getOrderCount();
+    this.orderTypeLise = json;
     this.$apply();
   }
-  async onShow() {
-    this.orderTypeLise = await this.getOrderCount();
-    this.$apply();
-  }
+  async onLoad() {}
   methods = {
     toOrderType(status) {
       // console.log(status)

@@ -18,8 +18,8 @@ export default class login extends base {
   static user2session(params) {
     let url = `${this.baseUrl}/api/news/user2session2`;
     return this.get(url, params).then(data => {
-      wepy.setStorageSync('userInfo', data)
-      wepy.$instance.globalData.userInfo = data
+      wepy.setStorageSync('userIDS', data)
+      wepy.$instance.globalData.userIDS = data
       return data
     }).catch(data => {
       // this.register()
