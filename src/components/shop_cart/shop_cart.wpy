@@ -17,9 +17,9 @@
               </view>
               <!--  -->
               <!-- <view class="lable">
-                    <view class="goods-lable">{{item.goodsSkuValName}}</view>
-                    <view class="bo-label" wx:if="{{item.type==2}}">补货</view>
-                  </view> -->
+                      <view class="goods-lable">{{item.goodsSkuValName}}</view>
+                      <view class="bo-label" wx:if="{{item.type==2}}">补货</view>
+                    </view> -->
               <view class="goods-price">¥ {{item.price}}</view>
               <view class="buy-num">
                 <view class="jian-btn {{item.num==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.id}}">-</view>
@@ -179,10 +179,10 @@ export default class ShopCart extends wepy.component {
   }
   watch = {
     cart(newValue, oldValue) {
-       getBadge(this.cart.cartNum);
+      getBadge(this.cart.cartNum);
     },
     list(newValue, oldValue) {
-      let newCart = {}
+      let newCart = {};
       newCart.cartNum = getCartNum(newValue);
       newCart.list = newValue;
       store.save('cart', newCart);

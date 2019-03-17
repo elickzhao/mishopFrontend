@@ -73,6 +73,7 @@ export default class Category extends wepy.page {
   }
   async onShow() {
     await this.getRootCateTopLevel();
+    await this.getChildCate(this.rootCate.selectedId);
   }
   watch = {
     async rootCate() {

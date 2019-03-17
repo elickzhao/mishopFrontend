@@ -18,6 +18,32 @@
       <ScrollXList :list.sync='hotList' title='1小时达'></ScrollXList>
     </view>
     <!-- /热卖商品 -->
+    <view class="h-gap"></view>
+    <!-- 分类导航  -->
+    <view class="row-between nav">
+      <view class="column-center" @tap="goToCate('567')">
+        <image mode="aspectFill" src="../../images/nav/mm.png"></image>
+        <view class="title">面膜</view>
+        </text>
+      </view>
+      <view class="column-center" @tap="goToCate('408')">
+        <image mode="aspectFill" src="../../images/nav/mz.png" />
+        <view class="title">美妆</view>
+      </view>
+      <view class="column-center" @tap="goToCate('428')">
+        <image mode="aspectFill" src="../../images/nav/xh.png" />
+        <view class="title">洗护</view>
+      </view>
+      <view class="column-center" @tap="goToCate('447')">
+        <image mode="aspectFill" src="../../images/nav/ry.png" />
+        <view class="title">日用</view>
+      </view>
+      <view class="column-center" @tap="goToCate('477')">
+        <image mode="aspectFill" src="../../images/nav/sc.png" />
+        <view class="title">潮流</view>
+      </view>
+    </view>
+    <!-- /分类导航  -->
     <!-- 分割图片 -->
     <image src="{{picUrl}}" mode="widthFix" style="width:100%;margin-top:15rpx;"></image>
     <!-- /分割图片 -->
@@ -35,7 +61,6 @@
 import wepy from 'wepy';
 import config from '@/api/config';
 import goods from '@/api/goods';
-import { getBadge } from '@/utils/Common';
 import BaseMixin from '@/mixins/base';
 import Pagination from '@/mixins/pagination';
 import GotopMixin from '@/mixins/gotop_mix';
@@ -49,7 +74,8 @@ import { picRandom, getBadge } from '@/utils/Common';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
 @connect({
-  cart: store.get('cart')
+  cart: store.get('cart'),
+  rootCate: store.get('rootCate')
 })
 export default class Home extends wepy.page {
   config = {
@@ -78,10 +104,28 @@ export default class Home extends wepy.page {
     ScrollXList: ScrollXList,
     GoodsList: GoodsList
   };
-  methods = {};
-  events = {};
-  watch = {};
-  computed = {};
+  methods = {
+    async goToCate(cateId) {
+      await this.getRootCateTopLevel(cateId);
+      wepy.switchTab({
+        url: '/pages/goods/category'
+      });
+    }
+  };
+  async getRootCateTopLevel(id) {
+    if (!store.exists('rootCate')) {
+      const json = await goods.getRootCateTopLevel();
+      json.selectedId = id;
+      store.save('rootCate', json);
+      store.saveMeta('rootCate');
+    } else {
+      let newCate = this.rootCate;
+      newCate.selectedId = id;
+      store.save('rootCate', newCate);
+      store.saveMeta('rootCate');
+    }
+    this.$apply();
+  }
   async onLoad() {
     // 可有可无 login直接跳转首页 首页也不能转发 所以初始化与否都行 但测试时会直接打开这个页面 所以先放着
     await store.init();
@@ -96,10 +140,24 @@ export default class Home extends wepy.page {
     // 所有等待的都放在下面 要不加载组件时 会出现空白变量 比如上面的imgUrl
     this.swipers = await config.getSwipers();
     this.hotList = await goods.hotList();
-    this.page = await goods.getGoodsList();
+    this.page = goods.getGoodsList();
     await this.next();
     this.$apply();
   }
   onShow() {}
 }
 </script>
+
+<style lang="less">
+.nav {
+  background-color: #fff;
+  height: 200rpx;
+  image {
+    height: 70px;
+    width: 70px;
+  }
+  .title {
+    color: #999999;
+  }
+}
+</style>
