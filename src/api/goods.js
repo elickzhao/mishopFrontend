@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-03-11 01:01:21
+ * @LastEditTime: 2019-03-20 02:22:05
  * @Description:  商品api请求类
  */
 import base from './base';

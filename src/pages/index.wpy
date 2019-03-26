@@ -378,7 +378,7 @@ export default class Index extends wepy.page {
       this.$broadcast('index-broadcast', 1, 3, 4);
     },
     request() {
-      let self = this;
+      let that = this;
       let i = 10;
       let map = [
         'MA==',
@@ -400,8 +400,8 @@ export default class Index extends wepy.page {
             '&i=' +
             i,
           success: function(d) {
-            self.netrst += d.data + '.';
-            self.$apply();
+            that.netrst += d.data + '.';
+            that.$apply();
           }
         });
       }
@@ -422,7 +422,7 @@ export default class Index extends wepy.page {
     }
   };
   onLoad() {
-    let self = this;
+    // let self = this;
     // this.$parent.getUserInfo(function(userInfo) {
     //   if (userInfo) {
     //     self.userInfo = userInfo;

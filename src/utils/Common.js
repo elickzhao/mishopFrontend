@@ -2,7 +2,7 @@
  * @Author: elick
  * @Date: 2019-02-06 19:47:55
  * @LastEditors: elick
- * @LastEditTime: 2019-03-15 01:56:58
+ * @LastEditTime: 2019-03-26 16:54:27
  * @Description:  公共工具函数
  */
 
@@ -183,12 +183,22 @@ function getBadge(cartNum) {
       index: 2,
       text: `${cartNum}`
     });
-  }else{
+  } else {
     wx.removeTabBarBadge({
       index: 2 //tabBar的哪一项，从左边算起,
     });
-    
+
   }
+}
+
+/**
+ * 解析扫码小程序码 传递过来的参数
+ * @param {*} scene 
+ */
+function decodeScene(scene) {
+  let str = decodeURIComponent(scene);
+  str = str.replace(/'/g, '"')
+  return JSON.parse('{' + str + '}')
 }
 
 module.exports = {
@@ -207,5 +217,6 @@ module.exports = {
   isPrevpage: isPrevpage,
   isExist: isExist,
   getCartNum: getCartNum,
-  getBadge: getBadge
+  getBadge: getBadge,
+  decodeScene: decodeScene
 }

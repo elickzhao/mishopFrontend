@@ -148,7 +148,7 @@ import wepy from 'wepy';
 import api from '@/api/goods';
 import coupon from '@/api/coupon';
 import tip from '@/utils/Tips';
-// import { getCartNum } from '@/utils/Common';
+import { decodeScene } from '@/utils/Common';
 import WxParse from '@/utils/wxParse/wxParse';
 import BaseMixin from '@/mixins/base';
 import GotopMixin from '@/mixins/gotop_mix';
@@ -210,6 +210,15 @@ export default class GoodsDetail extends wepy.page {
   };
   async onLoad(option) {
     this.goodsId = option.id;
+
+    if (option.scene) {
+      let scene = decodeScene(option.scene);
+      console.log(scene, '==================== scene');
+      console.log(scene.id, '==================== scene');
+      this.goodsId = scene.id;
+      this.$apply();
+    }
+
     this.$apply();
     await store.init();
     this.miniNum = wepy.$store.getState().cache.miniNum;
