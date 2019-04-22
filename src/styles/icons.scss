@@ -236,11 +236,12 @@ icon.msg-bar:before { content: "\e623"; }
 
 @font-face {
   font-family: 'iconfont';  /* project id 684395 */
-  src: url('//at.alicdn.com/t/font_684395_2gyo6ovg02.eot');
-  src: url('//at.alicdn.com/t/font_684395_2gyo6ovg02.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_684395_2gyo6ovg02.woff') format('woff'),
-  url('//at.alicdn.com/t/font_684395_2gyo6ovg02.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_684395_2gyo6ovg02.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_684395_yhak8ohe8pb.eot');
+  src: url('//at.alicdn.com/t/font_684395_yhak8ohe8pb.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_684395_yhak8ohe8pb.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_684395_yhak8ohe8pb.woff') format('woff'),
+  url('//at.alicdn.com/t/font_684395_yhak8ohe8pb.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_684395_yhak8ohe8pb.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -254,3 +255,7 @@ icon.msg-bar:before { content: "\e623"; }
 
 
 .icon-mulu:before { content: "\e890"; }
+.icon-daohang:before {
+  content: "\e651";
+}
+//at.alicdn.com/t/font_684395_yhak8ohe8pb.css

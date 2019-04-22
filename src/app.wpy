@@ -37,6 +37,7 @@ export default class extends wepy.app {
       'pages/home/home',
       'pages/home/sign_in',
       'pages/home/goods_zone',
+      'pages/home/select_city',
       'pages/goods/category',
       'pages/goods/search',
       'pages/goods/search_goods_list',
@@ -57,8 +58,14 @@ export default class extends wepy.app {
       'pages/personal_center/address/address_add',
       'pages/personal_center/address/address_edit',
       // 'pages/personal_center/index',
+      'pages/test/lnglat',
       'pages/index'
     ],
+    permission: {
+      'scope.userLocation': {
+        desc: '你的位置信息将用于小程序位置接口的效果展示'
+      }
+    },
     tabBar: {
       color: '#999999',
       selectedColor: '#FF0077',

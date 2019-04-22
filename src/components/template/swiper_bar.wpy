@@ -1,6 +1,6 @@
 <template>
   <!--TODO 自定义高度处理-->
-  <swiper indicator-dots="true" indicator-active-color="#FFF" interval="3000" duration="1000" circular="true" autoplay style="height:{{param.height?param.height:'292rpx'}}">
+  <swiper  indicator-dots="true" indicator-active-color="#FFF" interval="3000" duration="1000" circular="true" autoplay style="height:{{param.height?param.height:'265rpx'}}">
     <swiper-item class="swiper-box" wx:for="{{param}}" wx:key="index" wx:index="index">
       <image mode="aspectFit" src="{{item.photo}}" @tap="routeToUrl({{item.link}})"></image>
     </swiper-item>
@@ -8,31 +8,31 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import router from '@/mixins/router';
-  export default class SwiperBar extends wepy.component {
-    props = {
-      param: []
-    };
-    mixins = [router]
-    methods = {
-      routeToUrl(url) {
-        this.routeByAction({
-          action: 'PAGE_NAVIGATE',
-          params: url
-        })
-      }
+import wepy from 'wepy';
+import router from '@/mixins/router';
+export default class SwiperBar extends wepy.component {
+  props = {
+    param: []
+  };
+  mixins = [router];
+  methods = {
+    routeToUrl(url) {
+      this.routeByAction({
+        action: 'PAGE_NAVIGATE',
+        params: url
+      });
     }
-  }
+  };
+}
 </script>
 
 <style lang="scss">
-  .swiper-box {
+.swiper-box {
+  height: 100%;
+  width: 100%;
+  image {
     height: 100%;
     width: 100%;
-    image {
-      height: 100%;
-      width: 100%;
-    }
   }
+}
 </style>

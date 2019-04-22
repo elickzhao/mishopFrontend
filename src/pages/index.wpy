@@ -26,6 +26,7 @@
 </style>
 <template lang="wxml" minapp="wepy">
   <view class="container">
+    <SearchBar></SearchBar>
     <view class="row-between nav">
       <view class="column-center">
         <image mode="aspectFill" src="../images/nav/mm.png"></image>
@@ -258,6 +259,7 @@
 
 <script>
 import wepy from 'wepy';
+import SearchBar from '@/components/template/home_search_bar1';
 import { connect } from 'wepy-redux';
 import Panel from '@/components/panel'; // alias example
 import Counter from 'counter'; // alias example
@@ -288,7 +290,8 @@ export default class Index extends wepy.page {
     counter2: Counter,
     list: List,
     group: Group,
-    toast: Toast
+    toast: Toast,
+    SearchBar: SearchBar
   };
   // mixins = [testMixin];
   data = {

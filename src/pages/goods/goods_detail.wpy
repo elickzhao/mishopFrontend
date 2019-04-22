@@ -1,72 +1,72 @@
 <template>
-    <view style="height:{{winHeight}}rpx;overflow:hidden">
-        <import src="../../utils/wxParse/wxParse.wxml" />
-        <!--index.wxml-->
-        <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#FF5588" indicator-color="#efefef" class="swiper">
-            <block wx:for="{{detail.img_arr}}" key="item" item="item" wx:key="key">
-                <swiper-item style="background-color:#FFF">
-                    <image mode="aspectFit" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
-                </swiper-item>
-            </block>
-        </swiper>
-        <view class="details-msg">
-            <view class="details-title">{{detail.name}}</view>
-            <view class="details_pinfo">
-                <text class="price">￥{{detail.price_yh}}</text>
-                <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
-                                                                                <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-                                                                              </view> -->
-                <view class="other-price c999">卖场价:
-                    <wxc-price status="del" class="del-price" del-color="#999">{{detail.price}}</wxc-price>
-                </view>
-                <!-- <view class="other-price">分享价:280</view> -->
-                <view class="share-box fz25">
-                    <i class="iconfont icon-share c999"></i>
-                    <text class="sm darkgray">分享</text>
-                </view>
-                <button class="share-btn" type="primary" open-type="share" plain="true">  </button>
-            </view>
-            <view class="baoyou c999">满 {{miniNum}} 元起送</view>
+  <view style="height:{{winHeight}}rpx;overflow:hidden">
+    <import src="../../utils/wxParse/wxParse.wxml" />
+    <!--index.wxml-->
+    <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#FF5588" indicator-color="#efefef" class="swiper">
+      <block wx:for="{{detail.img_arr}}" key="item" item="item" wx:key="key">
+        <swiper-item style="background-color:#FFF">
+          <image mode="aspectFit" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="details-msg">
+      <view class="details-title">{{detail.name}}</view>
+      <view class="details_pinfo">
+        <text class="price">￥{{detail.price_yh}}</text>
+        <!--         <view class="order_time {{purchasetype==2||special==1?'hidden':''}}">
+                                                                                      <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
+                                                                                    </view> -->
+        <view class="other-price c999">卖场价:
+          <wxc-price status="del" class="del-price" del-color="#999">{{detail.price}}</wxc-price>
         </view>
-        <view class="order_num">
-            <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 30分钟发货 </view>
-            <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 5公里用户 </view>
-            <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 1小时及时送达 </view>
+        <!-- <view class="other-price">分享价:280</view> -->
+        <view class="share-box fz25">
+          <i class="iconfont icon-share c999"></i>
+          <text class="sm darkgray">分享</text>
         </view>
-        <view class="spacing"></view>
-        <!-- 优惠活动  -->
-        <block wx:if="{{list.length > 0}}">
-            <view class="block">
-                <view class="block_title">优惠活动</view>
-                <view class="block_content">
-                    <CouponGoodsList :list.sync="list"></CouponGoodsList>
-                </view>
-            </view>
-        </block>
-        <!-- /优惠活动  -->
-        <view class="spacing"></view>
-        <view class="block">
-            <view class="block_title">商品信息</view>
-            <view class="block_content">
-                <view class="table">
-                    <!-- <wxc-input type="text" title="商品名称:" placeholder="{{detail.name}}" disabled="true"></wxc-input> -->
-                    <wxc-input type="number" title="商品编号：" placeholder="{{detail.pro_number}}" disabled="true"></wxc-input>
-                    <wxc-input type="text" title="分类：" placeholder="{{detail.cat_name}}" disabled="true"></wxc-input>
-                    <wxc-input type="text" title="库存：" placeholder="{{detail.num}}" disabled="true"></wxc-input>
-                    <wxc-input type="text" title="售后：" mode="none" placeholder="签收之日48小时无条件退货" disabled="true"></wxc-input>
-                </view>
-            </view>
+        <button class="share-btn" type="primary" open-type="share" plain="true">  </button>
+      </view>
+      <view class="baoyou c999">满 {{miniNum}} 元起送</view>
+    </view>
+    <view class="order_num">
+      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 30分钟发货 </view>
+      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 5公里用户 </view>
+      <view class="doc fz24 c999"><i class="iconfont" style="color:#FF0077">&#xe617;</i> 1小时及时送达 </view>
+    </view>
+    <view class="spacing"></view>
+    <!-- 优惠活动  -->
+    <block wx:if="{{list.length > 0}}">
+      <view class="block">
+        <view class="block_title">优惠活动</view>
+        <view class="block_content">
+          <CouponGoodsList :list.sync="list"></CouponGoodsList>
         </view>
-        <block wx:if="{{showGoodsInfo}}">
-            <view class="spacing"></view>
-            <view class="block">
-                <view class="block_title">商品详情</view>
-            </view>
-        </block>
-        <view class="big_images">
-            <view class="doc">
-                <view class="wxParse-p">
-                    <template is="wxParse" data="{{wxParseData:detailInfo.nodes}}">
+      </view>
+    </block>
+    <!-- /优惠活动  -->
+    <view class="spacing"></view>
+    <view class="block">
+      <view class="block_title">商品信息</view>
+      <view class="block_content">
+        <view class="table">
+          <!-- <wxc-input type="text" title="商品名称:" placeholder="{{detail.name}}" disabled="true"></wxc-input> -->
+          <wxc-input type="number" title="商品编号：" placeholder="{{detail.pro_number}}" disabled="true"></wxc-input>
+          <wxc-input type="text" title="分类：" placeholder="{{detail.cat_name}}" disabled="true"></wxc-input>
+          <wxc-input type="text" title="库存：" placeholder="{{detail.num}}" disabled="true"></wxc-input>
+          <wxc-input type="text" title="售后：" mode="none" placeholder="签收之日48小时无条件退货" disabled="true"></wxc-input>
+        </view>
+      </view>
+    </view>
+    <block wx:if="{{showGoodsInfo}}">
+      <view class="spacing"></view>
+      <view class="block">
+        <view class="block_title">商品详情</view>
+      </view>
+    </block>
+    <view class="big_images">
+      <view class="doc">
+        <view class="wxParse-p">
+          <template is="wxParse" data="{{wxParseData:detailInfo.nodes}}">
 </template>
         </view>
       </view>
@@ -144,765 +144,760 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import api from '@/api/goods';
-import coupon from '@/api/coupon';
-import tip from '@/utils/Tips';
-import { decodeScene } from '@/utils/Common';
-import WxParse from '@/utils/wxParse/wxParse';
-import BaseMixin from '@/mixins/base';
-import GotopMixin from '@/mixins/gotop_mix';
-import CheckLoginMixin from '@/mixins/check_login';
-import CouponGoodsList from '@/components/goods/coupon_goods_list';
-import { connect } from 'wepy-redux';
-import store from '@/store/utils';
-@connect({
-  cart: store.get('cart')
-})
-export default class GoodsDetail extends wepy.page {
-  config = {
-    navigationBarTitleText: '商品详情',
-    usingComponents: {
-      'wxc-price': '../../packages/@minui/wxc-price/dist/index',
-      'wxc-badge': '../../packages/@minui/wxc-badge/dist/index',
-      'wxc-input': '../../packages/@minui/wxc-input/dist/index',
-      'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
-      'wux-floating-button': '../../packages/floating-button/index'
-    }
-  };
-  mixins = [BaseMixin, GotopMixin, CheckLoginMixin];
-  components = {
-    CouponGoodsList: CouponGoodsList
-  };
-  data = {
-    backUrl: '',
-    showCom: 'menu',
-    list: [],
-    shopCartNum: 0, // 购物车商品数量
-    showGoodsInfo: false, // 展示商品详细信息
-    winWidth: 0,
-    winHeight: '100%',
-    miniNum: 0,
-    maxNum: 99, // 最大购买数量 由商品数量决定
-    goodsId: 0,
-    detail: {},
-    good_bigimg: [],
-    // 订单活动开始时间（格式yy-mm-dd 或者 yy/mm/dd ）
-    //  startTime: "2017-07-15 16:00:00",
-    startTime: '',
-    // 订单活动结束时间（格式yy-mm-dd 或者 yy/mm/dd ）
-    //  endTime: "2017-07-21 16:04:00"
-    endTime: '',
-    hidden: true,
-    // 动画效果
-    animationData: '',
-    // 购买方式:1-加购物车,2-立即购买
-    orderType: 1,
-    // 购买数量
-    orderNum: 1,
-    // 是否收藏
-    isFavorite: false,
-    // isValidDate: true,  // 有效时间
-    canOrder: true, // 是否能下单
-    purchasetype: 1, //  1-正常购买;2-补货
-    purchaseText: '立即购买',
-    special: 0 // //  0-正常入库;1-特价专区和换货专区,
-  };
-  async onLoad(option) {
-    this.goodsId = option.id;
-
-    if (option.scene) {
-      let scene = decodeScene(option.scene);
-      console.log(scene, '==================== scene');
-      console.log(scene.id, '==================== scene');
-      this.goodsId = scene.id;
-      this.$apply();
-    }
-
-    this.$apply();
-    await store.init();
-    this.miniNum = wepy.$store.getState().cache.miniNum;
-    this.shopCartNum = this.cart.cartNum;
-    this.backUrl = '/pages/goods/goods_detail&id=' + option.id; // 这个路径一定要放在 authorize 前面 要不就不会使用这个返
-    this.$apply();
-    await this.getGoodsDetail();
-    this.couponList();
-    // 检测用户信息
-    //   await this.authorize();
-  }
-  onShow(option) {
-    this.goodsIsFavorite();
-    // 创建动画
-    var animation = wx.createAnimation({
-      transformOrigin: '50% 50%',
-      duration: 200,
-      timingFunction: 'linear',
-      delay: 0
-    });
-    this.animation = animation;
-    // this.getShopCartNum();
-    // this.shopCartNum = this.cart.cartNum
-  }
-  methods = {
-    // 显示图片
-    previewImage(e) {
-      let current = e.target.dataset.src;
-      let imageArry = [];
-      let obj = this.detail.img_arr;
-      Object.keys(obj).forEach(item => {
-        imageArry.push(obj[item]);
-      });
-      wx.previewImage({
-        current: current, // 当前显示图片的http链接
-        urls: imageArry // 需要预览的图片http链接列表
-      });
-    },
-    // 收藏操作
-    takeFavorite() {
-      this.checkLogin();
-      // XXX 这个收藏以后改 一个方法就完事了
-      if (this.isFavorite == true) {
-        this.goodsUnFavorite();
-      } else {
-        this.goodsFavorite();
+  import wepy from 'wepy';
+  import api from '@/api/goods';
+  import coupon from '@/api/coupon';
+  import tip from '@/utils/Tips';
+  import {
+    decodeScene
+  } from '@/utils/Common';
+  import WxParse from '@/utils/wxParse/wxParse';
+  import BaseMixin from '@/mixins/base';
+  import GotopMixin from '@/mixins/gotop_mix';
+  import CheckLoginMixin from '@/mixins/check_login';
+  import CouponGoodsList from '@/components/goods/coupon_goods_list';
+  import {
+    connect
+  } from 'wepy-redux';
+  import store from '@/store/utils';
+  @connect({
+    cart: store.get('cart')
+  })
+  export default class GoodsDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '商品详情',
+      usingComponents: {
+        'wxc-price': '../../packages/@minui/wxc-price/dist/index',
+        'wxc-badge': '../../packages/@minui/wxc-badge/dist/index',
+        'wxc-input': '../../packages/@minui/wxc-input/dist/index',
+        'wxc-flex': '../../packages/@minui/wxc-flex/dist/index',
+        'wux-floating-button': '../../packages/floating-button/index'
       }
-    },
-    // XXX 加入购物车 这可以做成组件 以后说
-    async takeCart() {
-      await this.checkLogin();
-      if (!this.canOrder) {
-        return;
-      }
-      this.showConfirmData();
-      this.orderType = 1;
-    },
-    // 关闭购物车菜单
-    closeModel() {
-      this.hiddenConfirmData();
-    },
-    // 商品数量 +
-    jiaBtnTap(e) {
-      this.orderNum++;
-    },
-    // 商品数量 -
-    jianBtnTap() {
-      if (this.orderNum > 1) {
-        this.orderNum--;
-      }
-    },
-    // 商品数量 输入
-    bindOrderNumInput(e) {
-      this.orderNum = e.detail.value;
-    },
-    // 确认购物车
-    confirmTake() {
-      // 确定购物车或者直接购买
-      if (this.orderType == 1) {
-        this.doTakeCart();
-      } else if (this.orderType == 2) {
-        this.doTakeOrder();
-      }
-    },
-    shopCart() {
-      wepy.switchTab({
-        url: '/pages/shop_cart/shop_cart'
-      });
-    }
-  };
-  events = {
-    childFn: vid => {
-      // console.log("parent received emit event, number is: " + vid);
-      this.takeCoupon(vid);
-    }
-  };
-  watch = {
-    shopCartNum(newValue, oldValue) {
-      this.cart.cartNum = newValue;
-      store.save('cart', this.cart);
-    }
-  };
-  // 商品详情
-  async getGoodsDetail() {
-    const json = await api.goodsDetail({
-      pro_id: this.goodsId
-    });
-    // console.log(json);
-
-    /* 报错处理 */
-    let back = () => {
-      wepy.navigateBack({
-        delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-      });
     };
-    this.hasErrorBack(json, back);
-    /*  /报错处理  */
-
-    this.detail = json;
-    let html = this.detail.content;
-    var imgs = html.match(/<img[^>]+>/g);
-    if (imgs != null) {
-      WxParse.wxParse(
-        'detailInfo',
-        'html',
-        imgs.toString().replace(/,/g, ''),
-        this,
-        3
-      );
-      this.showGoodsInfo = true;
+    mixins = [BaseMixin, GotopMixin, CheckLoginMixin];
+    components = {
+      CouponGoodsList: CouponGoodsList
+    };
+    data = {
+      backUrl: '',
+      showCom: 'menu',
+      list: [],
+      shopCartNum: 0, // 购物车商品数量
+      showGoodsInfo: false, // 展示商品详细信息
+      winWidth: 0,
+      winHeight: '100%',
+      miniNum: 0,
+      maxNum: 99, // 最大购买数量 由商品数量决定
+      goodsId: 0,
+      detail: {},
+      good_bigimg: [],
+      // 订单活动开始时间（格式yy-mm-dd 或者 yy/mm/dd ）
+      //  startTime: "2017-07-15 16:00:00",
+      startTime: '',
+      // 订单活动结束时间（格式yy-mm-dd 或者 yy/mm/dd ）
+      //  endTime: "2017-07-21 16:04:00"
+      endTime: '',
+      hidden: true,
+      // 动画效果
+      animationData: '',
+      // 购买方式:1-加购物车,2-立即购买
+      orderType: 1,
+      // 购买数量
+      orderNum: 1,
+      // 是否收藏
+      isFavorite: false,
+      // isValidDate: true,  // 有效时间
+      canOrder: true, // 是否能下单
+      purchasetype: 1, //  1-正常购买;2-补货
+      purchaseText: '立即购买',
+      special: 0 // //  0-正常入库;1-特价专区和换货专区,
+    };
+    async onLoad(option) {
+      this.goodsId = option.id;
+      if (option.scene) {
+        let scene = decodeScene(option.scene);
+        // 已经改写完成 下面留着测试时验证下
+        console.log(scene, '==================== scene');
+        console.log(scene.id, '==================== scene');
+        this.goodsId = scene.id;
+        this.$apply();
+      }
+      this.$apply();
+      await store.init();
+      this.miniNum = wepy.$store.getState().cache.miniNum;
+      this.shopCartNum = this.cart.cartNum;
+      this.backUrl = '/pages/goods/goods_detail&id=' + option.id; // 这个路径一定要放在 authorize 前面 要不就不会使用这个返
+      this.$apply();
+      await this.getGoodsDetail();
+      this.couponList();
+      // 检测用户信息
+      //   await this.authorize();
     }
-    // 数量不足 显示售罄
-    if (json.num < 1) {
-      this.canOrder = false;
+    onShow(option) {
+      this.goodsIsFavorite();
+      // 创建动画
+      var animation = wx.createAnimation({
+        transformOrigin: '50% 50%',
+        duration: 200,
+        timingFunction: 'linear',
+        delay: 0
+      });
+      this.animation = animation;
+      // this.getShopCartNum();
+      // this.shopCartNum = this.cart.cartNum
     }
-    this.maxNum = json.num;
-    this.$apply();
-  }
-  // 优惠券列表
-  async couponList() {
-    const json = await coupon.getCouponList({
-      uid: wepy.$instance.globalData.userIDS.ID
-    });
-    this.hasError(json);
-    this.canTakeList(json.list);
-  }
-  // 可领取的优惠券
-  canTakeList(array) {
-    // 去除掉已经领取和已经领光的优惠券
-    let arr = [];
-    for (let i = 0; i < array.length; i++) {
-      if (array[i].status == 0 && array[i].receive_num < array[i].count) {
-        arr.push(array[i]);
+    methods = {
+      // 显示图片
+      previewImage(e) {
+        let current = e.target.dataset.src;
+        let imageArry = [];
+        let obj = this.detail.img_arr;
+        Object.keys(obj).forEach(item => {
+          imageArry.push(obj[item]);
+        });
+        wx.previewImage({
+          current: current, // 当前显示图片的http链接
+          urls: imageArry // 需要预览的图片http链接列表
+        });
+      },
+      // 收藏操作
+      takeFavorite() {
+        this.checkLogin();
+        // XXX 这个收藏以后改 一个方法就完事了
+        if (this.isFavorite == true) {
+          this.goodsUnFavorite();
+        } else {
+          this.goodsFavorite();
+        }
+      },
+      // XXX 加入购物车 这可以做成组件 以后说
+      async takeCart() {
+        await this.checkLogin();
+        if (!this.canOrder) {
+          return;
+        }
+        this.showConfirmData();
+        this.orderType = 1;
+      },
+      // 关闭购物车菜单
+      closeModel() {
+        this.hiddenConfirmData();
+      },
+      // 商品数量 +
+      jiaBtnTap(e) {
+        this.orderNum++;
+      },
+      // 商品数量 -
+      jianBtnTap() {
+        if (this.orderNum > 1) {
+          this.orderNum--;
+        }
+      },
+      // 商品数量 输入
+      bindOrderNumInput(e) {
+        this.orderNum = e.detail.value;
+      },
+      // 确认购物车
+      confirmTake() {
+        // 确定购物车或者直接购买
+        if (this.orderType == 1) {
+          this.doTakeCart();
+        } else if (this.orderType == 2) {
+          this.doTakeOrder();
+        }
+      },
+      shopCart() {
+        wepy.switchTab({
+          url: '/pages/shop_cart/shop_cart'
+        });
+      }
+    };
+    events = {
+      childFn: vid => {
+        // console.log("parent received emit event, number is: " + vid);
+        this.takeCoupon(vid);
+      }
+    };
+    watch = {
+      shopCartNum(newValue, oldValue) {
+        this.cart.cartNum = newValue;
+        store.save('cart', this.cart);
+      }
+    };
+    // 商品详情
+    async getGoodsDetail() {
+      const json = await api.goodsDetail({
+        pro_id: this.goodsId
+      });
+      // console.log(json);
+      /* 报错处理 */
+      let back = () => {
+        wepy.navigateBack({
+          delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
+      };
+      this.hasErrorBack(json, back);
+      /*  /报错处理  */
+      this.detail = json;
+      let html = this.detail.content;
+      var imgs = html.match(/<img[^>]+>/g);
+      if (imgs != null) {
+        WxParse.wxParse(
+          'detailInfo',
+          'html',
+          imgs.toString().replace(/,/g, ''),
+          this,
+          3
+        );
+        this.showGoodsInfo = true;
+      }
+      // 数量不足 显示售罄
+      if (json.num < 1) {
+        this.canOrder = false;
+      }
+      this.maxNum = json.num;
+      this.$apply();
+    }
+    // 优惠券列表
+    async couponList() {
+      const json = await coupon.getCouponList({
+        uid: wepy.$instance.globalData.userIDS.ID
+      });
+      this.hasError(json);
+      this.canTakeList(json.list);
+    }
+    // 可领取的优惠券
+    canTakeList(array) {
+      // 去除掉已经领取和已经领光的优惠券
+      let arr = [];
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].status == 0 && array[i].receive_num < array[i].count) {
+          arr.push(array[i]);
+        }
+      }
+      this.list = arr;
+      // console.log(this.list);
+      this.$apply();
+    }
+    // 获取优惠券
+    async takeCoupon(vid) {
+      const json = await coupon.addVoucher({
+        uid: wepy.$instance.globalData.userIDS.ID,
+        vid: vid
+      });
+      this.hasError(json);
+    }
+    // 查看商品收藏状态
+    async goodsIsFavorite() {
+      const json = await api.goodsIsFavorite({
+        uid: wepy.$instance.globalData.userIDS.ID,
+        goodsId: this.goodsId
+      });
+      this.hasError(json);
+      if (json.isFavorite == 1) {
+        this.isFavorite = true;
+      } else {
+        this.isFavorite = false;
+      }
+      this.$apply();
+    }
+    // 商品收藏
+    async goodsFavorite() {
+      const json = await api.goodsFavorite({
+        uid: wepy.$instance.globalData.userIDS.ID,
+        goodsId: this.goodsId
+      });
+      this.hasError(json);
+      this.isFavorite = true;
+      tip.toast('收藏成功');
+      this.$apply();
+    }
+    // 商品取消收藏
+    async goodsUnFavorite() {
+      const json = await api.goodsUnFavorite({
+        uid: wepy.$instance.globalData.userIDS.ID,
+        goodsId: this.goodsId
+      });
+      this.hasError(json);
+      this.isFavorite = false;
+      tip.toast('取消收藏成功');
+      this.$apply();
+    }
+    // 购物车商品数量
+    // async getShopCartNum() {
+    //   const json = await api.cartList({
+    //     uid: wepy.$instance.globalData.userIDS.ID
+    //   });
+    //   this.hasError(json);
+    //   let cartNum = getCartNum(json.list);
+    //   // let cartNum = 0;
+    //   // for (var i = 0; i < data.list.length; i++) {
+    //   //   cartNum += parseInt(data.list[i].num);
+    //   // }
+    //   this.shopCartNum = cartNum;
+    //   this.$apply();
+    // }
+    async doTakeCart() {
+      const json = await api.addCart({
+        uid: wepy.$instance.globalData.userIDS.ID,
+        pid: this.goodsId,
+        num: this.orderNum
+      });
+      this.hasError(json);
+      // 关闭购物车窗口
+      this.hiddenConfirmData();
+      tip.success('成功加入购物车');
+      this.shopCartNum += this.orderNum;
+    }
+    // 打开购物车窗口
+    showConfirmData() {
+      this.animation.height('783rpx').step();
+      this.setData({
+        animationData: this.animation.export()
+      });
+      setTimeout(() => {
+        this.hidden = false;
+        this.winHeight = wepy.getSystemInfoSync().windowHeight;
+        this.$apply();
+      }, 100);
+    }
+    // 关闭购物车窗口
+    hiddenConfirmData() {
+      this.winHeight = '100%';
+      this.animation.height(0).step();
+      this.setData({
+        animationData: this.animation.export()
+      });
+      setTimeout(() => {
+        this.hidden = true;
+        this.$apply();
+      }, 100);
+    }
+    //   图片宽高计算
+    wxParseImgLoad(e) {}
+    //   解析图片点击
+    wxParseImgTap(e) {
+      var that = this;
+      var nowImgUrl = e.target.dataset.src;
+      var tagFrom = e.target.dataset.from;
+      if (typeof tagFrom != 'undefined' && tagFrom.length > 0) {
+        wx.previewImage({
+          current: nowImgUrl, // 当前显示图片的http链接
+          // urls: that.data[tagFrom].imageUrls // 需要预览的图片http链接列表
+          urls: that.bindData[tagFrom].imageUrls // 注释掉上面的 换着一行 (http:// blog.csdn.net/zhuming3834/article/details/74380079)
+        });
       }
     }
-    this.list = arr;
-    // console.log(this.list);
-    this.$apply();
   }
-
-  // 获取优惠券
-  async takeCoupon(vid) {
-    const json = await coupon.addVoucher({
-      uid: wepy.$instance.globalData.userIDS.ID,
-      vid: vid
-    });
-    this.hasError(json);
-  }
-
-  // 查看商品收藏状态
-  async goodsIsFavorite() {
-    const json = await api.goodsIsFavorite({
-      uid: wepy.$instance.globalData.userIDS.ID,
-      goodsId: this.goodsId
-    });
-    this.hasError(json);
-    if (json.isFavorite == 1) {
-      this.isFavorite = true;
-    } else {
-      this.isFavorite = false;
-    }
-    this.$apply();
-  }
-
-  // 商品收藏
-  async goodsFavorite() {
-    const json = await api.goodsFavorite({
-      uid: wepy.$instance.globalData.userIDS.ID,
-      goodsId: this.goodsId
-    });
-    this.hasError(json);
-    this.isFavorite = true;
-    tip.toast('收藏成功');
-    this.$apply();
-  }
-  // 商品取消收藏
-  async goodsUnFavorite() {
-    const json = await api.goodsUnFavorite({
-      uid: wepy.$instance.globalData.userIDS.ID,
-      goodsId: this.goodsId
-    });
-    this.hasError(json);
-    this.isFavorite = false;
-    tip.toast('取消收藏成功');
-    this.$apply();
-  }
-
-  // 购物车商品数量
-  // async getShopCartNum() {
-  //   const json = await api.cartList({
-  //     uid: wepy.$instance.globalData.userIDS.ID
-  //   });
-  //   this.hasError(json);
-  //   let cartNum = getCartNum(json.list);
-  //   // let cartNum = 0;
-  //   // for (var i = 0; i < data.list.length; i++) {
-  //   //   cartNum += parseInt(data.list[i].num);
-  //   // }
-  //   this.shopCartNum = cartNum;
-  //   this.$apply();
-  // }
-
-  async doTakeCart() {
-    const json = await api.addCart({
-      uid: wepy.$instance.globalData.userIDS.ID,
-      pid: this.goodsId,
-      num: this.orderNum
-    });
-    this.hasError(json);
-    // 关闭购物车窗口
-    this.hiddenConfirmData();
-    tip.success('成功加入购物车');
-    this.shopCartNum += this.orderNum;
-  }
-  // 打开购物车窗口
-  showConfirmData() {
-    this.animation.height('783rpx').step();
-    this.setData({
-      animationData: this.animation.export()
-    });
-    setTimeout(() => {
-      this.hidden = false;
-      this.winHeight = wepy.getSystemInfoSync().windowHeight;
-      this.$apply();
-    }, 100);
-  }
-  // 关闭购物车窗口
-  hiddenConfirmData() {
-    this.winHeight = '100%';
-    this.animation.height(0).step();
-    this.setData({
-      animationData: this.animation.export()
-    });
-    setTimeout(() => {
-      this.hidden = true;
-      this.$apply();
-    }, 100);
-  }
-
-  //   图片宽高计算
-  wxParseImgLoad(e) {}
-  //   解析图片点击
-  wxParseImgTap(e) {
-    var that = this;
-    var nowImgUrl = e.target.dataset.src;
-    var tagFrom = e.target.dataset.from;
-    if (typeof tagFrom != 'undefined' && tagFrom.length > 0) {
-      wx.previewImage({
-        current: nowImgUrl, // 当前显示图片的http链接
-        // urls: that.data[tagFrom].imageUrls // 需要预览的图片http链接列表
-        urls: that.bindData[tagFrom].imageUrls // 注释掉上面的 换着一行 (http://blog.csdn.net/zhuming3834/article/details/74380079)
-      });
-    }
-  }
-}
 </script>
 
 <style lang='scss'>
-.fz25 {
-  font-size: 25rpx;
-}
-.c999 {
-  color: #999999;
-}
-.other-price {
-  .del-price {
-    text,
-    view {
-      font-size: 26rpx;
-      color: #999 !important;
+  .fz25 {
+    font-size: 25rpx;
+  }
+  .c999 {
+    color: #999999;
+  }
+  .other-price {
+    .del-price {
+      text,
+      view {
+        font-size: 26rpx;
+        color: #999 !important;
+      }
     }
   }
-}
-.share-btn {
-  height: 120rpx;
-  left: -80rpx;
-  border: none !important;
-}
-.user__un-read-msg-count {
-  position: absolute;
-  top: -10rpx;
-}
-/*----------  解决解析图片缝隙的问题  ----------*/
-.free-images {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-.free-images image {
-  width: 100%;
-  min-height: 630rpx;
-}
-/*----------  /解决解析图片缝隙的问题  ----------*/
-.swiper {
-  height: 750rpx;
-}
-.slide-image {
-  width: 100%;
-  height: 100%;
-}
-.big_images {
-  height: 100%;
-  display: block;
-  margin-bottom: 90rpx;
-  image {
-    width: 100%;
+  .share-btn {
+    height: 120rpx;
+    left: -80rpx;
+    border: none !important;
   }
-}
-.details-msg {
-  border-top: 1px solid #ededed;
-  padding: 30rpx 30rpx;
-  background: #fff;
-  .details-title {
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    font-size: 30rpx;
-    color: #5f5f5f;
-    font-weight: bold;
+  .user__un-read-msg-count {
+    position: absolute;
+    top: -10rpx;
   }
-  .details-introduction {
-    color: #999;
-    font-size: 28rpx;
-    line-height: 40rpx;
-    margin-top: 20rpx;
-  }
-  .details_pinfo {
-    padding: 20rpx 0;
+  /*----------  解决解析图片缝隙的问题  ----------*/
+  .free-images {
     position: relative;
     display: flex;
-    align-items: center;
-    align-items: flex-end;
-    .price {
-      color: #f73c3c;
-      font-size: 45rpx;
-      flex: 2;
+    flex-direction: column;
+  }
+  .free-images image {
+    width: 100%;
+    min-height: 630rpx;
+  }
+  /*----------  /解决解析图片缝隙的问题  ----------*/
+  .swiper {
+    height: 750rpx;
+  }
+  .slide-image {
+    width: 100%;
+    height: 100%;
+  }
+  .big_images {
+    height: 100%;
+    display: block;
+    margin-bottom: 90rpx;
+    image {
+      width: 100%;
     }
-    .other-price {
+  }
+  .details-msg {
+    border-top: 1px solid #ededed;
+    padding: 30rpx 30rpx;
+    background: #fff;
+    .details-title {
+      overflow: hidden;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      font-size: 30rpx;
+      color: #5f5f5f;
+      font-weight: bold;
+    }
+    .details-introduction {
+      color: #999;
       font-size: 28rpx;
-      padding-left: 40rpx; // flex: 1;
-    }
-    .share-box {
-      text-align: center; // font-size: 20rpx;
-      padding-left: 50rpx;
-      flex: 1;
-      font-weight: 600;
-    }
-    .icon-share {
-      display: block;
-      padding-bottom: 5rpx;
-      font-size: 40rpx;
-    }
-    .baoyou {
-      color: #808080;
-      font-size: 28rpx;
+      line-height: 40rpx;
       margin-top: 20rpx;
     }
-    .order_time {
-      position: absolute;
-      right: 170rpx;
-      top: 40rpx;
-    }
-  }
-}
-.order_num {
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 108rpx;
-  border-top: 1px solid #efefef;
-  border-bottom: 1px solid #efefef;
-  padding: 0 30rpx;
-  .doc {
-    color: #808080;
-    .num {
-      color: #f73c3c;
-    }
-  }
-}
-.block {
-  padding: 27rpx 0rpx;
-  background: #fff;
-  .block_title {
-    color: #000;
-    height: 30rpx;
-    line-height: 30rpx;
-    border-left: 6px solid #f73c3c;
-    padding-left: 20rpx;
-  }
-  .block_content {
-    padding: 38rpx 22rpx;
-    .process {
-      font-size: 25rpx;
-      margin: 0 auto;
-      border: 1px solid #999999;
-      padding: 10rpx;
-      border-radius: 200px;
-      text-align: center;
-      margin-bottom: 25rpx;
-      color: #808080;
-    }
-    .doc {
-      color: #808080;
-      font-size: 26rpx;
-      line-height: 30rpx;
-    }
-  }
-  .table {
-    margin: 0 auto;
-    margin-top: -24rpx;
-    .th {
+    .details_pinfo {
+      padding: 20rpx 0;
+      position: relative;
       display: flex;
-      justify-content: space-between;
-      margin-top: 24rpx;
-    }
-    .tr {
-      font-size: 26rpx;
-      color: #808080;
-      text-align: left;
-      flex: 1;
+      align-items: center;
+      align-items: flex-end;
+      .price {
+        color: #f73c3c;
+        font-size: 45rpx;
+        flex: 2;
+      }
+      .other-price {
+        font-size: 28rpx;
+        padding-left: 40rpx; // flex: 1;
+      }
+      .share-box {
+        text-align: center; // font-size: 20rpx;
+        padding-left: 50rpx;
+        flex: 1;
+        font-weight: 600;
+      }
+      .icon-share {
+        display: block;
+        padding-bottom: 5rpx;
+        font-size: 40rpx;
+      }
+      .baoyou {
+        color: #808080;
+        font-size: 28rpx;
+        margin-top: 20rpx;
+      }
+      .order_time {
+        position: absolute;
+        right: 170rpx;
+        top: 40rpx;
+      }
     }
   }
-}
-.detail-bottom {
-  width: 100%;
-  border-top: 1px solid #ededed;
-  position: fixed;
-  bottom: 0;
-  background: #fff;
-  z-index: 1001;
-  .bottom-box {
+  .order_num {
+    background: #fff;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    .contact {
-      width: 100rpx;
-      height: 80rpx;
+    justify-content: space-between;
+    height: 108rpx;
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    padding: 0 30rpx;
+    .doc {
+      color: #808080;
+      .num {
+        color: #f73c3c;
+      }
+    }
+  }
+  .block {
+    padding: 27rpx 0rpx;
+    background: #fff;
+    .block_title {
+      color: #000;
+      height: 30rpx;
+      line-height: 30rpx;
+      border-left: 6px solid #f73c3c;
+      padding-left: 20rpx;
+    }
+    .block_content {
+      padding: 38rpx 22rpx;
+      .process {
+        font-size: 25rpx;
+        margin: 0 auto;
+        border: 1px solid #999999;
+        padding: 10rpx;
+        border-radius: 200px;
+        text-align: center;
+        margin-bottom: 25rpx;
+        color: #808080;
+      }
+      .doc {
+        color: #808080;
+        font-size: 26rpx;
+        line-height: 30rpx;
+      }
+    }
+    .table {
       margin: 0 auto;
-      position: absolute;
+      margin-top: -24rpx;
+      .th {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24rpx;
+      }
+      .tr {
+        font-size: 26rpx;
+        color: #808080;
+        text-align: left;
+        flex: 1;
+      }
+    }
+  }
+  .detail-bottom {
+    width: 100%;
+    border-top: 1px solid #ededed;
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+    z-index: 1001;
+    .bottom-box {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: relative;
+      .contact {
+        width: 100rpx;
+        height: 80rpx;
+        margin: 0 auto;
+        position: absolute;
+        text-align: center;
+        line-height: 80rpx;
+        left: 0rpx; //  在客服上面
+        opacity: 0;
+      }
+    }
+    .sy-bottom {
+      padding: 15rpx 40rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      font-size: 30rpx;
       text-align: center;
-      line-height: 80rpx;
-      left: 0rpx; //  在客服上面
-      opacity: 0;
+      flex: 2;
+    }
+    .btn_order {
+      background: #ff4856;
+      color: #fff;
+    }
+    .btn_cart {
+      color: #fff;
+      background: #ff0077;
+    }
+    .order_color {
+      background: #a9a9a9;
+      color: #fff;
+    }
+    .cart_color {
+      color: #fff;
+      background: #a9a9a9;
+    }
+    .item:first-child {
+      border-right: 1px solid #efefef;
+    }
+    .item {
+      flex: 1;
+      text-align: center;
+      .doc {
+        font-size: 24rpx;
+      }
+    }
+    .selec_active {
+      .doc {
+        color: #ff3366;
+      }
+      .iconfont {
+        color: #ff3366;
+      }
     }
   }
-  .sy-bottom {
-    padding: 15rpx 40rpx;
-    height: 60rpx;
-    line-height: 60rpx;
-    font-size: 30rpx;
-    text-align: center;
-    flex: 2;
+  .over_model {
+    position: fixed;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    top: 0;
   }
-  .btn_order {
-    background: #ff4856;
-    color: #fff;
-  }
-  .btn_cart {
-    color: #fff;
-    background: #ff0077;
-  }
-  .order_color {
-    background: #a9a9a9;
-    color: #fff;
-  }
-  .cart_color {
-    color: #fff;
-    background: #a9a9a9;
-  }
-  .item:first-child {
-    border-right: 1px solid #efefef;
-  }
-  .item {
-    flex: 1;
-    text-align: center;
-    .doc {
-      font-size: 24rpx;
-    }
-  }
-  .selec_active {
-    .doc {
-      color: #ff3366;
-    }
-    .iconfont {
-      color: #ff3366;
-    }
-  }
-}
-.over_model {
-  position: fixed;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  width: 100%;
-  height: 100%;
-  top: 0;
-}
-.head_box {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #efefef;
-  padding-bottom: 26rpx;
-  .img_wrap {
-    height: 200rpx;
-    width: 200rpx;
-    background: #000;
-  }
-  .goods_img {
-    height: 200rpx;
-    width: 200rpx;
-    background: #000;
-  }
-  .product_wrap {
-    padding: 20rpx;
-  }
-  .product_name {
-    color: #666;
-  }
-  .price {
-    color: #e11500;
-    font-size: 36rpx;
-    padding-top: 32rpx;
-  }
-}
-.rule_box {
-  border-bottom: 1px solid #efefef;
-  padding-bottom: 26rpx;
-  .title {
-    color: #4c4c4c;
-    font-size: 32rpx;
-    margin-top: 10rpx;
-  }
-  .items {
+  .head_box {
     display: flex;
-    flex-wrap: wrap;
-    margin-top: 5rpx;
-    margin-left: -20rpx;
+    align-items: center;
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 26rpx;
+    .img_wrap {
+      height: 200rpx;
+      width: 200rpx;
+      background: #000;
+    }
+    .goods_img {
+      height: 200rpx;
+      width: 200rpx;
+      background: #000;
+    }
+    .product_wrap {
+      padding: 20rpx;
+    }
+    .product_name {
+      color: #666;
+    }
+    .price {
+      color: #e11500;
+      font-size: 36rpx;
+      padding-top: 32rpx;
+    }
   }
-  .item {
-    padding: 15rpx 28rpx;
-    background: #e6e6e6;
-    color: #000;
-    margin-left: 20rpx;
-    margin-top: 10rpx;
-    border-radius: 10rpx;
+  .rule_box {
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 26rpx;
+    .title {
+      color: #4c4c4c;
+      font-size: 32rpx;
+      margin-top: 10rpx;
+    }
+    .items {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 5rpx;
+      margin-left: -20rpx;
+    }
+    .item {
+      padding: 15rpx 28rpx;
+      background: #e6e6e6;
+      color: #000;
+      margin-left: 20rpx;
+      margin-top: 10rpx;
+      border-radius: 10rpx;
+    }
+    .active {
+      background: #ed394a;
+      color: #fff;
+    }
   }
-  .active {
-    background: #ed394a;
-    color: #fff;
+  .num_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15rpx 0rpx;
+    .title {
+      color: #4c4c4c;
+      font-size: 32rpx;
+    }
   }
-}
-.num_box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15rpx 0rpx;
-  .title {
-    color: #4c4c4c;
-    font-size: 32rpx;
-  }
-}
-.buy-num {
-  width: 170rpx;
-  height: 48rpx;
-  line-height: 48rpx;
-  display: flex;
-  font-size: 24rpx;
-  text-align: center;
-  .jian-btn {
-    width: 48rpx;
-    height: 100%;
-    border-left: 1rpx solid #ccc;
-    border-bottom: 1rpx solid #ccc;
-    border-top: 1rpx solid #ccc;
-    border-bottom-left-radius: 6rpx;
-    border-top-left-radius: 6rpx;
-  }
-  .jian-btn.disabled {
-    background-color: #f5f5f9;
-    border-left: 1rpx solid #eee;
-    border-bottom: 1rpx solid #eee;
-    border-top: 1rpx solid #eee;
-    color: #ccc;
-  }
-  .jia-btn {
-    width: 48rpx;
-    height: 100%;
-    border-right: 1rpx solid #ccc;
-    border-bottom: 1rpx solid #ccc;
-    border-top: 1rpx solid #ccc;
-    border-bottom-right-radius: 6rpx;
-    border-top-right-radius: 6rpx;
-  }
-  .jia-btn.disabled {
-    background-color: #f5f5f9;
-    border-right: 1rpx solid #eee;
-    border-bottom: 1rpx solid #eee;
-    border-top: 1rpx solid #eee;
-    color: #ccc;
-  }
-  input {
-    width: 68rpx;
+  .buy-num {
+    width: 170rpx;
     height: 48rpx;
-    min-height: 48rpx;
-    text-align: center;
+    line-height: 48rpx;
+    display: flex;
     font-size: 24rpx;
-    border: 1rpx solid #ccc;
+    text-align: center;
+    .jian-btn {
+      width: 48rpx;
+      height: 100%;
+      border-left: 1rpx solid #ccc;
+      border-bottom: 1rpx solid #ccc;
+      border-top: 1rpx solid #ccc;
+      border-bottom-left-radius: 6rpx;
+      border-top-left-radius: 6rpx;
+    }
+    .jian-btn.disabled {
+      background-color: #f5f5f9;
+      border-left: 1rpx solid #eee;
+      border-bottom: 1rpx solid #eee;
+      border-top: 1rpx solid #eee;
+      color: #ccc;
+    }
+    .jia-btn {
+      width: 48rpx;
+      height: 100%;
+      border-right: 1rpx solid #ccc;
+      border-bottom: 1rpx solid #ccc;
+      border-top: 1rpx solid #ccc;
+      border-bottom-right-radius: 6rpx;
+      border-top-right-radius: 6rpx;
+    }
+    .jia-btn.disabled {
+      background-color: #f5f5f9;
+      border-right: 1rpx solid #eee;
+      border-bottom: 1rpx solid #eee;
+      border-top: 1rpx solid #eee;
+      color: #ccc;
+    }
+    input {
+      width: 68rpx;
+      height: 48rpx;
+      min-height: 48rpx;
+      text-align: center;
+      font-size: 24rpx;
+      border: 1rpx solid #ccc;
+    }
   }
-}
-.panle_model {
-  position: absolute;
-  height: 0rpx;
-  width: 100%;
-  z-index: 1002;
-  background: #fff;
-  bottom: 0;
-}
-.model_content {
-  padding: 20rpx;
-  position: relative;
-}
-.colse_model {
-  position: absolute;
-  right: 10rpx;
-  top: 10rpx;
-  .icon-close {
-    color: #e11500;
-    font-size: 32rpx;
+  .panle_model {
+    position: absolute;
+    height: 0rpx;
+    width: 100%;
+    z-index: 1002;
+    background: #fff;
+    bottom: 0;
   }
-}
-.comfire_btn {
-  height: 100rpx;
-  line-height: 100rpx;
-  width: 100%;
-  background: #ff0077;
-  text-align: center;
-  color: #fff;
-  position: absolute;
-  bottom: 0;
-  z-index: 10003;
-}
-.button-more-cmment {
-  font-size: 28rpx;
-  height: 55rpx;
-  line-height: 55rpx;
-  text-align: center;
-  margin: 20rpx auto;
-  width: 200rpx;
-  -moz-border-radius: 10rpx;
-  /* Firefox */
-  -webkit-border-radius: 10rpx;
-  /* Safari 和 Chrome */
-  border-radius: 10rpx;
-  /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
-  color: #ff4856;
-  border: 1px solid #ff4856;
-}
-.myButtons {
-  bottom: 150rpx !important;
-}
-.hidden {
-  display: none;
-}
+  .model_content {
+    padding: 20rpx;
+    position: relative;
+  }
+  .colse_model {
+    position: absolute;
+    right: 10rpx;
+    top: 10rpx;
+    .icon-close {
+      color: #e11500;
+      font-size: 32rpx;
+    }
+  }
+  .comfire_btn {
+    height: 100rpx;
+    line-height: 100rpx;
+    width: 100%;
+    background: #ff0077;
+    text-align: center;
+    color: #fff;
+    position: absolute;
+    bottom: 0;
+    z-index: 10003;
+  }
+  .button-more-cmment {
+    font-size: 28rpx;
+    height: 55rpx;
+    line-height: 55rpx;
+    text-align: center;
+    margin: 20rpx auto;
+    width: 200rpx;
+    -moz-border-radius: 10rpx;
+    /* Firefox */
+    -webkit-border-radius: 10rpx;
+    /* Safari 和 Chrome */
+    border-radius: 10rpx;
+    /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+    color: #ff4856;
+    border: 1px solid #ff4856;
+  }
+  .myButtons {
+    bottom: 150rpx !important;
+  }
+  .hidden {
+    display: none;
+  }
 </style>

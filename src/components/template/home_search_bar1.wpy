@@ -1,0 +1,350 @@
+<template lang="wxml" minapp="wepy">
+  <!-- 搜索条 -->
+  <view class="top-search-panel">
+    <view class="search_read_only">
+      <!-- <image src="../../images/home/1xs1.png" mode="widthFix" class="img-xs" lazy-load="false"></image> -->
+      <icon class="order icon-d"></icon>
+      <!-- <icon class="address icon-d"></icon> -->
+      <block wx:if="{{locationScope}}">
+        <view class="flex-item ">{{address}}
+          <icon class="error arrow"></icon>
+        </view>
+        <view class="flex-item-2 ">
+          <icon class="icon-daohang icon-d"></icon><text class="weak xxs" style="font-weight:bold;"> {{distanceInfo}}</text></view>
+        <view class="flex-item-0 " @tap="scan()">
+          <icon class="scan xs" style="font-weight:bold;color:#999999;"></icon>
+        </view>
+      </block>
+      <block wx:else>
+        <button size="mini" plain="true" open-type="openSetting" bindopensetting="handler">请授权位置信息,为您导航及配送.</button>
+      </block>
+    </view>
+    <view class="search_read_only">
+      <navigator class="search_content" open-type="navigate" url="/pages/goods/search">
+        <i class="iconfont icon-search"></i>
+        <view class="search_input">搜索</view>
+      </navigator>
+    </view>
+  </view>
+  <!-- /搜索条 -->
+  <!--绑定输入事件-->
+  <view class="search_read_only ">
+    <input class='search_address' bindinput="getsuggest" value="{{backfill}}"></input>
+  </view>
+  <!--关键词输入提示列表渲染-->
+  <view wx:for="{{suggestion}}" wx:key="index">
+    <!--绑定回填事件-->
+    <view>
+      <!--根据需求渲染相应数据-->
+      <!--渲染地址title-->
+      <view style="text-align:center;" bindtap="backfill" id="{{index}}">{{item.title}}</view>
+      <!--渲染详细地址-->
+      <view style="font-size:12px;color:#666;text-align:center;">{{item.addr}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import QQMapWX from '@/utils/qqmap-wx-jssdk';
+import api from '@/api/config';
+export default class SearchBar extends wepy.component {
+  props = {
+    param: {}
+  };
+  data = {
+    locationScope: false,
+    qqmapsdk: {},
+    address: '',
+    distanceInfo: '',
+    city_code: '',
+    suggestion: '',
+    backfill: ''
+  };
+  methods = {
+    handler: function(e) {
+      if (!e.detail.authSetting['scope.userLocation']) {
+        this.locationScope = false;
+      } else {
+        this.locationScope = true;
+        this.getLocation();
+      }
+    },
+    scan() {
+      let url;
+      // 只允许从相机扫码
+      wx.scanCode({
+        onlyFromCamera: true,
+        success(res) {
+          console.log(res);
+          url = res.path;
+          // 这个上传后还得改
+          url = '/pages/goods' + url.substring(5);
+          wx.navigateTo({
+            url: url
+          });
+        }
+      });
+    },
+    // 在Page({})中使用下列代码
+    // 数据回填方法
+    backfill: function(e) {
+      var id = e.currentTarget.id;
+      // console.log(e);
+      for (var i = 0; i < this.suggestion.length; i++) {
+        if (i == id) {
+          this.backfill = this.suggestion[i].title;
+        }
+      }
+    },
+    // 触发关键词输入提示事件
+    getsuggest: function(e) {
+      var _this = this;
+      console.log(e);
+      // 调用关键词提示接口
+      this.qqmapsdk.getSuggestion({
+        // 获取输入框值并设置keyword参数
+        keyword: e.detail.value, // 用户输入的关键词，可设置固定值,如keyword:'KFC'
+        // region: '北京', // 设置城市名，限制关键词所示的地域范围，非必填参数
+        success: function(res) {
+          // 搜索成功后的回调
+          console.log(res);
+          var sug = [];
+          for (var i = 0; i < res.data.length; i++) {
+            sug.push({
+              // 获取返回结果，放到sug数组中
+              title: res.data[i].title,
+              id: res.data[i].id,
+              addr: res.data[i].address,
+              city: res.data[i].city,
+              district: res.data[i].district,
+              latitude: res.data[i].location.lat,
+              longitude: res.data[i].location.lng
+            });
+          }
+          _this.suggestion = sug;
+          _this.$apply();
+          // _this.setData({
+          //   //设置suggestion属性，将关键词搜索结果以列表形式展示
+          //   suggestion: sug
+          // });
+        },
+        fail: function(error) {
+          console.error(error);
+        },
+        complete: function(res) {
+          console.log(res);
+        }
+      });
+    }
+  };
+  /**
+   * 获取本机定位
+   */
+  getLocation() {
+    var that = this;
+    wx.getLocation({
+      type: 'gcj02',
+      success: function(res) {
+        that.locationScope = true;
+        that.$apply();
+        const latitude = res.latitude;
+        const longitude = res.longitude;
+        that.getLocationInfo(latitude, longitude);
+      },
+      fail: function(res) {
+        console.log('拒绝授权');
+        that.locationScope = false;
+      }
+    });
+  }
+  /**
+   * 获取经纬度附近地址信息
+   */
+  getLocationInfo(lat, lng) {
+    let that = this;
+    // 调用接口
+    this.qqmapsdk.reverseGeocoder({
+      location: lat + ',' + lng,
+      //   118.746971,32.221862
+      // location: '32.221862,118.746971',
+      get_poi: 1,
+      success: function(res) {
+        // console.log(res);
+        let r = res.result;
+        let addr = r.pois[6].title;
+        if (addr.length > 5) {
+          addr = addr.substring(0, 5) + '...';
+        }
+        that.address = addr;
+        that.city_code = r.ad_info.city_code;
+        let shops = api.getShopLocation({
+          adcode: r.ad_info.adcode
+        });
+        shops.then(data => {
+          console.log(data, '<<<<<<<<<<<<<<<');
+          that.getShopDistance(lat, lng, data);
+          // that.getShopDistance('32.221862', '118.746971', data);
+        });
+        that.$apply();
+      },
+      fail: function(res) {
+        console.log(res);
+      }
+    });
+  }
+  /**
+   * 获取到达门店距离
+   */
+  getShopDistance(lat, lng, shopList) {
+    let that = this;
+    this.qqmapsdk.calculateDistance({
+      //   mode: 'driving', // 行走模式 默认为 walking 步行距离好像更近些和精确 驾车可能存在掉头停靠问题
+      from: lat + ',' + lng,
+      //   to: '40.2155294611,116.2230294943',
+      to: shopList,
+      success: res => {
+        // console.log(res);
+        let list = res.result.elements;
+        list = list.sort((a, b) => {
+          return a.distance - b.distance;
+        });
+        console.log(list);
+        // 大于多少公里就不要显示了 哦 目前只有南京显示 看看米和公里做个转换 小于公里显示米 如果在门店里 怎么显示
+        // 应该做个显示转换的方法
+        that.formatDistance(list[0].distance);
+        // that.distance = list[0].distance;
+        // that.$apply();
+      },
+      fail: res => {
+        console.log(res);
+      }
+    });
+  }
+  /**
+   * 距离转换
+   * 如何缓存这几个列表  还有这几个方法不要放在search里 应该放到一个文件里  好像不行 这种callback不能放到外面 而且下面信息和页面结合太深了
+   */
+  formatDistance(distance) {
+    let info;
+    let dis = distance;
+    if (distance < 1000) {
+      info = distance + '米';
+    } else {
+      distance = parseInt(distance / 1000);
+      info = distance + 'km';
+    }
+    // console.log(info)
+    this.distanceInfo = dis > 100 ? `您距离最近的门店: ${info}` : '';
+    this.$apply();
+  }
+  async onLoad() {
+    // 实例化API核心类
+    this.qqmapsdk = new QQMapWX({
+      key: '6QIBZ-NHXR3-KYO3T-YZAGT-4ADW6-NTBF5'
+    });
+    this.$apply();
+    this.getLocation();
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+@import '../../styles/variable'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+.search_address {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50rpx;
+  color: #999; // width: 500rpx;
+  flex-grow: 1;
+  background: #a3a3a3;
+  padding: 0 30rpx;
+  width: 650rpx;
+  height: 55rpx; // margin: 0 auto;
+  font-weight: bold;
+}
+.arrow {
+  color: $color-normal;
+  font-size: $text-xs;
+}
+.icon-d {
+  font-size: $text-sm;
+  font-weight: bold;
+}
+.flex-item {
+  flex-grow: 1;
+}
+.flex-item-0 {
+  flex-grow: 0;
+}
+.flex-item-2 {
+  flex-grow: 2;
+}
+.search_read_only {
+  align-items: center;
+  padding: 0 20rpx;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto; // width: 650rpx;
+  margin-top: 15rpx;
+  margin-bottom: 10rpx;
+  .search_content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10rpx;
+    color: #999; // width: 500rpx;
+    flex-grow: 1;
+    background: #efefef;
+    padding: 0 300rpx;
+    height: 55rpx; // margin: 0 auto;
+    font-weight: bold;
+    .search_input {
+      font-size: 26rpx;
+      width: 100%;
+    }
+  }
+  .icon-search {
+    font-size: 40rpx;
+  }
+  .icon-message {
+    font-size: 50rpx;
+  }
+}
+.top-search-panel {
+  // @extend .btn-panel-top;
+  // position: fixed;
+  // top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99; // width: 100%;
+  background: #fff; //   background: linear-gradient(
+  //     to bottom,
+  //     rgba(12, 12, 12, 10),
+  //     rgba(255, 0, 0, 0)
+  //   );
+  .search_content {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #efefee;
+    .icon-search,
+    .search_input {
+      color: #999;
+    }
+  }
+  .message {
+    display: block;
+    text-align: center;
+    margin-left: 20rpx;
+  }
+  .doc {
+    font-size: 16rpx;
+    display: block;
+  }
+}
+.img-xs {
+  width: 110rpx;
+  margin-right: 20rpx;
+}
+</style>

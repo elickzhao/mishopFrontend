@@ -1,0 +1,435 @@
+<!--  -->
+<template lang='wxml' minapp='wepy'>
+  <view class='list-warpper'>
+    <!-- 搜索框 -->
+    <view wx:if="{{config.search}}" class='list-search' style="height:{{config.searchHeight}}px">
+      <view class='list-search-box'>
+        <icon type="search" size="15" />
+        <input confirm-type="search" placeholder="输入您要搜索的城市" bindinput='input' value="{{value}}" bindconfirm	="searchMt"/>
+        <icon wx:if="{{showClear}}" type="clear" size="15" @tap="clear" />
+      </view>
+      <!-- <button class='search-button' plain="{{false}}" catchtap='searchMt'>搜索</button> -->
+      <text class='search-button' catchtap='searchMt'> 搜索 </text>
+    </view>
+    <view wx:if="{{config.suctionTop}}" class='fiexed-box list-title' style='transform: translateY(-{{moveDistance}}px);top:{{config.search?90:0}}rpx'>
+      {{list[listIndex].title}}
+    </view>
+    <!-- 提示城市快捷字母 -->
+    <block wx:if="{{isShowLetter}}">
+      <view class="showSlectedLetter">{{showLetter}}</view>
+    </block>
+    <!-- /提示城市快捷字母 -->
+    <!-- 搜索到所有数据的时候显示 -->
+    <block wx:if="{{list.length != 0 }}">
+      <scroll-view class="list-scroll {{config.search?'top':''}}" style=" padding-top:{{config.search?config.searchHeight:0}}px" scroll-y="true" scroll-into-view="{{jumpNum}}" scroll-with-animation="{{config.animation}}" bindscroll="scroll">
+        <!-- 主体内容显示 -->
+        <repeat for="{{list}}" key="index" index="index" item="item">
+          <view id="index{{index}}">
+            <view class="list-title fixed-title-hock">{{item.title}}</view>
+            <view class="{{config.horizontal && item.type === 'hot' || item.type === 'hot' || item.type === 'me' ? 'list-horizontal' : '' }}">
+              <view class="list-name border {{item.type === 'me' ? 'slectCity' : ''}} " wx:for="{{item.item}}" wx:for-item="city" wx:for-index="idx" wx:key="city" @tap.stop="detailMt({{city}})">
+                {{city.name}}
+              </view>
+            </view>
+          </view>
+        </repeat>
+      </scroll-view>
+      <!-- 右侧索引显示 -->
+      <view class="list-right-wrapper">
+        <repeat for="{{rightArr}}" key="rightArr" index="index" item="item">
+          <view class="right-item {{listIndex == index?'active':''}}" @tap.stop="jumpMt({{index}})">
+            {{rightArr[index]}}
+          </view>
+        </repeat>
+      </view>
+    </block>
+    <!-- 没有搜索到数据的时候显示 -->
+    <block wx:else>
+      <view class='nodata'>没有搜索到相关的数据哦</view>
+    </block>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+// 不能在组件里引用 可能因为文件太大 加载的时候 会造成右侧提示及吸顶的延迟问题
+// import citys from '@/utils/allcity';
+export default class CitySelect extends wepy.component {
+  config = {
+    navigationBarTitleText: '城市选择'
+  };
+  props = {
+    citys: {
+      type: Object
+    },
+    /**
+     * 配置项
+     */
+    config: {
+      type: Object,
+      default: {
+        horizontal: true, // 第一个选项是否横排显示（一般第一个数据选项为 热门城市，常用城市之类 ，开启看需求）
+        animation: true, // 过渡动画是否开启
+        search: true, // 是否开启搜索
+        searchHeight: 50, // 搜索条高度
+        suctionTop: true, // 是否开启标题吸顶
+        myCity: false,
+        myCityName: '点击获取我的位置'
+      }
+    }
+  };
+  data = {
+    list: {}, // 地区列表
+    rightArr: [], // 右侧地区首字母
+    jumpNum: '', // 跳转到那个字母
+    listIndex: 0, // 右侧字母高亮序号
+    topGroup: [], // 内容高度数据
+    moveDistance: 0, // 吸顶高度
+    isShowLetter: false, // 显示右侧信息
+    showLetter: '', // 城市快捷字母
+    value: '',
+    showClear: false
+  };
+  onLoad() {
+    // console.log(this.citys, '<<<<<<<<')
+    // console.log(this.config)
+    // this.list = citys;
+    // 初始化数据
+    this.resetRight(this.citys);
+    // this.$apply();
+  }
+  resetRight(data) {
+    let rightArr = [];
+    // console.log(this.config)
+    // if (this.data.config.myCity && this.data.k) {
+    if (this.config.myCity) {
+      data.unshift({
+        title: '当前定位',
+        type: 'me',
+        item: [
+          {
+            // name: '点击获取我的位置',
+            name: this.config.myCityName,
+            key: '当前定位'
+          }
+        ]
+      });
+      this.config.myCity = false;
+    }
+    // this.data.k = true;
+    for (let i in data) {
+      rightArr.push(data[i].title.substr(0, 1));
+    }
+    this.list = data;
+    this.rightArr = rightArr;
+    this.$apply();
+    // 必须放这里 因为上面 数据没有真正赋值 所以无法计算高度
+    this.queryMultipleNodes();
+  }
+  /**
+   * 获取节点信息
+   */
+  queryMultipleNodes() {
+    let that = this;
+    const query = wx.createSelectorQuery();
+    query
+      .selectAll('.fixed-title-hock')
+      .boundingClientRect(res => {
+        res.forEach(function(rect) {
+          return rect.top; // 节点的上边界坐标
+        });
+      })
+      .exec(e => {
+        // e 是返回上面选择的类的元素的边界等信息 数组保存在 e[0]里
+        let arr = [];
+        e[0].forEach(rect => {
+          // 计算上边距 有搜索框与无搜索框不同
+          let num = 0;
+          if (rect.top !== 0) {
+            num =
+              rect.top -
+              // (that.props.config.search ? that.props.config.searchHeight : 0);
+              (that.config.search ? that.config.searchHeight : 0);
+          }
+          arr.push(num);
+        });
+        that.topGroup = arr;
+        // that.$apply();
+      });
+  }
+  /**
+   * 获取当前滚动索引
+   */
+  currentIndex(y) {
+    let listHeight = this.topGroup;
+    for (let i = 0; i < listHeight.length; i++) {
+      let height1 = listHeight[i];
+      let height2 = listHeight[i + 1];
+      if (!height2 || (y >= height1 && y < height2)) {
+        return i;
+      }
+    }
+    return 0;
+  }
+  /**
+   * 搜索相关逻辑实现
+   */
+  _search() {
+    if (typeof this.value != 'undefined') {
+      let data = this.citys;
+      let newData = [];
+      for (let i = 0; i < data.length; i++) {
+        let itemArr = [];
+        for (let j = 0; j < data[i].item.length; j++) {
+          if (data[i].item[j].name.indexOf(this.value) > -1) {
+            let itemJson = {};
+            for (let k in data[i].item[j]) {
+              itemJson[k] = data[i].item[j][k];
+            }
+            itemArr.push(itemJson);
+          }
+        }
+        if (itemArr.length === 0) {
+          continue;
+        }
+        newData.push({
+          title: data[i].title,
+          type: data[i].type ? data[i].type : '',
+          item: itemArr
+        });
+      }
+      this.resetRight(newData);
+    }
+  }
+
+  components = {};
+  methods = {
+    scroll(e) {
+      let top = e.detail.scrollTop;
+      let index = this.currentIndex(top);
+      let list = this.topGroup;
+      // let distance = top - list[this.listIndex];
+      let num = -(list[this.data.listIndex + 1] - top - 40);
+      // 渲染滚动索引
+      if (index !== this.listIndex) {
+        this.listIndex = index;
+        this.moveDistance = 40;
+        // 如果监听到 index 的变化 ，一定要return ，否则吸顶会先变化文字后运动，会闪烁
+        return;
+      }
+      if (num < 0) num = 0;
+      if (num !== this.moveDistance) {
+        this.moveDistance = num;
+      }
+    },
+    jumpMt(id) {
+      let jumpNum = 'index' + id;
+      // console.log(this.data.rightArr[jumpNum.substr(5)])
+      let that = this;
+      this.isShowLetter = true;
+      this.showLetter = this.data.rightArr[jumpNum.substr(5)];
+      setTimeout(function() {
+        that.isShowLetter = false;
+        that.$apply();
+      }, 1000);
+      this.jumpNum = jumpNum;
+    },
+    /**
+     * 列表点击事件
+     */
+    detailMt(city) {
+      this.$emit('selectCity', city);
+    },
+    // 获取搜索输入内容
+    input(e) {
+      this.value = e.detail.value;
+      // console.log(this.value);
+    },
+    // 基础搜索功能
+    searchMt() {
+      this._search();
+    },
+    // 清除搜索框
+    clear() {
+      this.value = '';
+      // 如果搜索完成 退回原页面
+      if (this.list != this.citys) {
+        this.resetRight(this.citys);
+      }
+    }
+  };
+  events = {};
+  watch = {
+    value(newValue) {
+      if (newValue != '') {
+        this.showClear = true;
+      } else {
+        this.showClear = false;
+      }
+    }
+  };
+  computed = {};
+  // onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.list-warpper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+.list-scroll {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.list-scroll.top {
+  padding-top: 90rpx;
+}
+/* 样式控制  */
+.list-title {
+  background: #f5f5f5;
+  color: #666;
+  font-size: 36rpx;
+  /* padding: 10rpx; */
+  padding-left: 30rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  /* padding-top: 15rpx; */
+}
+.list-name {
+  position: relative;
+  font-size: 30rpx;
+  padding: 15rpx;
+  padding-left: 30rpx;
+  color: #666;
+}
+.list-name.border::after {
+  content: '';
+  position: absolute;
+  left: 30rpx;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: #f5f5f5;
+}
+.list-right-wrapper {
+  position: absolute;
+  top: 120rpx;
+  right: 20rpx;
+  padding: 20rpx 0;
+  border-radius: 40rpx;
+  /* z-index: 2; */
+  background: #ddd;
+  box-sizing: border-box;
+  z-index: 999;
+}
+.right-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rpx 10rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+.right-item.active {
+  color: #ff0077;
+}
+.list-search {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 90rpx;
+  padding: 10rpx 30rpx;
+  box-sizing: border-box;
+  z-index: 20;
+  background: #fff;
+  border-bottom: 1px #f5f5f5 solid;
+}
+.search-title {
+  flex-shrink: 0;
+  font-size: 28rpx;
+  padding-right: 10rpx;
+}
+.list-search-box {
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  width: 100%;
+  height: 70rpx;
+  background: #f5f5f5;
+  border-radius: 90rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+.list-search-box input {
+  width: 100%;
+  padding-left: 10rpx;
+}
+.search-button {
+  /* width: 100rpx; */
+  flex-shrink: 0;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 28rpx;
+  margin-left: 40rpx;
+  color: #999;
+}
+/* 热门城市横排显示样式  */
+.list-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10rpx;
+  padding-right: 50rpx;
+}
+.list-horizontal .list-name {
+  padding: 5rpx 45rpx;
+  border: 1px#ededed solid;
+  border-radius: 10rpx;
+  margin: 10rpx;
+  color: #666;
+  font-size: 28rpx;
+  /* margin-right: 20rpx; */
+}
+.fiexed-box {
+  position: absolute;
+  top: 90rpx;
+  z-index: 19;
+  width: 100%;
+  /* background: #ddd; */
+}
+.list-horizontal .slectCity {
+  color: #ff0077;
+  border: 1px#FF0077 solid;
+}
+/* 无数据  */
+.nodata {
+  padding-top: 200rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #ddd;
+}
+/* 提示信息 */
+.showSlectedLetter {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: -100rpx;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 20rpx;
+  font-size: 52rpx;
+  z-index: 1;
+}
+</style>

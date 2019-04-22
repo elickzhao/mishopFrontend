@@ -14,8 +14,8 @@
     <view class="h-gap"></view>
     <!-- 热卖商品 -->
     <view class="column-center bg-white">
-      <text class="xxl" style="font-weight:bold;"> 1小时达</text>
-      <ScrollXList :list.sync='hotList' title='1小时达'></ScrollXList>
+      <text class="xxl" style="font-weight:bold;"> 天天特价</text>
+      <ScrollXList :list.sync='hotList' title='天天特价'></ScrollXList>
     </view>
     <!-- /热卖商品 -->
     <view class="h-gap"></view>
@@ -64,7 +64,7 @@ import goods from '@/api/goods';
 import BaseMixin from '@/mixins/base';
 import Pagination from '@/mixins/pagination';
 import GotopMixin from '@/mixins/gotop_mix';
-import SearchBar from '@/components/template/home_search_bar';
+import SearchBar from '@/components/template/home_search_bar1';
 import SwiperBar from '../../components/template/swiper_bar';
 import NavList from '../../components/nav_list';
 import ScrollXList from '../../components/scroll_list';

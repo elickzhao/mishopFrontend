@@ -1,22 +1,22 @@
 <!-- 首页四图标导航 -->
 <template>
     <view class="nav_list">
-        <navigator open-type="navigate" url="/pages/home/sign_in">
+        <navigator open-type="navigate" url="/pages/home/goods_zone?title=香港直邮&flag=3">
             <image src="../images/icons/icon_nav_01_new.png" class="nav_icon"></image>
-            <view class="nav_text">签到有礼</view>
+            <view class="nav_text">香港直邮</view>
         </navigator>
-        <navigator open-type="navigate" url="/pages/home/goods_zone?title=疯狂店促&flag=2">
-            <image src="../images/icons/icon_nav_02_new.gif" class="nav_icon"></image>
-            <view class="nav_text">疯狂店促</view>
+        <navigator open-type="navigate" url="/pages/home/goods_zone?title=店内发货&flag=2">
+            <image src="../images/icons/icon_nav_02_new.png" class="nav_icon"></image>
+            <view class="nav_text">店内发货</view>
         </navigator>
-        <navigator open-type="navigate" url="/pages/home/goods_zone?title=淘宝拼团&flag=0">
+        <navigator open-type="navigate" url="/pages/home/goods_zone?title=海外直邮&flag=0">
             <image src="../images/icons/icon_nav_03_new.png" class="nav_icon"></image>
-            <view class="nav_text">淘宝拼团</view>
+            <view class="nav_text">海外直邮</view>
         </navigator>
         <!-- flag= ['is_hot','type','is_show','is_sale']; -->
-        <navigator open-type="navigate" url="/pages/home/goods_zone?title=分销招募&flag=1">
-            <image src="../images/icons/icon_nav_02.png" class="nav_icon"></image>
-            <view class="nav_text">分销招募</view>
+        <navigator open-type="navigate" url="/pages/home/goods_zone?title=保税发货&flag=1">
+            <image src="../images/icons/icon_nav_04_new.png" class="nav_icon"></image>
+            <view class="nav_text">保税发货</view>
         </navigator>
     </view>
 </template>

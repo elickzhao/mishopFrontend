@@ -1,0 +1,29 @@
+<!--  -->
+<template lang='wxml' minapp='wepy'>
+    <view class='container'>
+        <SearchBar></SearchBar>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import SearchBar from '@/components/template/home_search_bar1';
+export default class Lnglat extends wepy.page {
+  config = {
+    navigationBarTitleText: '测试经纬度'
+  };
+  data = {};
+  components = {
+    SearchBar: SearchBar
+  };
+  methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+</style>

@@ -57,6 +57,16 @@ export default class config extends base {
     let url = `${this.baseUrl}/api/news/getSwipers`
     return this.get(url)
   }
+
+  static getShopLocation(params){
+    let url = `${this.baseUrl}/api/news/getShopLocation`
+    return this.get(url,params)
+    // return this.get(url, params).then(data => {
+    //   return data
+    // }).catch(error => {
+    //   return error
+    // })
+  }  
   // // 折扣
   // static discount = null;
 
