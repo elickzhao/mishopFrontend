@@ -9,43 +9,52 @@
 import wepy from 'wepy';
 import CitySelect from '@/components/city_select';
 import citys from '@/utils/allcity';
-export default class Example extends wepy.page {
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  lnglat: store.get('lnglat')
+})
+export default class SelectCity extends wepy.page {
   config = {
     navigationBarTitleText: '城市选择',
     usingComponents: {
-
+      // 弹出不行
+      // 'van-popup': '../../packages/vant/lib/popup/index'
     }
   };
   data = {
+    // show: true,
     city: citys,
     // 绑定后 就算有默认值 也不行
     config: {
       horizontal: true, // 第一个选项是否横排显示（一般第一个数据选项为 热门城市，常用城市之类 ，开启看需求）
       animation: true, // 过渡动画是否开启
-      search: true, // 是否开启搜索
+      search: false, // 是否开启搜索
       searchHeight: 50, // 搜索条高度
       suctionTop: true, // 是否开启标题吸顶
-      myCity: true,
-      myCityName: '北京'
+      myCity: true
+      // myCityName: '南京'
     }
   };
   components = {
     CitySelect: CitySelect
   };
-  methods = {
-    // bindtap(e) {
-    //   console.log(e.detail);
-    // }
-  };
+  methods = {};
   events = {
     selectCity: city => {
-      console.log(city);
+      this.lnglat.city = city.name;
+      store.save('lnglat', this.lnglat);
+      // console.log(city);
+      wepy.navigateBack({
+        delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+      });
     }
   };
   watch = {};
   computed = {};
   onLoad() {}
   onShow() {}
+  onReady() {}
 }
 </script>
 

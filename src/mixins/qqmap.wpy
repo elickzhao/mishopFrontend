@@ -1,0 +1,234 @@
+
+<script>
+import wepy from 'wepy';
+import _ from 'lodash/core';
+import QQMapWX from '@/utils/qqmap-wx-jssdk';
+// import { isExist } from '@/utils/Common';
+import Tips from '@/utils/Tips';
+import api from '@/api/config';
+import store from '@/store/utils';
+// import { connect } from 'wepy-redux';
+// @connect({
+//   lnglat: store.get('lnglat')
+// })
+export default class QQmap extends wepy.mixin {
+  props = {};
+  data = {
+    qqmapsdk: ''
+  };
+  /**
+   * 获取本机定位
+   */
+  getLocation() {
+    var that = this;
+    wx.getLocation({
+      type: 'gcj02',
+      success: function(res) {
+        that.locationScope = true;
+        that.$apply();
+        const latitude = res.latitude;
+        const longitude = res.longitude;
+        that.getLocationInfo(latitude, longitude);
+      },
+      fail: function(res) {
+        console.log('拒绝授权');
+        that.locationScope = false;
+      }
+    });
+  }
+  /**
+   * 获取经纬度附近地址信息
+   */
+  getLocationInfo(lat, lng, search) {
+    let that = this;
+    // console.log(lat, '-----', lng);
+    // 调用接口
+    this.qqmapsdk.reverseGeocoder({
+      location: lat + ',' + lng,
+      get_poi: 1,
+      // 配置页面个数 必须带当前页面
+      poi_options: 'page_size=5;page_index=1',
+      success: function(res) {
+        let r = res.result;
+        // console.log(r)
+        // XXX 因为下面传递了 地址名称 search.title 所以不用再在列表里找当前信息了
+        // let curr = _.find(r.pois, {
+        //   location: {
+        //     lat: lat,
+        //     lng: lng
+        //   }
+        // });
+        // XXX 这里依然有优化的余地 如果关键词 可以在 结果里搜索  不过需要模糊搜索比较烦 暂且放下吧
+        // console.log(curr);
+        let addr = r.pois[0].title;
+        // let addr = isExist(curr) ? curr.title : r.pois[0].title;
+        // 这个解决点击后不修改地名问题  比如 昌平区委 和 昌平区政府 在同一个楼 为同一个经纬度 这样显示 总是显示第一个地址 这是不对  这里逻辑挺复杂 有空整理下
+        // console.log(typeof(search) )
+        // console.log(search)
+        if (typeof search == 'object') addr = search.title;
+        let oldCity = '';
+        if (that.lnglat) {
+          oldCity = that.lnglat.city;
+        }
+        let addrInfo = addr;
+        // console.log(addr, '<--------------------')
+        if (addr.length > 5) {
+          addr = addr.substring(0, 5) + '...';
+        }
+        store.save('lnglat', {
+          ...that.lnglat,
+          city: r.ad_info.city,
+          pois: r.pois,
+          currentAddr: addrInfo,
+          addrInfo: addr
+        });
+        // 这里需要优化下 不能总请求 -----------------------------------  且应该保存在store里结算时用
+        // 如上说 但是不能保存在store里 因为更换低区后必须 更换店铺列表 而且还要计算距离  所以现在是根据城市 是否重新请求 但是有问题是 添加门店后不能及时更新 但这个问题不大
+        // 目前还发现个问题 因为 各地区行政区域的变化  adcode  请求会有出错的现象 比如南京的高淳区 原来是个县 没在南京里 但目前影响不大 遇到可更新后台数据库来解决
+        if (oldCity != r.ad_info.city) {
+          let shops = api.getShopLocation({
+            adcode: r.ad_info.adcode
+          });
+          shops.then(data => {
+            that.getShopDistance(lat, lng, data);
+          });
+        } else {
+          that.getShopDistance(lat, lng, that.lnglat.shops);
+        }
+        that.$apply();
+      },
+      fail: function(res) {
+        console.log(res);
+      }
+    });
+  }
+  /**
+   * 获取到达门店距离
+   */
+  getShopDistance(lat, lng, shopList) {
+    let that = this;
+    this.qqmapsdk.calculateDistance({
+      from: lat + ',' + lng,
+      to: shopList,
+      success: res => {
+        let list = res.result.elements;
+        // list = list.sort((a, b) => {
+        //   return a.distance - b.distance;
+        // });
+        list = _.sortBy(list, 'distance');
+        // console.log(list, '<--------------------')
+        let dif = that.formatDistance(list[0].distance, 1);
+        store.save('lnglat', {
+          ...that.lnglat,
+          distanceInfo: dif
+        });
+        that.getShops(shopList, list);
+      },
+      fail: res => {
+        console.log(res);
+      }
+    });
+  }
+  /**
+   * 距离转换
+   * 如何缓存这几个列表  还有这几个方法不要放在search里 应该放到一个文件里  好像不行 这种callback不能放到外面 而且下面信息和页面结合太深了
+   */
+  formatDistance(distance, flag) {
+    let info;
+    let dis = distance;
+    let r;
+    if (distance < 1000) {
+      info = distance + '米';
+    } else {
+      distance = parseInt(distance / 1000);
+      info = distance + 'km';
+    }
+    if (flag == 1) {
+      r = dis > 100 ? `您距离最近的门店: ${info}` : '';
+    } else {
+      r = dis > 100 ? `您距离门店: ${info}` : '';
+    }
+    // this.distanceInfo = dis > 100 ? `您距离最近的门店: ${info}` : '';
+    // this.$apply();
+    // let r = dis > 100 ? `您距离门店: ${info}` : '';
+    return r;
+  }
+  /**
+   * 获得门店列表
+   */
+  getShops(shops, dists) {
+    for (let i in shops) {
+      let lat = parseFloat(shops[i].latitude);
+      let lng = parseFloat(shops[i].longitude);
+      let r = _.find(dists, {
+        to: {
+          lat: lat,
+          lng: lng
+        }
+      });
+      shops[i]['distance'] = this.formatDistance(r.distance, 2);
+      shops[i]['dist'] = r.distance;
+    }
+    // console.log(shops, 'old shops')
+    shops = _.sortBy(shops, 'dist');
+    // console.log(shops, 'new shops')
+    store.save('lnglat', {
+      ...this.lnglat,
+      shops: shops
+    });
+  }
+  /**
+   * 根据关键字搜索地址
+   */
+  searchAddr(addr) {
+    if (typeof addr == 'object') {
+      // console.log(addr, '===>', typeof addr);
+      this.getLocationInfo(addr.location.lat, addr.location.lng, addr);
+      // 明确地址跳转 返回页面
+      Tips.loading();
+      setTimeout(function() {
+        Tips.loaded();
+        wepy.navigateBack({
+          delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
+      }, 500);
+    } else {
+      // 不明确地址手动选择
+      //   console.log(addr, '===>', typeof addr);
+      this.getAddrLatLng(addr);
+    }
+  }
+  /**
+   * 搜索地名转换经纬度
+   */
+  getAddrLatLng(key) {
+    let that = this;
+    // console.log(this.lnglat.city)
+    this.qqmapsdk.geocoder({
+      region: this.lnglat.city,
+      address: key,
+      success: function(res, data) {
+        // 如果不是知名建筑 只能是类似搜索不能准确搜索 所以建议用下拉条选择 不要手动输入关键词
+        // console.log(res);
+        // console.log(data);
+        that.getLocationInfo(
+          data.geocoderSimplify.latitude,
+          data.geocoderSimplify.longitude
+        );
+      }
+    });
+  }
+  methods = {};
+  onLoad() {
+    // 实例化API核心类
+    this.qqmapsdk = new QQMapWX({
+      key: '6QIBZ-NHXR3-KYO3T-YZAGT-4ADW6-NTBF5'
+    });
+    // store.save('lnglat', {
+    //   qqmapsdk: this.qqmapsdk
+    // });
+    this.$apply();
+    // this.getLocation();
+  }
+}
+</script>

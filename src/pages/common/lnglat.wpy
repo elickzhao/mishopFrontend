@@ -1,11 +1,10 @@
 <!--  -->
 <template lang='wxml' minapp='wepy'>
   <view class='container'>
-    <!-- <SearchBar></SearchBar> -->
     <!--绑定输入事件-->
     <!-- <view class="search_read_only ">
-                                <input class='search_address' bindinput="getsuggest" value="{{backfill}}">地址</input>
-                              </view> -->
+                                          <input class='search_address' bindinput="getsuggest" value="{{backfill}}">地址</input>
+                                        </view> -->
     <view class='list-search' style="height:45px">
       <text class='search-city' catchtap='selectCity'> {{lnglat.city}} </text>
       <icon class="error arrow" @tap.stop="selectCity" style="margin-right: 30rpx;"></icon>
@@ -55,7 +54,6 @@
 
 <script>
 import wepy from 'wepy';
-import SearchBar from '@/components/template/home_search_bar1';
 import QQmapMixin from '@/mixins/qqmap';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
@@ -64,7 +62,7 @@ import store from '@/store/utils';
 })
 export default class Lnglat extends wepy.page {
   config = {
-    navigationBarTitleText: '测试经纬度',
+    navigationBarTitleText: '位置定位',
     usingComponents: {
       'van-cell': '../../packages/vant/lib/cell/index',
       'van-cell-group': '../../packages/vant/lib/cell-group/index',
@@ -83,9 +81,16 @@ export default class Lnglat extends wepy.page {
     searchKeyAddr: ''
   };
   mixins = [QQmapMixin];
-  components = {
-    SearchBar: SearchBar
-  };
+  components = {};
+  _searchKey() {
+    // 如果不是知名建筑 只能是类似搜索不能准确搜索 所以建议用下拉条选择 不要手动输入关键词
+    if (this.searchKeyAddr == '') {
+      // 这里是判断手动
+      this.searchKeyAddr = this.backfill;
+    }
+    this.searchAddr(this.searchKeyAddr);
+    this.searchKeyAddr = this.backfill = '';
+  }
   methods = {
     // 在Page({})中使用下列代码
     // 数据回填方法
@@ -96,12 +101,17 @@ export default class Lnglat extends wepy.page {
         if (i == id) {
           this.backfill = this.suggestion[i].title;
           this.searchKeyAddr = {
-            lat: this.suggestion[i].latitude,
-            lng: this.suggestion[i].longitude
+            title: this.suggestion[i].title,
+            location: {
+              lat: this.suggestion[i].latitude,
+              lng: this.suggestion[i].longitude
+            }
           };
         }
       }
       this.suggestion = [];
+      // 这里无法找到methods的方法
+      this._searchKey();
     },
     // 触发关键词输入提示事件
     getsuggest: function(e) {
@@ -141,7 +151,7 @@ export default class Lnglat extends wepy.page {
           console.error(error);
         },
         complete: function(res) {
-          console.log(res);
+          // console.log(res);
         }
       });
     },
@@ -171,7 +181,8 @@ export default class Lnglat extends wepy.page {
       this.getLocation();
     },
     selectAddr(addr) {
-      this.searchAddr(addr.location);
+      // console.log(addr);
+      this.searchAddr(addr);
     },
     // 关键字搜索地址
     searchKey() {

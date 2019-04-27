@@ -38,7 +38,10 @@ module.exports = {
       ]
     }
   },
-  plugins: {},
+  plugins: {
+    // wux: {
+    // }
+  },
   appConfig: {
     noPromiseAPI: ['createSelectorQuery']
   }

@@ -85,7 +85,8 @@ export default class Home extends wepy.page {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index',
       'wxc-label': '../../packages/@minui/wxc-label/dist/index',
-      'wux-floating-button': '../../packages/floating-button/index'
+      'wux-floating-button': '../../packages/floating-button/index',
+      'wux-notice-bar': '../../packages/wux/notice-bar/index'
     }
   };
   data = {

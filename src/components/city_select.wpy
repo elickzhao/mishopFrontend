@@ -5,7 +5,7 @@
     <view wx:if="{{config.search}}" class='list-search' style="height:{{config.searchHeight}}px">
       <view class='list-search-box'>
         <icon type="search" size="15" />
-        <input confirm-type="search" placeholder="输入您要搜索的城市" bindinput='input' value="{{value}}" bindconfirm	="searchMt"/>
+        <input confirm-type="search" placeholder="输入您要搜索的城市" bindinput='input' value="{{value}}" bindconfirm="searchMt" />
         <icon wx:if="{{showClear}}" type="clear" size="15" @tap="clear" />
       </view>
       <!-- <button class='search-button' plain="{{false}}" catchtap='searchMt'>搜索</button> -->
@@ -54,6 +54,11 @@
 import wepy from 'wepy';
 // 不能在组件里引用 可能因为文件太大 加载的时候 会造成右侧提示及吸顶的延迟问题
 // import citys from '@/utils/allcity';
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  lnglat: store.get('lnglat')
+})
 export default class CitySelect extends wepy.component {
   config = {
     navigationBarTitleText: '城市选择'
@@ -73,8 +78,7 @@ export default class CitySelect extends wepy.component {
         search: true, // 是否开启搜索
         searchHeight: 50, // 搜索条高度
         suctionTop: true, // 是否开启标题吸顶
-        myCity: false,
-        myCityName: '点击获取我的位置'
+        myCity: false
       }
     }
   };
@@ -89,6 +93,7 @@ export default class CitySelect extends wepy.component {
     showLetter: '', // 城市快捷字母
     value: '',
     showClear: false
+    // myCityName: '点击获取我的位置'
   };
   onLoad() {
     // console.log(this.citys, '<<<<<<<<')
@@ -109,7 +114,7 @@ export default class CitySelect extends wepy.component {
         item: [
           {
             // name: '点击获取我的位置',
-            name: this.config.myCityName,
+            name: this.lnglat.city,
             key: '当前定位'
           }
         ]
@@ -201,7 +206,6 @@ export default class CitySelect extends wepy.component {
       this.resetRight(newData);
     }
   }
-
   components = {};
   methods = {
     scroll(e) {

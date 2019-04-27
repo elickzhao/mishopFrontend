@@ -1,0 +1,15 @@
+<script>
+import wepy from 'wepy';
+export default class Example extends wepy.page {
+  config = {
+    navigationBarTitleText: ''
+  };
+  onLoad(res) {
+    //  修补上一版路径不同的问题
+    let url = res.path;
+    url = '/pages/goods' + url.substring(5);
+    wx.redirectTo({ url: url });
+  }
+  onShow() {}
+}
+</script>
