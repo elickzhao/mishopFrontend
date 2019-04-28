@@ -54,7 +54,7 @@ export default class config extends base {
   }
 
   static getSwipers() {
-    let url = `${this.baseUrl}/api/news/getSwipers`
+    let url = `${this.baseUrl}/api/news/getSwipersNew`
     return this.get(url)
   }
 

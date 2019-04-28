@@ -91,7 +91,8 @@ export default class PsersonalCenter extends wepy.page {
         },
         {
           name: '在线客服',
-          icon: 'kefu.png'
+          icon: 'kefu.png',
+          url: '/pages/personal_center/personal_center'
           // url: '/pages/personal_center/favorites'
         }
         // {
@@ -171,7 +172,11 @@ export default class PsersonalCenter extends wepy.page {
     // 用户点击列表项
     toPage(url) {
       // console.log(url);
-      this.$root.$navigate(url);
+      if (url != 'kefu') {
+        this.$root.$navigate(url);
+      } else {
+        wepy.switchTab({ url: 'url' });
+      }
     }
   };
 }

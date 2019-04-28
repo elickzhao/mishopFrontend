@@ -10,7 +10,10 @@
           <icon class="error arrow"></icon>
         </view>
         <view class="flex-item-2 ">
-          <icon class="icon-daohang icon-d"></icon><text class="weak xxs" style="font-weight:bold;"> {{lnglat.distanceInfo}}</text></view>
+          <icon wx:if="{{lnglat.distanceInfo != ''}}" class="icon-daohang icon-d"></icon>
+          <text class="weak xxs" style="font-weight:bold;"> {{lnglat.distanceInfo}}</text>
+          <text wx:if="{{lnglat.distanceInfo == ''}}" class="weak xs" style="font-weight:bold;"> TFS环球免税店 </text>
+        </view>
         <view class="flex-item-0 " @tap="scan()">
           <icon class="scan xs" style="font-weight:bold;color:#999999;"></icon>
         </view>
@@ -86,139 +89,6 @@
         });
       }
     };
-    // /**
-    //  * 获取本机定位
-    //  */
-    // getLocation() {
-    //   var that = this;
-    //   wx.getLocation({
-    //     type: 'gcj02',
-    //     success: function(res) {
-    //       that.locationScope = true;
-    //       that.$apply();
-    //       const latitude = res.latitude;
-    //       const longitude = res.longitude;
-    //       that.getLocationInfo(latitude, longitude);
-    //     },
-    //     fail: function(res) {
-    //       console.log('拒绝授权');
-    //       that.locationScope = false;
-    //     }
-    //   });
-    // }
-    // /**
-    //  * 获取经纬度附近地址信息
-    //  */
-    // getLocationInfo(lat, lng) {
-    //   let that = this;
-    //   // 调用接口
-    //   this.qqmapsdk.reverseGeocoder({
-    //     // location: lat + ',' + lng,
-    //     //   118.746971,32.221862
-    //     location: '32.221862,118.746971',
-    //     get_poi: 1,
-    //     // 配置页面个数 必须带当前页面
-    //     poi_options: 'page_size=5;page_index=1',
-    //     success: function(res) {
-    //       let r = res.result;
-    //       let addr = r.pois[0].title;
-    //       store.save('lnglat', {
-    //         ...that.lnglat,
-    //         city: r.ad_info.city,
-    //         pois: r.pois,
-    //         currentAddr: addr
-    //       });
-    //       if (addr.length > 5) {
-    //         addr = addr.substring(0, 5) + '...';
-    //       }
-    //       that.address = addr;
-    //       // 现在不用城市了 改用地区码了 因为与后台的城市码不同
-    //       // that.city_code = r.ad_info.city_code;
-    //       let shops = api.getShopLocation({
-    //         adcode: r.ad_info.adcode
-    //       });
-    //       shops.then(data => {
-    //         // console.log(data, '<<<<<<<<<<<<<<<');
-    //         that.getShopDistance(lat, lng, data);
-    //         // that.getShopDistance('32.221862', '118.746971', data);
-    //       });
-    //       that.$apply();
-    //     },
-    //     fail: function(res) {
-    //       console.log(res);
-    //     }
-    //   });
-    // }
-    // /**
-    //  * 获取到达门店距离
-    //  */
-    // getShopDistance(lat, lng, shopList) {
-    //   let that = this;
-    //   this.qqmapsdk.calculateDistance({
-    //     //   mode: 'driving', // 行走模式 默认为 walking 步行距离好像更近些和精确 驾车可能存在掉头停靠问题
-    //     from: lat + ',' + lng,
-    //     //   to: '40.2155294611,116.2230294943',
-    //     to: shopList,
-    //     success: res => {
-    //       // console.log(res);
-    //       let list = res.result.elements;
-    //       list = list.sort((a, b) => {
-    //         return a.distance - b.distance;
-    //       });
-    //       // console.log(list);
-    //       // 大于多少公里就不要显示了 哦 目前只有南京显示 看看米和公里做个转换 小于公里显示米 如果在门店里 怎么显示
-    //       // 应该做个显示转换的方法
-    //       that.formatDistance(list[0].distance);
-    //       that.getShops(shopList, list);
-    //       // that.distance = list[0].distance;
-    //       // that.$apply();
-    //     },
-    //     fail: res => {
-    //       console.log(res);
-    //     }
-    //   });
-    // }
-    // /**
-    //  * 距离转换
-    //  * 如何缓存这几个列表  还有这几个方法不要放在search里 应该放到一个文件里  好像不行 这种callback不能放到外面 而且下面信息和页面结合太深了
-    //  */
-    // formatDistance(distance) {
-    //   let info;
-    //   let dis = distance;
-    //   if (distance < 1000) {
-    //     info = distance + '米';
-    //   } else {
-    //     distance = parseInt(distance / 1000);
-    //     info = distance + 'km';
-    //   }
-    //   // console.log(info)
-    //   this.distanceInfo = dis > 100 ? `您距离最近的门店: ${info}` : '';
-    //   this.$apply();
-    //   let r = dis > 100 ? `您距离门店: ${info}` : '';
-    //   return r;
-    // }
-    // /**
-    //  * 获得门店列表
-    //  */
-    // getShops(shops, dists) {
-    //   for (let i in shops) {
-    //     let lat = parseFloat(shops[i].latitude);
-    //     let lng = parseFloat(shops[i].longitude);
-    //     let r = _.find(dists, {
-    //       to: {
-    //         lat: lat,
-    //         lng: lng
-    //       }
-    //     });
-    //     shops[i]['distance'] = this.formatDistance(r.distance);
-    //   }
-    //   shops = _.sortBy(shops, 'distance');
-    //   // console.log(shops)
-    //   store.save('lnglat', {
-    //     ...this.lnglat,
-    //     shops: shops
-    //   });
-    // }
     async onLoad() {
       // 实例化API核心类
       // this.qqmapsdk = new QQMapWX({

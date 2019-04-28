@@ -1,6 +1,6 @@
 <template>
   <view class="points">
-    <image src="../../images/bc_qdyl.png" class="head_bc"></image>
+    <image src="../../../images/bc_qdyl.png" class="head_bc"></image>
     <view class="jf_content">
       <view class="jf_header">
         <view class="image_box">
@@ -12,7 +12,7 @@
             <view class="cfff">{{userPoint}}</view>
           </view>
         </view>
-        <view class="btn_jf_rule" @tap="jfRule">积分说明</view>
+        <view class="btn_jf_rule" @tap="jfRule">签到</view>
       </view>
     </view>
     <view class="jf_detai">
@@ -58,9 +58,9 @@ export default class Points extends wepy.page {
   events = {};
   onLoad() {
     let systemInfo = wepy.getSystemInfoSync();
-    let userInfo = wepy.getStorageSync('UserDetails');
-    this.avatarUrl = userInfo.photo;
-    this.nickName = userInfo.username;
+    let userInfo = wepy.getStorageSync('userInfo');
+    this.avatarUrl = userInfo.avatarUrl;
+    this.nickName = userInfo.nickName;
     this.winHeight = systemInfo.windowHeight - 170;
     this.$apply();
     this.getUserPoint();
@@ -73,8 +73,12 @@ export default class Points extends wepy.page {
       });
     },
     jfRule() {
+      // 积分规则 暂时改成签到
+      // wepy.navigateTo({
+      //   url: '/pages/personal_center/points/points_rule'
+      // });
       wepy.navigateTo({
-        url: '/pages/personal_center/points_rule'
+        url: '/pages/home/sign_in'
       });
     }
   };

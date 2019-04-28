@@ -31,7 +31,7 @@
           <text space="ensp">共 {{list.length}} 件商品  合计:</text> <text class="totalPrice"> ￥{{totalPrice}}</text></view>
       </wxc-panel>
     </view>
-    <view class="spacing"></view>
+    <view class="h-gap"></view>
     <view class="order_info">
       <view class="block">
         <view class="left">配送方式</view>
@@ -45,21 +45,26 @@
       </view>
       <!-- <view wx:if="{{total_jf_num >= 100 && totalPrice > 30}}" class="list-item"> -->
       <!-- <view wx:if="{{totalPrice > 30}}" class="list-item">
-                          <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
-                            <view class="desc-highlight">满100积分减5元</view>
-                            <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
-                          </wxc-list>
-                        </view>
-                        <view class="list-item" wx:else>
-                          <wxc-list title="积分优惠券" arrow="{{false}}" mode="none" desc="当前积分或商品 无法使用优惠券">
-                          </wxc-list>
-                        </view> -->
-      <view class="spacing"></view>
+                                <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
+                                  <view class="desc-highlight">满100积分减5元</view>
+                                  <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
+                                </wxc-list>
+                              </view>
+                              <view class="list-item" wx:else>
+                                <wxc-list title="积分优惠券" arrow="{{false}}" mode="none" desc="当前积分或商品 无法使用优惠券">
+                                </wxc-list>
+                              </view> -->
+      <view class="h-gap"></view>
       <view wx:if="{{limitPrice > 30 && (total_jf_num >= 100 || coupons.length >0)}}" class="list-item" @tap="selectCoupon">
-        <wxc-list title="优惠券" desc="使用优惠券" arrow="{{true}}" mode="none">
+        <wxc-list title="优惠券" desc="使用优惠券" arrow="{{true}}">
         </wxc-list>
       </view>
-      <view class="spacing"></view>
+      <view wx:if="{{currentShop != '当前无门店'}}" class="list-item">
+        <picker bindchange="chooseShop" range-key="name" value="{{shops}}" range="{{shops}}">
+          <wxc-list title="推荐门店" desc="{{currentShop}}" arrow="{{true}}">
+          </wxc-list>
+        </picker>
+      </view>
       <view class="block">
         <view class="left tongji">合计金额</view>
         <view>
@@ -72,24 +77,25 @@
       </view>
     </view>
     <!-- <view class="pay_box">
-                                  <block wx:if="{{totalNum > miniNum}}">
-                                    <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
-                                  </block>
-                                  <block wx:else>
-                                    <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
-                                  </block>
-                                  <br/>
-                                  <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
-                                    <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
-                                  </picker>
-                                </view> -->
+                                        <block wx:if="{{totalNum > miniNum}}">
+                                          <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
+                                        </block>
+                                        <block wx:else>
+                                          <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
+                                        </block>
+                                        <br/>
+                                        <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
+                                          <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
+                                        </picker>
+                                      </view> -->
     <view class="spacing5"></view>
     <view class="footer">
       <wxc-panel border="{{false}}">
         <view class="bottom-left">实付款: <text class="totalPrice"> ￥{{actualPrice}}</text></view>
-        <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
-          <view class=" content to-pay-btn" style="background:#09bb07;">门店自提</view>
-        </picker>
+        <!-- 这里改提问的方式 确定门店 不要选择 -->
+        <!-- <picker bindchange="createProductOrderByXX" range-key="name" value="{{shops}}" range="{{shops}}"> -->
+        <view wx:if="{{currentShop != '当前无门店'}}" class=" content to-pay-btn" style="background:#09bb07;" @tap="createProductOrderByXX">门店自提</view>
+        <!-- </picker> -->
         <view wx:if="{{totalNum > miniNum}}" class=" content to-pay-btn" @tap="goPay('weixin')">配送到家</view>
         <view class=" content to-pay-btn" style="background:#999;" wx:else>满 {{miniNum}} 元起送</view>
       </wxc-panel>
@@ -103,6 +109,7 @@ import api from '@/api/order';
 import addresses from '@/api/addresses';
 import coupon from '@/api/coupon';
 import tip from '@/utils/Tips';
+import { isExist } from '@/utils/Common';
 import Adress from '@/components/common/address';
 import CheckLoginMixin from '@/mixins/check_login';
 import BaseMixin from '@/mixins/base';
@@ -112,7 +119,8 @@ import { saveAddress } from '@/store/actions';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
 @connect({
-  miniNum: store.get('miniNum')
+  miniNum: store.get('miniNum'),
+  lnglat: store.get('lnglat')
 })
 export default class ComfireOrder extends wepy.page {
   config = {
@@ -164,7 +172,9 @@ export default class ComfireOrder extends wepy.page {
     // 输入抵扣积分
     jf_num: 0,
     reduce_fee: 0,
-    operating: false
+    operating: false,
+    kuaidi_name: '仓库配送',
+    currentShop: '当前无门店'
   };
   // 获取订单详情
   async getOrderDetailInfo() {
@@ -221,19 +231,44 @@ export default class ComfireOrder extends wepy.page {
       });
       return false;
     }
+    // tip.confirm(`确认 ${this.currentShop} 自提`,'','确认自提门店!')
+    // -------------------  原版
     // console.log('picker发送选择改变，携带值为', this.data.shops[e.detail.value])
-    let shopAdd = this.address;
-    shopAdd['address_xq'] = this.shops[e.detail.value];
-    this.address = shopAdd;
+    // let shopAdd = this.address;
+    // shopAdd['address_xq'] = this.shops[e.detail.value].name;
+    // this.currentShop = this.shops[e.detail.value].name;
+    // this.address = shopAdd;
+    // --------------------
+    let that = this;
+    wx.showModal({
+      title: '确认自提门店!', // 提示的标题,
+      content: `由 ${this.currentShop} 负责配货`, // 提示的内容,
+      showCancel: true, // 是否显示取消按钮,
+      cancelText: '取消', // 取消按钮的文字，默认为取消，最多 4 个字符,
+      cancelColor: '#000000', // 取消按钮的文字颜色,
+      confirmText: '确定', // 确定按钮的文字，默认为取消，最多 4 个字符,
+      confirmColor: '#3CC51F', // 确定按钮的文字颜色,
+      success: res => {
+        if (res.confirm) {
+          that.goToPay();
+        } else if (res.cancel) {
+          // reject(payload);
+        }
+      }
+    });
     // console.log(this.address);
     // 其他手机号什么都不用改
-    this.goToPay();
     // console.log('执行完毕了');
     this.$apply();
   }
   // 获取门店列表
   async getShop() {
-    this.shops = await api.getShop();
+    // this.shops = await api.getShop();
+    this.shops = this.lnglat.shops;
+    if (isExist(this.shops)) {
+      this.currentShop = this.kuaidi_name = this.shops[0].name;
+    }
+    // console.log(this.shops);
     this.$apply();
   }
   // 发送消息
@@ -289,11 +324,12 @@ export default class ComfireOrder extends wepy.page {
       vid: this.voucheID,
       actualPrice: this.actualPrice,
       type: this.paytype,
-      address: this.address
+      address: this.address,
+      kuaidi_name: this.kuaidi_name
     });
     this.hasError(json);
     // XXX 再添加一个清除 cart的reduce
-    store.refresh('cart')
+    store.refresh('cart');
     // console.log(json);
     if (json.code == 0) {
       let order = json.data;
@@ -361,7 +397,7 @@ export default class ComfireOrder extends wepy.page {
       success: function(res) {
         // console.log(res);
         wx.request({
-          url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
+          url: 'https:// small.huanqiujishi.com/index.php/Api/Address/add_adds',
           data: {
             user_id: wepy.$instance.globalData.userIDS.ID,
             receiver: res.userName,
@@ -471,6 +507,10 @@ export default class ComfireOrder extends wepy.page {
   methods = {
     createProductOrderByXX(e) {
       this.createProductOrderBy(e);
+    },
+    chooseShop(e) {
+      this.currentShop = this.shops[e.detail.value].name;
+      this.kuaidi_name = this.shops[e.detail.value].name;
     },
     // 选择要使用的优惠券
     async selectCoupon() {

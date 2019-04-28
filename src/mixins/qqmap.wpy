@@ -125,6 +125,12 @@ export default class QQmap extends wepy.mixin {
         that.getShops(shopList, list);
       },
       fail: res => {
+        store.save('lnglat', {
+          ...that.lnglat,
+          distanceInfo: '',
+          shops: []
+        });
+
         console.log(res);
       }
     });

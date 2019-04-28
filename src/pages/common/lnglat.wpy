@@ -28,22 +28,24 @@
         <van-cell title="{{item.title}}" label="{{item.address}}" bind:click="selectAddr({{item}})" />
       </view>
     </van-cell-group>
-    <van-cell-group title="附近门店">
-      <view wx:for="{{lnglat.shops}}" wx:key="index">
-        <van-cell title="{{item.name}}" label="{{item.distance}}" bind:click="openMap({{item.latitude}},{{item.longitude}})">
-          <!-- <van-tag type="danger">标签</van-tag> -->
-          <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
-        </van-cell>
-      </view>
-    </van-cell-group>
+    <block wx:if="{{lnglat.shops != ''}}">
+      <van-cell-group title="附近门店">
+        <view wx:for="{{lnglat.shops}}" wx:key="index">
+          <van-cell title="{{item.name}}" label="{{item.distance}}" bind:click="openMap({{item.latitude}},{{item.longitude}})">
+            <!-- <van-tag type="danger">标签</van-tag> -->
+            <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
+          </van-cell>
+        </view>
+      </van-cell-group>
+    </block>
     <van-popup show="{{ showPopup }}" position="top" overlay-style="margin-top: 100rpx" bind:click-overlay="clear" custom-class="popup">
       <!--关键词输入提示列表渲染-->
       <view wx:for="{{suggestion}}" wx:key="index">
         <!--绑定回填事件-->
-        <view class="cell">
+        <view class="cell" @tap.stop="backfill">
           <!--根据需求渲染相应数据-->
           <!--渲染地址title-->
-          <view style="text-align:center;" bindtap="backfill" id="{{index}}">{{item.title}}</view>
+          <view style="text-align:center;"  id="{{index}}">{{item.title}}</view>
           <!--渲染详细地址-->
           <view style="font-size:12px;color:#666;text-align:center;">{{item.addr}}</view>
         </view>
