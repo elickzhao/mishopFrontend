@@ -4,7 +4,7 @@
       <SearchBar></SearchBar>
     </view>
     <view class="sidebar">
-      <SideTab :tab.sync="rootCate" key="rootCate" />
+      <SideTab :tab.sync="rootcateList" key="rootCate" />
     </view>
     <view class="main">
       <ImageBox :list.sync="childcateList"></ImageBox>
@@ -51,6 +51,9 @@ export default class Category extends wepy.page {
   async getRootCateTopLevel() {
     if (!store.exists('rootCate')) {
       const json = await api.getRootCateTopLevel();
+      // 放到页面变量 避免 rootCate 二次请求无法监视的bug
+      this.rootcateList = json
+      this.$apply()
       store.save('rootCate', json);
       store.saveMeta('rootCate');
     }
@@ -58,26 +61,33 @@ export default class Category extends wepy.page {
   }
   // 获取二级分类
   async getChildCate(rootCateCode) {
+    // console.log(this.childcateList, 'tab 二级分类请求...........')
     const json = await api.getChildGoodsCatetoryList({
       cat_id: rootCateCode
     });
     this.childcateList = json;
     this.$apply();
   }
-  onLoad() {
-    // this.dd(); // 这个mixin里有redux 所以会报错
+  async onLoad() {
+    // this.dd(); // 这个mixin里有redux 所以会报错 // 之后发现只要去掉 wepy-redux 和 connect 只保留store 就可以用了 而显示redux在加载mixin的页面里注册
     // let a = { serverCode: 1, message: '我错了' };
     // this.hasError(a);
+    // await this.getRootCateTopLevel();
     this.imgUrl = this.$parent.globalData.imgUrl;
     this.$apply();
   }
   async onShow() {
     await this.getRootCateTopLevel();
-    await this.getChildCate(this.rootCate.selectedId);
+    await this.getChildCate(this.rootcateList.selectedId);
   }
   watch = {
-    async rootCate() {
-      await this.getChildCate(this.rootCate.selectedId);
+    // 这个监视是不行的 rootCate 是这个redux 当再次请求后 这个redux的地址好像就变了 这样就监视不了
+    // 会造成子栏目点击后无法获得  现在做的是把每次请求后都放到一个页面的变量里 这样就没问题了
+    // async rootCate() {
+    //   await this.getChildCate(this.rootCate.selectedId);
+    // }
+    async rootcateList() {
+      await this.getChildCate(this.rootcateList.selectedId);
     }
   };
   computed = {};

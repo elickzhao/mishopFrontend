@@ -31,10 +31,22 @@
     <block wx:if="{{lnglat.shops != ''}}">
       <van-cell-group title="附近门店">
         <view wx:for="{{lnglat.shops}}" wx:key="index">
-          <van-cell title="{{item.name}}" label="{{item.distance}}" bind:click="openMap({{item.latitude}},{{item.longitude}})">
-            <!-- <van-tag type="danger">标签</van-tag> -->
-            <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
-          </van-cell>
+        <van-cell title="{{item.name}}" use-label-slot="true" bind:click="openMap({{item.latitude}},{{item.longitude}})">
+          <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
+          <view slot="label" class="column label-solt">
+            <view class="sub row">
+              <icon class="bouns" />
+              <text class="darkgray">{{item.distance ? item.distance : '您在当前门店附近'}}</text>
+            </view>
+            <view class="sub row">
+              <icon class="phone" /> <text class="darkgray">{{item.phone}}</text>
+            </view>
+            <view class="sub row">
+              <icon class="address" />
+              <text class="darkgray">{{item.address}}</text>
+            </view>
+          </view>
+        </van-cell>
         </view>
       </van-cell-group>
     </block>
@@ -287,5 +299,18 @@ export default class Lnglat extends wepy.page {
 .icon-d {
   font-size: $text-sm;
   font-weight: bold;
+}
+.label-solt {
+  width: 620rpx;
+  .sub {
+    icon {
+      font-size: 26rpx !important;
+      color: #666;
+    }
+  }
+}
+.label-solt text {
+  font-size: 22rpx !important;
+  padding-left: 10rpx;
 }
 </style>

@@ -4,8 +4,8 @@
     <!-- <SearchBar></SearchBar> -->
     <!--绑定输入事件-->
     <!-- <view class="search_read_only ">
-                                <input class='search_address' bindinput="getsuggest" value="{{backfill}}">地址</input>
-                              </view> -->
+                                  <input class='search_address' bindinput="getsuggest" value="{{backfill}}">地址</input>
+                                </view> -->
     <view class='list-search' style="height:45px">
       <text class='search-city' catchtap='selectCity'> {{lnglat.city}} </text>
       <icon class="error arrow" @tap.stop="selectCity" style="margin-right: 30rpx;"></icon>
@@ -31,9 +31,21 @@
     </van-cell-group>
     <van-cell-group title="附近门店">
       <view wx:for="{{lnglat.shops}}" wx:key="index">
-        <van-cell title="{{item.name}}" label="{{item.distance}}" bind:click="openMap({{item.latitude}},{{item.longitude}})">
-          <!-- <van-tag type="danger">标签</van-tag> -->
+        <van-cell title="{{item.name}}" use-label-slot="true" bind:click="openMap({{item.latitude}},{{item.longitude}})">
           <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
+          <view slot="label" class="column label-solt">
+            <view class="sub row">
+              <icon class="bouns" />
+              <text class="darkgray">{{item.distance}}</text>
+            </view>
+            <view class="sub row">
+              <icon class="phone" /> <text class="darkgray">{{item.phone}}</text>
+            </view>
+            <view class="sub row">
+              <icon class="address" />
+              <text class="darkgray">{{item.address}}</text>
+            </view>
+          </view>
         </van-cell>
       </view>
     </van-cell-group>
@@ -55,7 +67,7 @@
 
 <script>
 import wepy from 'wepy';
-import SearchBar from '@/components/template/home_search_bar1';
+import SearchBar from '@/components/template/home_search_bar';
 import QQmapMixin from '@/mixins/qqmap';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
@@ -274,5 +286,19 @@ export default class Lnglat extends wepy.page {
 .icon-d {
   font-size: $text-sm;
   font-weight: bold;
+}
+.label-solt {
+  // width: 350px;
+  width: 620rpx;
+  .sub {
+    icon {
+      font-size: 26rpx !important;
+      color: #666;
+    }
+  }
+}
+.label-solt text {
+  font-size: 22rpx !important;
+  padding-left: 10rpx;
 }
 </style>

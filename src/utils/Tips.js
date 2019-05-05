@@ -90,12 +90,12 @@ export default class Tips {
       title: title,
       image: '/images/icons/alert.png',
       mask: true,
-      duration: 500
+      duration: 1500
     });
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve();
-      }, 500);
+      }, 1500);
     });
   }
 

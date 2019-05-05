@@ -259,7 +259,7 @@
 
 <script>
 import wepy from 'wepy';
-import SearchBar from '@/components/template/home_search_bar1';
+import SearchBar from '@/components/template/home_search_bar';
 import { connect } from 'wepy-redux';
 import Panel from '@/components/panel'; // alias example
 import Counter from 'counter'; // alias example

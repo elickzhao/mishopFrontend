@@ -31,10 +31,38 @@ export default class shopCart extends wepy.page {
   mixins = [CheckLoginMixin, QQmapMixin];
   data = {};
   async onLoad() {
+    let that = this;
     // 检测用户信息
     await this.checkLogin();
     if (!isExist(this.lnglat)) {
       this.getLocation();
+      // 每次进入检查授权
+      wx.getSetting({
+        success(res) {
+          console.log(res);
+          let scope = res.authSetting;
+          if (scope['scope.userLocation'] == false) {
+            wx.showModal({
+              title: '请求授权定位',
+              content: '请求授权定位信息,为您提供附近门店及更多服务!',
+              success: res => {
+                if (res.confirm) {
+                  wx.openSetting({
+                    success(res) {
+                      if (res.authSetting['scope.address'] == false) {
+                        console.log('用户未授权');
+                      }
+                      that.getLocation();
+                    }
+                  });
+                } else if (res.cancel) {
+                  console.log('用户点击取消');
+                }
+              }
+            });
+          }
+        }
+      });
     }
   }
   onShow() {

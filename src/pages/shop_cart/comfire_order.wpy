@@ -45,15 +45,15 @@
       </view>
       <!-- <view wx:if="{{total_jf_num >= 100 && totalPrice > 30}}" class="list-item"> -->
       <!-- <view wx:if="{{totalPrice > 30}}" class="list-item">
-                                <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
-                                  <view class="desc-highlight">满100积分减5元</view>
-                                  <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
-                                </wxc-list>
-                              </view>
-                              <view class="list-item" wx:else>
-                                <wxc-list title="积分优惠券" arrow="{{false}}" mode="none" desc="当前积分或商品 无法使用优惠券">
-                                </wxc-list>
-                              </view> -->
+                                  <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
+                                    <view class="desc-highlight">满100积分减5元</view>
+                                    <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
+                                  </wxc-list>
+                                </view>
+                                <view class="list-item" wx:else>
+                                  <wxc-list title="积分优惠券" arrow="{{false}}" mode="none" desc="当前积分或商品 无法使用优惠券">
+                                  </wxc-list>
+                                </view> -->
       <view class="h-gap"></view>
       <view wx:if="{{limitPrice > 30 && (total_jf_num >= 100 || coupons.length >0)}}" class="list-item" @tap="selectCoupon">
         <wxc-list title="优惠券" desc="使用优惠券" arrow="{{true}}">
@@ -77,17 +77,17 @@
       </view>
     </view>
     <!-- <view class="pay_box">
-                                        <block wx:if="{{totalNum > miniNum}}">
-                                          <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
-                                        </block>
-                                        <block wx:else>
-                                          <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
-                                        </block>
-                                        <br/>
-                                        <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
-                                          <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
-                                        </picker>
-                                      </view> -->
+                                          <block wx:if="{{totalNum > miniNum}}">
+                                            <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
+                                          </block>
+                                          <block wx:else>
+                                            <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
+                                          </block>
+                                          <br/>
+                                          <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
+                                            <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
+                                          </picker>
+                                        </view> -->
     <view class="spacing5"></view>
     <view class="footer">
       <wxc-panel border="{{false}}">
@@ -113,6 +113,7 @@ import { isExist } from '@/utils/Common';
 import Adress from '@/components/common/address';
 import CheckLoginMixin from '@/mixins/check_login';
 import BaseMixin from '@/mixins/base';
+import AddressMixin from '@/mixins/address';
 import { saveAddress } from '@/store/actions';
 // import CommonMixin from '../utils/common-mix';
 // import { SYSTEM_INFO, USER_SPECICAL_INFO, ADDRESS_ID } from '../utils/constant';
@@ -137,7 +138,7 @@ export default class ComfireOrder extends wepy.page {
     // discover: Discover,
     address: Adress
   };
-  mixins = [BaseMixin, CheckLoginMixin];
+  mixins = [BaseMixin, CheckLoginMixin, AddressMixin];
   data = {
     limitPrice: 0, // 这个价格是去掉特价商品的总价
     coupons: [],
@@ -203,22 +204,80 @@ export default class ComfireOrder extends wepy.page {
     });
     this.hasError(json);
     wepy.$store.dispatch(saveAddress(json.list));
-    this.getAddressInfo();
+    // this.getAddressInfo();
     this.$apply();
   }
   // 设置收货地址
   getAddressInfo() {
+    let that = this;
     let address = wepy.$store.getState().address;
     let list = wepy.$store.getState().address.list;
     let current = {};
-    list.map(item => {
-      if (item.id == address.current) {
-        current = item;
-      }
-    });
-    this.is_exit_address = true;
-    this.address = current;
-    this.$apply();
+    if (list.length > 0) {
+      list.map(item => {
+        if (item.id == address.current) {
+          current = item;
+        }
+      });
+      that.is_exit_address = true;
+      that.address = current;
+      that.$apply();
+    } else {
+      that.is_exit_address = false;
+      that.address = {};
+      that.$apply();
+    }
+
+    if (that.is_exit_address == false) {
+      wx.showModal({
+        title: '请添加收货地址!',
+        content: '你未设置收货地址，请设置地址',
+        success: res => {
+          if (res.confirm) {
+            console.log('用户点击确定');
+            that.addWechatAddressSync();
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        }
+      });
+    }
+
+    // new Promise(function(resolve, reject) {
+    //   let address = wepy.$store.getState().address;
+    //   let list = wepy.$store.getState().address.list;
+    //   let current = {};
+    //   if (list.length > 0) {
+    //     list.map(item => {
+    //       if (item.id == address.current) {
+    //         current = item;
+    //       }
+    //     });
+    //     that.is_exit_address = true;
+    //     that.address = current;
+    //     that.$apply();
+    //   } else {
+    //     that.is_exit_address = false;
+    //     that.address = {};
+    //     that.$apply();
+    //   }
+    //   resolve('200 OK');
+    // }).then(function(r) {
+    //   console.log('Done: ' + that.is_exit_address);
+    //   if (that.is_exit_address == false) {
+    //     wx.showModal({
+    //       title: '请添加收货地址!',
+    //       success: res => {
+    //         if (res.confirm) {
+    //           console.log('用户点击确定');
+    //           that.addWechatAddressSync();
+    //         } else if (res.cancel) {
+    //           console.log('用户点击取消');
+    //         }
+    //       }
+    //     });
+    //   }
+    // });
   }
   // 线下支付 => 改成店内自提
   createProductOrderBy(e) {
@@ -288,7 +347,7 @@ export default class ComfireOrder extends wepy.page {
     }
   }
   async onLoad(option) {
-    // 检查权限
+    // 检查权限  这里好像少个授权定位  还是在前面购物车那里 查一下
     this.checkLogin();
     await this.getUserAddress();
     // let that = this;
@@ -307,7 +366,9 @@ export default class ComfireOrder extends wepy.page {
     this.couponList();
   }
   onShow(option) {
-    this.getAddressInfo();
+    setTimeout(() => {
+      this.getAddressInfo();
+    }, 1000);
   }
   computed = {};
   // 支付
@@ -390,58 +451,7 @@ export default class ComfireOrder extends wepy.page {
       tip.error(json.msg);
     }
   }
-  // 添加地址
-  addAddress() {
-    let that = this;
-    wx.chooseAddress({
-      success: function(res) {
-        // console.log(res);
-        wx.request({
-          url: 'https:// small.huanqiujishi.com/index.php/Api/Address/add_adds',
-          data: {
-            user_id: wepy.$instance.globalData.userIDS.ID,
-            receiver: res.userName,
-            tel: res.telNumber,
-            sheng: res.provinceName,
-            city: res.cityName,
-            quyu: res.countyName,
-            adds: res.detailInfo,
-            code: res.postalCode
-          },
-          method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-          header: {
-            // 设置请求的 header
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          success: function(res) {
-            that.getUserAddress();
-            // success
-            // console.log(res);
-            var status = res.data.status;
-            if (status == 1) {
-              wx.showToast({
-                title: '保存成功！',
-                duration: 2000
-              });
-            } else {
-              console.log('添加失败:' + res.data.err);
-              wx.showToast({
-                title: res.data.err,
-                duration: 5000
-              });
-            }
-          },
-          fail: function() {
-            // fail
-            wx.showToast({
-              title: '网络异常！',
-              duration: 2000
-            });
-          }
-        });
-      }
-    });
-  }
+
   // 优惠券列表
   async couponList() {
     let that = this;
@@ -504,8 +514,14 @@ export default class ComfireOrder extends wepy.page {
     }
     this.$apply();
   }
+
   methods = {
-    createProductOrderByXX(e) {
+    async createProductOrderByXX(e) {
+      if (!this.is_exit_address) {
+        await tip.confirm('你未设置收货地址，请设置地址');
+        await this.addWechatAddressSync();
+        return false;
+      }
       this.createProductOrderBy(e);
     },
     chooseShop(e) {
@@ -545,7 +561,7 @@ export default class ComfireOrder extends wepy.page {
       this.paytype = e;
       if (!this.is_exit_address) {
         await tip.confirm('你未设置收货地址，请设置地址');
-        this.addAddress();
+        this.addWechatAddressSync();
         return false;
       }
       // 这个是为了查看支付成功页面做的

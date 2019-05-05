@@ -9,6 +9,9 @@
     <!-- 广告图 以后可以弄成联网的 -->
     <image src="../../images/home/gg.png" mode="widthFix" style="width: 100%;" lazy-load="false"></image>
     <view class="h-gap"></view>
+    <!-- <navigator url="/pages/test/home">
+      <text > home </text>
+    </navigator> -->
     <!-- 导航 以后可以弄成联网的 template/image_box.wpy 这个是联网的-->
     <NavList></NavList>
     <view class="h-gap"></view>
@@ -19,31 +22,6 @@
     </view>
     <!-- /热卖商品 -->
     <view class="h-gap"></view>
-    <!-- 分类导航  -->
-    <!-- <view class="row-between nav">
-      <view class="column-center" @tap="goToCate('567')">
-        <image mode="aspectFill" src="../../images/nav/mm.png"></image>
-        <view class="title">面膜</view>
-        </text>
-      </view>
-      <view class="column-center" @tap="goToCate('408')">
-        <image mode="aspectFill" src="../../images/nav/mz.png" />
-        <view class="title">美妆</view>
-      </view>
-      <view class="column-center" @tap="goToCate('428')">
-        <image mode="aspectFill" src="../../images/nav/xh.png" />
-        <view class="title">洗护</view>
-      </view>
-      <view class="column-center" @tap="goToCate('447')">
-        <image mode="aspectFill" src="../../images/nav/ry.png" />
-        <view class="title">日用</view>
-      </view>
-      <view class="column-center" @tap="goToCate('477')">
-        <image mode="aspectFill" src="../../images/nav/sc.png" />
-        <view class="title">潮流</view>
-      </view>
-    </view> -->
-    <!-- /分类导航  -->
     <!-- 分割图片 -->
     <image src="{{picUrl}}" mode="widthFix" style="width:100%;margin-top:15rpx;"></image>
     <!-- /分割图片 -->
@@ -64,7 +42,7 @@ import goods from '@/api/goods';
 import BaseMixin from '@/mixins/base';
 import Pagination from '@/mixins/pagination';
 import GotopMixin from '@/mixins/gotop_mix';
-import SearchBar from '@/components/template/home_search_bar1';
+import SearchBar from '@/components/template/home_search_bar';
 import SwiperBar from '../../components/template/swiper_bar';
 import NavList from '../../components/nav_list';
 import ScrollXList from '../../components/scroll_list';

@@ -59,7 +59,8 @@ export default class extends wepy.app {
       'pages/personal_center/address/address_edit',
       // 'pages/personal_center/index',
       'pages/common/lnglat',
-      'pages/test/lnglat',
+      'pages/test/home',
+      'pages/goods_detail',
       'pages/index'
     ],
     permission: {

@@ -1,15 +1,44 @@
+<!--  -->
+<template lang='wxml' minapp='wepy'>
+  <view class='container'>
+  </view>
+</template>
+
 <script>
 import wepy from 'wepy';
 export default class Example extends wepy.page {
   config = {
     navigationBarTitleText: ''
   };
-  onLoad(res) {
+  data = {};
+  components = {};
+  methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  decodeScene(scene) {
+    let str = decodeURIComponent(scene);
+    str = str.replace(/'/g, '"');
+    return JSON.parse('{' + str + '}');
+  }
+  onLoad(option) {
+    console.log(option, '<----------------------');
     //  修补上一版路径不同的问题
-    let url = res.path;
-    url = '/pages/goods' + url.substring(5);
-    wx.redirectTo({ url: url });
+    let scene;
+    if (option.scene) {
+      scene = this.decodeScene(option.scene);
+      console.log(scene, '==================== scene');
+      console.log(scene.id, '==================== scene id');
+    }
+
+    let url = '/pages/goods/goods_detail?id=' + scene.id;
+    wx.redirectTo({
+      url: url
+    });
   }
   onShow() {}
 }
 </script>
+
+<style lang='scss'>
+</style>

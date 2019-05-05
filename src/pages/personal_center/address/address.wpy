@@ -1,7 +1,7 @@
 <!--地址管理-->
 <template>
   <view class="address">
-    <repeat for="{{addressList}}"  index="index" item="item">
+    <repeat for="{{addressList}}" index="index" item="item">
       <view class="list_box">
         <SwipeDelete :swipeData="item" @delItem.user="handleDelItem">
           <view class="address_list" @tap="tapSelAddress" data-id="{{item.id}}">
@@ -35,6 +35,7 @@ import api from '@/api/addresses';
 import { isExist } from '@/utils/Common';
 import SwipeDelete from '@/components/common/wepy-swipe-delete';
 import BaseMixin from '@/mixins/base';
+import AddressMixin from '@/mixins/address';
 import { connect } from 'wepy-redux';
 // import { initAddress, initAddressAsync } from '@/store/actions';
 import { initAddress, saveAddress, changeAddress } from '@/store/actions';
@@ -47,7 +48,7 @@ export default class Address extends wepy.page {
   config = {
     navigationBarTitleText: '地址管理'
   };
-  mixins = [BaseMixin];
+  mixins = [BaseMixin, AddressMixin];
   components = {
     SwipeDelete: SwipeDelete
   };
@@ -59,12 +60,12 @@ export default class Address extends wepy.page {
     type: '' // 哪个页面跳转过来的
   };
   // 获得用户地址
-  async getUserAddress(phone, code) {
+  async getUserAddress() {
     const json = await api.getUserAddress({
       uid: wepy.$instance.globalData.userIDS.ID
     });
     this.hasError(json);
-    // console.log(json.list);
+    // console.log(json.list, '222222222');
     // return json.list;
     // 目前看来一个 action 就够用了 每次到这个页面都会刷新地址 虽然这样不太好
     wepy.$store.dispatch(saveAddress(json.list));
@@ -89,60 +90,6 @@ export default class Address extends wepy.page {
     //   initAddressAsync(wepy.$instance.globalData.userIDS.ID)
     // );
     this.$apply();
-  }
-  // 添加微信地址
-  addWechatAddress() {
-    // let that = this;
-    wx.chooseAddress({
-      success: function(res) {
-        // console.log(res);
-        wx.request({
-          url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
-          data: {
-            user_id: wepy.$instance.globalData.userIDS.ID,
-            receiver: res.userName,
-            tel: res.telNumber,
-            sheng: res.provinceName,
-            city: res.cityName,
-            quyu: res.countyName,
-            adds: res.detailInfo,
-            code: res.postalCode
-          },
-          method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-          header: {
-            // 设置请求的 header
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          success: function(res) {
-            // success
-            console.log(res);
-            var status = res.data.status;
-            if (status == 1) {
-              wx.showToast({
-                title: '保存成功！',
-                duration: 2000
-              });
-              // XXX 现在不用改了  等改用initadress时 这里需要改
-              // 因为放在 onShow() 里会出现请求两次
-              // that.getUserAddress();
-            } else {
-              console.log('添加失败:' + res.data.err);
-              wx.showToast({
-                title: res.data.err,
-                duration: 5000
-              });
-            }
-          },
-          fail: function() {
-            // fail
-            wx.showToast({
-              title: '网络异常！',
-              duration: 2000
-            });
-          }
-        });
-      }
-    });
   }
   // 删除地址
   async delUserAddress(id) {
