@@ -49,7 +49,7 @@
         </wxc-list>
       </view>
       <view wx:if="{{currentShop != '当前无门店'}}" class="list-item">
-        <wxc-list title="推荐门店" desc="{{currentShop}}" @tap="onOpen" arrow="{{true}}">
+        <wxc-list title="服务门店" desc="{{currentShop}}" @tap="onOpen" arrow="{{true}}">
         </wxc-list>
         <!-- <picker bindchange="chooseShop" range-key="name" value="{{shops}}" range="{{shops}}">
             <wxc-list title="推荐门店" desc="{{currentShop}}" arrow="{{true}}">

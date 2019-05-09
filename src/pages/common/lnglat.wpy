@@ -2,67 +2,70 @@
 <template lang='wxml' minapp='wepy'>
   <view class='container'>
     <!--绑定输入事件-->
-    <!-- <view class="search_read_only ">
-                                          <input class='search_address' bindinput="getsuggest" value="{{backfill}}">地址</input>
-                                        </view> -->
-    <view class='list-search' style="height:45px">
-      <text class='search-city' catchtap='selectCity'> {{lnglat.city}} </text>
-      <icon class="error arrow" @tap.stop="selectCity" style="margin-right: 30rpx;"></icon>
-      <view class='list-search-box'>
-        <icon type="search" size="15" />
-        <input confirm-type="search" placeholder="输入您要搜索的城市" bindinput='getsuggest' value="{{backfill}}" bindconfirm="searchKey" />
-        <icon wx:if="{{showClear}}" type="clear" size="15" @tap="clear" />
-      </view>
-      <text class='search-button' catchtap='searchKey'> 搜索 </text>
-    </view>
-    <van-cell-group title="当前定位">
-      <van-cell title="{{lnglat.currentAddr}}" border="{{ false }}">
-        <icon slot="icon" class="order icon-d"></icon>
-        <!-- XXX  这里刷新的点击还没做 -->
-        <van-icon slot="right-icon" color="#A3A3A3" name="replay" size="20px" bind:click="refresh" />
-      </van-cell>
-    </van-cell-group>
-    <van-cell-group title="附近地址">
-      <!-- <view wx:for="{{lnglat.pois}}" wx:key="index" wx:if="{{index<5}}"> -->
-      <view wx:for="{{lnglat.pois}}" wx:key="index">
-        <van-cell title="{{item.title}}" label="{{item.address}}" bind:click="selectAddr({{item}})" />
-      </view>
-    </van-cell-group>
-    <block wx:if="{{lnglat.shops != ''}}">
-      <van-cell-group title="附近门店">
-        <view wx:for="{{lnglat.shops}}" wx:key="index">
-        <van-cell title="{{item.name}}" use-label-slot="true" bind:click="openMap({{item.latitude}},{{item.longitude}})">
-          <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
-          <view slot="label" class="column label-solt">
-            <view class="sub row">
-              <icon class="bouns" />
-              <text class="darkgray">{{item.distance ? item.distance : '您在当前门店附近'}}</text>
-            </view>
-            <view class="sub row">
-              <icon class="phone" /> <text class="darkgray">{{item.phone}}</text>
-            </view>
-            <view class="sub row">
-              <icon class="address" />
-              <text class="darkgray">{{item.address}}</text>
-            </view>
+    <wux-sticky scrollTop="{{ scrollTop }}">
+      <wux-sticky-item>
+        <view style="padding:0 !important;" slot="title" class='list-search' style="height:45px">
+          <text class='search-city' catchtap='selectCity'> {{lnglat.city}} </text>
+          <icon class="error arrow" @tap.stop="selectCity" style="margin-right: 30rpx;"></icon>
+          <view class='list-search-box'>
+            <icon type="search" size="15" />
+            <input confirm-type="search" placeholder="输入您要搜索的城市" bindinput='getsuggest' value="{{backfill}}" bindconfirm="searchKey" />
+            <icon wx:if="{{showClear}}" type="clear" size="15" @tap="clear" />
           </view>
-        </van-cell>
+          <text class='search-button' catchtap='searchKey'> 搜索 </text>
         </view>
-      </van-cell-group>
-    </block>
-    <van-popup show="{{ showPopup }}" position="top" overlay-style="margin-top: 100rpx" bind:click-overlay="clear" custom-class="popup">
-      <!--关键词输入提示列表渲染-->
-      <view wx:for="{{suggestion}}" wx:key="index">
-        <!--绑定回填事件-->
-        <view class="cell" @tap.stop="backfill">
-          <!--根据需求渲染相应数据-->
-          <!--渲染地址title-->
-          <view style="text-align:center;"  id="{{index}}">{{item.title}}</view>
-          <!--渲染详细地址-->
-          <view style="font-size:12px;color:#666;text-align:center;">{{item.addr}}</view>
+        <view slot="content">
+          <van-cell-group title="当前定位">
+            <van-cell title="{{lnglat.currentAddr}}" border="{{ false }}">
+              <icon slot="icon" class="order icon-d"></icon>
+              <!-- XXX  这里刷新的点击还没做 -->
+              <van-icon slot="right-icon" color="#A3A3A3" name="replay" size="20px" bind:click="refresh" />
+            </van-cell>
+          </van-cell-group>
+          <van-cell-group title="附近地址">
+            <!-- <view wx:for="{{lnglat.pois}}" wx:key="index" wx:if="{{index<5}}"> -->
+            <view wx:for="{{lnglat.pois}}" wx:key="index">
+              <van-cell title="{{item.title}}" label="{{item.address}}" bind:click="selectAddr({{item}})" />
+            </view>
+          </van-cell-group>
+          <block wx:if="{{lnglat.shops != ''}}">
+            <van-cell-group title="附近门店">
+              <view wx:for="{{lnglat.shops}}" wx:key="index">
+                <van-cell title="{{item.name}}" use-label-slot="true" bind:click="openMap({{item.latitude}},{{item.longitude}})">
+                  <wxc-label type="fill" type-color="#747bb1">导航</wxc-label>
+                  <view slot="label" class="column label-solt">
+                    <view class="sub row">
+                      <icon class="bouns" />
+                      <text class="darkgray">{{item.distance ? item.distance : '您在当前门店附近'}}</text>
+                    </view>
+                    <view class="sub row">
+                      <icon class="phone" /> <text class="darkgray">{{item.phone}}</text>
+                    </view>
+                    <view class="sub row">
+                      <icon class="address" />
+                      <text class="darkgray">{{item.address}}</text>
+                    </view>
+                  </view>
+                </van-cell>
+              </view>
+            </van-cell-group>
+          </block>
+          <van-popup show="{{ showPopup }}" position="top" overlay-style="margin-top: 100rpx" bind:click-overlay="clear" custom-class="popup">
+            <!--关键词输入提示列表渲染-->
+            <view wx:for="{{suggestion}}" wx:key="index">
+              <!--绑定回填事件-->
+              <view class="cell" @tap.stop="backfill">
+                <!--根据需求渲染相应数据-->
+                <!--渲染地址title-->
+                <view style="text-align:center;" id="{{index}}">{{item.title}}</view>
+                <!--渲染详细地址-->
+                <view style="font-size:12px;color:#666;text-align:center;">{{item.addr}}</view>
+              </view>
+            </view>
+          </van-popup>
         </view>
-      </view>
-    </van-popup>
+      </wux-sticky-item>
+    </wux-sticky>
   </view>
 </template>
 
@@ -83,10 +86,13 @@ export default class Lnglat extends wepy.page {
       'van-popup': '../../packages/vant/lib/popup/index',
       'van-icon': '../../packages/vant/lib/icon/index',
       'wux-notice-bar': '../../packages/wux/notice-bar/index',
-      'wxc-label': '../../packages/@minui/wxc-label/dist/index'
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index',
+      'wux-sticky': '../../packages/wux/sticky/index',
+      'wux-sticky-item': '../../packages/wux/sticky-item/index'
     }
   };
   data = {
+    scrollTop: 0,
     qqmapsdk: {},
     suggestion: '',
     backfill: '',
@@ -231,6 +237,11 @@ export default class Lnglat extends wepy.page {
   computed = {};
   onLoad() {}
   onShow() {}
+  onPageScroll(e) {
+    // console.log('onPageScroll', e.scrollTop);
+    this.scrollTop = e.scrollTop;
+    this.$apply()
+  }
 }
 </script>
 
@@ -312,5 +323,24 @@ export default class Lnglat extends wepy.page {
 .label-solt text {
   font-size: 22rpx !important;
   padding-left: 10rpx;
+}
+// 用这个其他都得占位一下 要不往上偏移了 //这个暂留 下面那个 总是有延迟 如果效果不好 还得用这个
+.warp {
+  width: 100%;
+  background: #fff;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 60rpx;
+  z-index: 99;
+}
+// 解决吸顶 宽度问题
+.wux-sticky-item__title {
+  width: 100%;
+  padding: 0 !important;
+  box-sizing: border-box;
+  background: #eee;
 }
 </style>

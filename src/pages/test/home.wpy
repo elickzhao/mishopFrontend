@@ -1,15 +1,47 @@
 <!-- 商城主页 -->
 <template lang="wxml" minapp="wepy">
   <view class='container'>
+    <wux-sticky scrollTop="{{ scrollTop }}">
+      <wux-sticky-item>
+        <view slot="title">小鸡 🐤</view>
+        <view slot="content">
+          <view class="demo-item">你看哪里有个小鸡呦</view>
+          <view class="demo-item">你看那里他有小鸡哟</view>
+          <view class="demo-item">小鸡哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
+        </view>
+      </wux-sticky-item>
+    </wux-sticky>
     <!-- 这要怎么滚动呢 -->
     我是主页
-    <button bind:click="onOpen1"> 打开级联</button>
-    <!-- <wux-cascader visible="{{ visible1 }}" city="{{ lnglat.city }}" controlled="{{ true }}"  value="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1"/> -->
-    <wux-cascader visible="{{ visible1 }}" city="{{ lnglat.city }}" controlled="{{ false }}" defaultValue="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1" />
-    <!-- <wux-cascader visible="{{ visible1 }}" city="{{ lnglat.city }}" default-value="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1" controlled="{{ false }}" defaultValue="{{ ['昌平区','北京TFS旗舰体验馆'] }}" /> -->
-    <!-- <wux-cascader visible="{{ visible2 }}" controlled value="{{ value2 }}" title="所在地区" options="{{ options2 }}" bind:close="onClose2" bind:change="onChange2" bind:load="onLoadOptions" /> -->
     <text class="xl cancel">我是主页</text>
     <text class="ll major">我是主页 -- ll</text>
+    <wux-sticky scrollTop="{{ scrollTop }}">
+      <wux-sticky-item>
+        <view slot="title">小鸡 🐤</view>
+        <view slot="content">
+          <view class="demo-item">你看哪里有个小鸡呦</view>
+          <view class="demo-item">你看那里他有小鸡哟</view>
+          <view class="demo-item">小鸡哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔-bi-哟</view>
+          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
+        </view>
+      </wux-sticky-item>
+    </wux-sticky>
+    <view class="bg-white">
+      <div class="row">
+        <div class="tab-border">2</div>
+        <view class="left-1px">3333333333</view>
+        <p class="left-1px">22222222222222</p>
+      </div>
+    </view>
     <view class="column">
       <text class="inline" style="width:120px;">横线应该是折线吧 不过不知道有多长啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</text>
       <text class="line-clamp danger" style="width:120px;">2行折线吧 不过不知道有多长啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</text>
@@ -68,362 +100,55 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import _ from 'lodash';
-import { connect } from 'wepy-redux';
-import store from '@/store/utils';
-@connect({
-  lnglat: store.get('lnglat')
-})
-export default class Example extends wepy.page {
-  config = {
-    navigationBarTitleText: '主页',
-    usingComponents: {
-      'wux-cascader': '../../packages/wux/cascader/index'
+  import wepy from 'wepy';
+  import {
+    connect
+  } from 'wepy-redux';
+  import store from '@/store/utils';
+  @connect({
+    lnglat: store.get('lnglat')
+  })
+  export default class Example extends wepy.page {
+    config = {
+      navigationBarTitleText: '主页',
+      usingComponents: {
+        'wux-cascader': '../../packages/wux/cascader/index',
+        'wux-sticky': '../../packages/wux/sticky/index',
+        'wux-sticky-item': '../../packages/wux/sticky-item/index'
+      }
+    };
+    data = {
+      scrollTop: 0
+    };
+    components = {};
+    methods = {};
+    events = {};
+    watch = {};
+    computed = {};
+    onLoad() {}
+    onShow() {}
+    onPageScroll(e) {
+      console.log('onPageScroll', e.scrollTop);
+      this.setData({
+        scrollTop: e.scrollTop
+      });
     }
-  };
-  data = {
-    city: '',
-    dd: ['110000', '110000'],
-    // default: ['北京', '北京市', '东城区'],
-    // default: ['北京'],
-    options1: [
-      {
-        label: '北京',
-        value: '110000',
-        children: [
-          {
-            label: '北京市',
-            value: '110000',
-            children: [
-              {
-                label: '东城区',
-                value: '110101'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        label: '上海',
-        value: '310000',
-        children: [
-          {
-            label: '上海市',
-            value: '310000',
-            children: [
-              {
-                label: '黄浦区',
-                value: '310101'
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    value1: [],
-    options2: [
-      {
-        value: 'beijing',
-        label: '北京',
-        isLeaf: false
-      },
-      {
-        value: 'hangzhou',
-        label: '杭州',
-        isLeaf: false
-      }
-    ],
-    value2: []
-  };
-  onOpen1() {
-    this.setData({
-      visible1: true
-    });
   }
-  onClose1(e) {
-    this.setData({
-      visible1: false
-    });
-  }
-  onChange1(e) {
-    this.setData({
-      title1: e.detail.options.map(n => n.label).join('/')
-    });
-    console.log('onChange1', e.detail);
-  }
-  onOpen2() {
-    this.setData({
-      visible2: true
-    });
-  }
-  onClose2() {
-    this.setData({
-      visible2: false
-    });
-  }
-  onChange2(e) {
-    console.log('onChange2', e.detail);
-    this.setData({
-      value2: e.detail.value,
-      title2: e.detail.done && e.detail.options.map(n => n.label).join('/')
-    });
-  }
-  onLoadOptions(e) {
-    console.log('onLoadOptions', e.detail);
-    const { value } = e.detail;
-    const options2 = [...this.data.options2];
-    wx.showLoading({
-      mask: true
-    });
-    setTimeout(() => {
-      if (value[value.length - 1] === 'beijing') {
-        options2.forEach(n => {
-          if (n.value === 'beijing') {
-            n.children = [
-              {
-                value: 'baidu',
-                label: '百度'
-              },
-              {
-                value: 'sina',
-                label: '新浪'
-              }
-            ];
-          }
-        });
-      } else if (value[value.length - 1] === 'hangzhou') {
-        options2.forEach(n => {
-          if (n.value === 'hangzhou') {
-            n.children = [
-              {
-                value: 'ali',
-                label: '阿里巴巴'
-              },
-              {
-                value: '163',
-                label: '网易'
-              }
-            ];
-          }
-        });
-      }
-      wx.hideLoading();
-      this.setData({
-        value2: value,
-        options2
-      });
-    }, 1000);
-  }
-  components = {};
-  methods = {
-    onOpen1() {
-      this.setData({
-        visible1: true
-      });
-    },
-    onClose1(e) {
-      this.setData({
-        visible1: false
-      });
-    },
-    onChange1(e) {
-      this.setData({
-        title1: e.detail.options.map(n => n.label).join('/')
-      });
-      console.log('onChange1', e.detail);
-    }
-  };
-  events = {};
-  watch = {};
-  computed = {};
-  onLoad() {
-    // let dd = [
-    //   {
-    //     id: '5',
-    //     name: '南京市鑫乐生活广场店',
-    //     longitude: '118.746971',
-    //     latitude: '32.221862',
-    //     phone: '15950562750',
-    //     add: '浦口区'
-    //   },
-    //   {
-    //     id: '22',
-    //     name: '南京市印象汇店',
-    //     longitude: '118.722266',
-    //     latitude: '32.140486',
-    //     phone: '13626211116',
-    //     add: '浦口区'
-    //   },
-    //   {
-    //     id: '17',
-    //     name: '南京市弘阳广场店',
-    //     longitude: '118.725954',
-    //     latitude: '32.137826',
-    //     phone: '18915962599',
-    //     add: '浦口区'
-    //   },
-    //   {
-    //     id: '12',
-    //     name: '南京市明发滨江新城店',
-    //     longitude: '118.742556',
-    //     latitude: '32.130679',
-    //     phone: '13472511118',
-    //     add: '秦淮区'
-    //   },
-    //   {
-    //     id: '16',
-    //     name: '南京市吾悦广场店',
-    //     longitude: '118.778009',
-    //     latitude: '32.069284',
-    //     phone: '18915962599',
-    //     add: '秦淮区'
-    //   },
-    //   {
-    //     id: '18',
-    //     name: '南京市金盛田广场店',
-    //     longitude: '118.639748',
-    //     latitude: '32.069347',
-    //     phone: '13851512363',
-    //     add: '鼓楼区'
-    //   },
-    //   {
-    //     id: '7',
-    //     name: '南京市晓庄彩虹广场店',
-    //     longitude: '118.819894',
-    //     latitude: '32.118228',
-    //     phone: '15962290826',
-    //     add: '栖霞区'
-    //   },
-    //   {
-    //     id: '21',
-    //     name: '南京市莱迪购物广场',
-    //     longitude: '118.786623',
-    //     latitude: '32.039987',
-    //     phone: '18800679448',
-    //     add: '六合区'
-    //   }
-    // ];
-    // let r = _.sortBy(dd, 'id');
-    // console.log(r);
-    // XXX 明天搞定 change赋值就完事了  某认不该 只有当门店名称出现时才改写
-    console.log(this.lnglat, '<---------------');
-    this.city = this.lnglat.city;
-    this.value1 = [this.lnglat.shops[0].county, this.lnglat.shops[0].name];
-    // this.value1 = ['昌平区','北京TFS旗舰体验馆'];
-    this.$apply();
-    console.log(this.value1, '===========================');
-    let dd = this.lnglat.shops;
-    let sim = [];
-    dd.map(d => {
-      // console.log(sim);
-      // console.log(sim);
-      // console.log(typeof _.find(sim, { label: d.add }) != 'undefined', '>>>>', _.find(sim, { label: d.add }));
-      // if (sim.length) {
-      //   console.log(_.find(sim, { label: d.add }), '??????'+d.add+'????????', sim.length);
-      // }
-      if (
-        typeof _.find(sim, {
-          label: d.county
-        }) != 'undefined' &&
-        sim.length > 0
-      ) {
-        let key = _.findIndex(sim, o => {
-          return o.label == d.county;
-        });
-        // console.log(sim[key].children, '--------------------');
-        // console.log({ label: d.name, value: d.name }, '++++++++++++++++++');
-        sim[key].children.push({
-          label: d.name,
-          value: d.name
-        });
-      } else {
-        // console.log('已经是else了');
-        // console.log(sim.length > 0);
-        if (sim.length == 0) {
-          // console.log('1111111111111111');
-          sim = [
-            {
-              label: d.county,
-              value: d.county,
-              children: [
-                {
-                  label: d.name,
-                  value: d.name
-                }
-              ]
-            }
-          ];
-        } else {
-          // console.log('33333333333333333333');
-          sim.push({
-            label: d.county,
-            value: d.county,
-            children: [
-              {
-                label: d.name,
-                value: d.name
-              }
-            ]
-          });
-        }
-      }
-    });
-    console.log(sim);
-    this.options1 = sim;
-    this.$apply();
-    //  [
-    //       {
-    //         label: '北京',
-    //         value: '110000',
-    //         children: [
-    //           {
-    //             label: '北京市',
-    //             value: '110000',
-    //             children: [
-    //               {
-    //                 label: '东城区',
-    //                 value: '110101'
-    //               }
-    //             ]
-    //           }
-    //         ]
-    //       },
-    //       {
-    //         label: '上海',
-    //         value: '310000',
-    //         children: [
-    //           {
-    //             label: '上海市',
-    //             value: '310000',
-    //             children: [
-    //               {
-    //                 label: '黄浦区',
-    //                 value: '310101'
-    //               }
-    //             ]
-    //           }
-    //         ]
-    //       }
-    //     ],
-  }
-  onShow() {}
-}
 </script>
 
 <style lang='scss'>
-// @import '../../styles/variable';
-@import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-@import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-text.ll {
-  font-size: $text-ll;
-}
-.row-center-wrap {
-  @extend .row-center;
-  flex-wrap: wrap;
-} // 引入变量 然后修改
-.weui-footer {
-  padding: 15rpx 0;
-  background-color: $color-bg-body;
-}
+  // @import '../../styles/variable';
+  @import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+  @import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+  text.ll {
+    font-size: $text-ll;
+  }
+  .row-center-wrap {
+    @extend .row-center;
+    flex-wrap: wrap;
+  } // 引入变量 然后修改
+  .weui-footer {
+    padding: 15rpx 0;
+    background-color: $color-bg-body;
+  }
 </style>
