@@ -39,7 +39,7 @@ export default class shopCart extends wepy.page {
       // 每次进入检查授权
       wx.getSetting({
         success(res) {
-          console.log(res);
+          // console.log(res);
           let scope = res.authSetting;
           if (scope['scope.userLocation'] == false) {
             wx.showModal({

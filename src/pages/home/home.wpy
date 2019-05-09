@@ -9,9 +9,6 @@
     <!-- 广告图 以后可以弄成联网的 -->
     <image src="../../images/home/gg.png" mode="widthFix" style="width: 100%;" lazy-load="false"></image>
     <view class="h-gap"></view>
-    <!-- <navigator url="/pages/test/home">
-      <text > home </text>
-    </navigator> -->
     <!-- 导航 以后可以弄成联网的 template/image_box.wpy 这个是联网的-->
     <NavList></NavList>
     <view class="h-gap"></view>

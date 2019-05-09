@@ -212,9 +212,6 @@ export default class GoodsDetail extends wepy.page {
     this.goodsId = option.id;
     if (option.scene) {
       let scene = decodeScene(option.scene);
-      // 已经改写完成 下面留着测试时验证下
-      console.log(scene, '==================== scene');
-      console.log(scene.id, '==================== scene');
       this.goodsId = scene.id;
       this.$apply();
     }

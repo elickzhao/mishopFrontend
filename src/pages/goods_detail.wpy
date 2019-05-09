@@ -22,13 +22,10 @@ export default class Example extends wepy.page {
     return JSON.parse('{' + str + '}');
   }
   onLoad(option) {
-    console.log(option, '<----------------------');
     //  修补上一版路径不同的问题
     let scene;
     if (option.scene) {
       scene = this.decodeScene(option.scene);
-      console.log(scene, '==================== scene');
-      console.log(scene.id, '==================== scene id');
     }
 
     let url = '/pages/goods/goods_detail?id=' + scene.id;

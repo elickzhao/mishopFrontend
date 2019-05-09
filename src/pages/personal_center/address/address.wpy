@@ -155,9 +155,9 @@ export default class Address extends wepy.page {
   };
   events = {
     // XXX 这个可能无用了删除就行了
-    refreshAddList(msg) {
-      this.getUserAddress();
-    }
+    // refreshAddList(msg) {
+    //   this.getUserAddress();
+    // }
   };
 }
 </script>

@@ -7,7 +7,7 @@
     <view class="spacing"></view>
     <view class="{{is_exit_address ? 'goodsList1' : 'goodsList'}} ">
       <wxc-panel margin="{{false}}">
-        <view class="content1"> <i class="iconfont shopIcon">&#xe6df;</i><text space="ensp" style="font-size:16px;color: #666;">  环球集市旗舰店</text></view>
+        <view class="content1"> <i class="iconfont shopIcon" style="color: #09BB07;">&#xe6df;</i><text space="ensp" style="font-size:16px;color: #666;"> {{ currentShop != '当前无门店' ? currentShop : '环球集市旗舰店' }}</text></view>
       </wxc-panel>
       <!--列表显示2个，绑定数据记得去掉，这里做调试-->
       <repeat for="{{list}}" key="index" index="index" item="item">
@@ -43,32 +43,22 @@
           <input name="remark" bindinput="bindKeyInput" placeholder="对本次交易的说明" />
         </view>
       </view>
-      <!-- <view wx:if="{{total_jf_num >= 100 && totalPrice > 30}}" class="list-item"> -->
-      <!-- <view wx:if="{{totalPrice > 30}}" class="list-item">
-                                  <wxc-list title="积分优惠券" arrow="{{false}}" mode="none">
-                                    <view class="desc-highlight">满100积分减5元</view>
-                                    <switch type="switch" color="#ff5777" bindchange="useCoupon"></switch>
-                                  </wxc-list>
-                                </view>
-                                <view class="list-item" wx:else>
-                                  <wxc-list title="积分优惠券" arrow="{{false}}" mode="none" desc="当前积分或商品 无法使用优惠券">
-                                  </wxc-list>
-                                </view> -->
       <view class="h-gap"></view>
       <view wx:if="{{limitPrice > 30 && (total_jf_num >= 100 || coupons.length >0)}}" class="list-item" @tap="selectCoupon">
         <wxc-list title="优惠券" desc="使用优惠券" arrow="{{true}}">
         </wxc-list>
       </view>
       <view wx:if="{{currentShop != '当前无门店'}}" class="list-item">
-        <picker bindchange="chooseShop" range-key="name" value="{{shops}}" range="{{shops}}">
-          <wxc-list title="推荐门店" desc="{{currentShop}}" arrow="{{true}}">
-          </wxc-list>
-        </picker>
+        <wxc-list title="推荐门店" desc="{{currentShop}}" @tap="onOpen" arrow="{{true}}">
+        </wxc-list>
+        <!-- <picker bindchange="chooseShop" range-key="name" value="{{shops}}" range="{{shops}}">
+            <wxc-list title="推荐门店" desc="{{currentShop}}" arrow="{{true}}">
+            </wxc-list>
+          </picker> -->
       </view>
       <view class="block">
         <view class="left tongji">合计金额</view>
         <view>
-          <!-- <view class="right price" wx:if="{{jf_num>0}}">商品金额:￥{{totalPrice}}-积分:￥{{reduce_fee}}</view> -->
           <view class="right price">应付:￥{{actualPrice}}</view>
         </view>
       </view>
@@ -76,18 +66,7 @@
         <wxc-list title="优惠券:" desc="- ￥{{reduce}}" arrow="{{false}}" mode="none"></wxc-list>
       </view>
     </view>
-    <!-- <view class="pay_box">
-                                          <block wx:if="{{totalNum > miniNum}}">
-                                            <button @tap="goPay('weixin')" form-type="submit" class="button type_green">配送到家</button>
-                                          </block>
-                                          <block wx:else>
-                                            <button style="background:#FFF;" form-type="submit" class="button">满 {{miniNum}} 元起送</button>
-                                          </block>
-                                          <br/>
-                                          <picker bindchange="createProductOrderByXX" value="{{shops}}" range="{{shops}}">
-                                            <button form-type="submit" class="button" style="background:#FF0077;margin-top:20rpx;color:#FFF">门店自提</button>
-                                          </picker>
-                                        </view> -->
+    <wux-cascader visible="{{ showCascader }}" city="{{ lnglat.city }}" defaultValue="{{ value }}" title="所在地区" options="{{ options }}" bind:close="onClose" bind:change="onChange" />
     <view class="spacing5"></view>
     <view class="footer">
       <wxc-panel border="{{false}}">
@@ -109,6 +88,7 @@ import api from '@/api/order';
 import addresses from '@/api/addresses';
 import coupon from '@/api/coupon';
 import tip from '@/utils/Tips';
+import _ from 'lodash';
 import { isExist } from '@/utils/Common';
 import Adress from '@/components/common/address';
 import CheckLoginMixin from '@/mixins/check_login';
@@ -131,7 +111,8 @@ export default class ComfireOrder extends wepy.page {
       'wxc-icon': '../../packages/@minui/wxc-icon/dist/index',
       'wxc-list': '../../packages/@minui/wxc-list/dist/index',
       'wxc-panel': '../../packages/@minui/wxc-panel/dist/index',
-      'wxc-label': '../../packages/@minui/wxc-label/dist/index'
+      'wxc-label': '../../packages/@minui/wxc-label/dist/index',
+      'wux-cascader': '../../packages/wux/cascader/index'
     }
   };
   components = {
@@ -140,6 +121,9 @@ export default class ComfireOrder extends wepy.page {
   };
   mixins = [BaseMixin, CheckLoginMixin, AddressMixin];
   data = {
+    showCascader: false, // 显示级联
+    value: '', // 级联门店初始门店选择
+    options: '', // 门店级联选择
     limitPrice: 0, // 这个价格是去掉特价商品的总价
     coupons: [],
     couponItems: [],
@@ -227,57 +211,32 @@ export default class ComfireOrder extends wepy.page {
       that.address = {};
       that.$apply();
     }
-
     if (that.is_exit_address == false) {
-      wx.showModal({
-        title: '请添加收货地址!',
-        content: '你未设置收货地址，请设置地址',
-        success: res => {
-          if (res.confirm) {
-            console.log('用户点击确定');
+      // this.addWechatAddressSync()
+      wx.getSetting({
+        success(res) {
+          let scope = res.authSetting;
+          console.log(scope, '***********************');
+          // 这里是取消了权限 才会打开授权页面 而当没有这个授权项时 是不会打开的
+          if (scope['scope.address'] == true) {
+            wx.showModal({
+              title: '请添加收货地址!',
+              content: '你未设置收货地址，请设置地址',
+              success: res => {
+                if (res.confirm) {
+                  console.log('用户点击确定');
+                  that.addWechatAddressSync();
+                } else if (res.cancel) {
+                  console.log('用户点击取消');
+                }
+              }
+            });
+          } else {
             that.addWechatAddressSync();
-          } else if (res.cancel) {
-            console.log('用户点击取消');
           }
         }
       });
     }
-
-    // new Promise(function(resolve, reject) {
-    //   let address = wepy.$store.getState().address;
-    //   let list = wepy.$store.getState().address.list;
-    //   let current = {};
-    //   if (list.length > 0) {
-    //     list.map(item => {
-    //       if (item.id == address.current) {
-    //         current = item;
-    //       }
-    //     });
-    //     that.is_exit_address = true;
-    //     that.address = current;
-    //     that.$apply();
-    //   } else {
-    //     that.is_exit_address = false;
-    //     that.address = {};
-    //     that.$apply();
-    //   }
-    //   resolve('200 OK');
-    // }).then(function(r) {
-    //   console.log('Done: ' + that.is_exit_address);
-    //   if (that.is_exit_address == false) {
-    //     wx.showModal({
-    //       title: '请添加收货地址!',
-    //       success: res => {
-    //         if (res.confirm) {
-    //           console.log('用户点击确定');
-    //           that.addWechatAddressSync();
-    //         } else if (res.cancel) {
-    //           console.log('用户点击取消');
-    //         }
-    //       }
-    //     });
-    //   }
-    // });
   }
   // 线下支付 => 改成店内自提
   createProductOrderBy(e) {
@@ -315,9 +274,6 @@ export default class ComfireOrder extends wepy.page {
         }
       }
     });
-    // console.log(this.address);
-    // 其他手机号什么都不用改
-    // console.log('执行完毕了');
     this.$apply();
   }
   // 获取门店列表
@@ -346,6 +302,58 @@ export default class ComfireOrder extends wepy.page {
       this.hasError(json);
     }
   }
+  initCascader() {
+    let shops = this.lnglat.shops;
+    let sim = [];
+    if (shops.length > 0) {
+      this.city = this.lnglat.city;
+      this.value = [shops[0].county, shops[0].name];
+      shops.map(d => {
+        if (
+          typeof _.find(sim, {
+            label: d.county
+          }) != 'undefined' &&
+          sim.length > 0
+        ) {
+          let key = _.findIndex(sim, o => {
+            return o.label == d.county;
+          });
+          sim[key].children.push({
+            label: d.name,
+            value: d.name
+          });
+        } else {
+          if (sim.length == 0) {
+            sim = [
+              {
+                label: d.county,
+                value: d.county,
+                children: [
+                  {
+                    label: d.name,
+                    value: d.name
+                  }
+                ]
+              }
+            ];
+          } else {
+            sim.push({
+              label: d.county,
+              value: d.county,
+              children: [
+                {
+                  label: d.name,
+                  value: d.name
+                }
+              ]
+            });
+          }
+        }
+      });
+      this.options = sim;
+      this.$apply();
+    }
+  }
   async onLoad(option) {
     // 检查权限  这里好像少个授权定位  还是在前面购物车那里 查一下
     this.checkLogin();
@@ -369,6 +377,7 @@ export default class ComfireOrder extends wepy.page {
     setTimeout(() => {
       this.getAddressInfo();
     }, 1000);
+    this.initCascader();
   }
   computed = {};
   // 支付
@@ -451,7 +460,6 @@ export default class ComfireOrder extends wepy.page {
       tip.error(json.msg);
     }
   }
-
   // 优惠券列表
   async couponList() {
     let that = this;
@@ -514,8 +522,22 @@ export default class ComfireOrder extends wepy.page {
     }
     this.$apply();
   }
-
   methods = {
+    // 打开级联
+    onOpen() {
+      this.showCascader = true;
+    },
+    // 关闭级联
+    onClose(e) {
+      this.showCascader = false;
+    },
+    onChange(e) {
+      let v = e.detail.value;
+      if (v.length > 1) {
+        this.currentShop = v[1];
+      }
+      // console.log('onChange1', e.detail);
+    },
     async createProductOrderByXX(e) {
       if (!this.is_exit_address) {
         await tip.confirm('你未设置收货地址，请设置地址');
@@ -609,7 +631,7 @@ export default class ComfireOrder extends wepy.page {
   left: 0px;
   bottom: 0px;
   width: 100%;
-  z-index: 9999;
+  z-index: 9;
 }
 .desc-highlight {
   font-size: 24rpx;

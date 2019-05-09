@@ -3,11 +3,10 @@
   <view class='container'>
     <!-- 这要怎么滚动呢 -->
     我是主页
-    <wux-cell-group title="Cascader">
-      <wux-cell title="Default" extra="{{ title1 }}" bind:click="onOpen1"></wux-cell>
-      <wux-cell title="Async" extra="{{ title2 }}" bind:click="onOpen2"></wux-cell>
-    </wux-cell-group>
-    <wux-cascader visible="{{ visible1 }}" default-value="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1" controlled="{{ false }}" defaultValue="{{ ['110000','110000'] }}" />
+    <button bind:click="onOpen1"> 打开级联</button>
+    <!-- <wux-cascader visible="{{ visible1 }}" city="{{ lnglat.city }}" controlled="{{ true }}"  value="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1"/> -->
+    <wux-cascader visible="{{ visible1 }}" city="{{ lnglat.city }}" controlled="{{ false }}" defaultValue="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1" />
+    <!-- <wux-cascader visible="{{ visible1 }}" city="{{ lnglat.city }}" default-value="{{ value1 }}" title="所在地区" options="{{ options1 }}" bind:close="onClose1" bind:change="onChange1" controlled="{{ false }}" defaultValue="{{ ['昌平区','北京TFS旗舰体验馆'] }}" /> -->
     <!-- <wux-cascader visible="{{ visible2 }}" controlled value="{{ value2 }}" title="所在地区" options="{{ options2 }}" bind:close="onClose2" bind:change="onChange2" bind:load="onLoadOptions" /> -->
     <text class="xl cancel">我是主页</text>
     <text class="ll major">我是主页 -- ll</text>
@@ -80,12 +79,11 @@ export default class Example extends wepy.page {
   config = {
     navigationBarTitleText: '主页',
     usingComponents: {
-      'wux-cell-group': '../../packages/wux/cell-group/index',
-      'wux-cell': '../../packages/wux/cell/index',
       'wux-cascader': '../../packages/wux/cascader/index'
     }
   };
   data = {
+    city: '',
     dd: ['110000', '110000'],
     // default: ['北京', '北京市', '东城区'],
     // default: ['北京'],
@@ -223,93 +221,111 @@ export default class Example extends wepy.page {
       this.setData({
         visible1: true
       });
+    },
+    onClose1(e) {
+      this.setData({
+        visible1: false
+      });
+    },
+    onChange1(e) {
+      this.setData({
+        title1: e.detail.options.map(n => n.label).join('/')
+      });
+      console.log('onChange1', e.detail);
     }
   };
   events = {};
   watch = {};
   computed = {};
   onLoad() {
-    let dd = [
-      {
-        id: '5',
-        name: '南京市鑫乐生活广场店',
-        longitude: '118.746971',
-        latitude: '32.221862',
-        phone: '15950562750',
-        add: '浦口区'
-      },
-      {
-        id: '22',
-        name: '南京市印象汇店',
-        longitude: '118.722266',
-        latitude: '32.140486',
-        phone: '13626211116',
-        add: '浦口区'
-      },
-      {
-        id: '17',
-        name: '南京市弘阳广场店',
-        longitude: '118.725954',
-        latitude: '32.137826',
-        phone: '18915962599',
-        add: '浦口区'
-      },
-      {
-        id: '12',
-        name: '南京市明发滨江新城店',
-        longitude: '118.742556',
-        latitude: '32.130679',
-        phone: '13472511118',
-        add: '秦淮区'
-      },
-      {
-        id: '16',
-        name: '南京市吾悦广场店',
-        longitude: '118.778009',
-        latitude: '32.069284',
-        phone: '18915962599',
-        add: '秦淮区'
-      },
-      {
-        id: '18',
-        name: '南京市金盛田广场店',
-        longitude: '118.639748',
-        latitude: '32.069347',
-        phone: '13851512363',
-        add: '鼓楼区'
-      },
-      {
-        id: '7',
-        name: '南京市晓庄彩虹广场店',
-        longitude: '118.819894',
-        latitude: '32.118228',
-        phone: '15962290826',
-        add: '栖霞区'
-      },
-      {
-        id: '21',
-        name: '南京市莱迪购物广场',
-        longitude: '118.786623',
-        latitude: '32.039987',
-        phone: '18800679448',
-        add: '六合区'
-      }
-    ];
-    let r = _.sortBy(dd, 'id');
-    console.log(r);
+    // let dd = [
+    //   {
+    //     id: '5',
+    //     name: '南京市鑫乐生活广场店',
+    //     longitude: '118.746971',
+    //     latitude: '32.221862',
+    //     phone: '15950562750',
+    //     add: '浦口区'
+    //   },
+    //   {
+    //     id: '22',
+    //     name: '南京市印象汇店',
+    //     longitude: '118.722266',
+    //     latitude: '32.140486',
+    //     phone: '13626211116',
+    //     add: '浦口区'
+    //   },
+    //   {
+    //     id: '17',
+    //     name: '南京市弘阳广场店',
+    //     longitude: '118.725954',
+    //     latitude: '32.137826',
+    //     phone: '18915962599',
+    //     add: '浦口区'
+    //   },
+    //   {
+    //     id: '12',
+    //     name: '南京市明发滨江新城店',
+    //     longitude: '118.742556',
+    //     latitude: '32.130679',
+    //     phone: '13472511118',
+    //     add: '秦淮区'
+    //   },
+    //   {
+    //     id: '16',
+    //     name: '南京市吾悦广场店',
+    //     longitude: '118.778009',
+    //     latitude: '32.069284',
+    //     phone: '18915962599',
+    //     add: '秦淮区'
+    //   },
+    //   {
+    //     id: '18',
+    //     name: '南京市金盛田广场店',
+    //     longitude: '118.639748',
+    //     latitude: '32.069347',
+    //     phone: '13851512363',
+    //     add: '鼓楼区'
+    //   },
+    //   {
+    //     id: '7',
+    //     name: '南京市晓庄彩虹广场店',
+    //     longitude: '118.819894',
+    //     latitude: '32.118228',
+    //     phone: '15962290826',
+    //     add: '栖霞区'
+    //   },
+    //   {
+    //     id: '21',
+    //     name: '南京市莱迪购物广场',
+    //     longitude: '118.786623',
+    //     latitude: '32.039987',
+    //     phone: '18800679448',
+    //     add: '六合区'
+    //   }
+    // ];
+    // let r = _.sortBy(dd, 'id');
+    // console.log(r);
+    // XXX 明天搞定 change赋值就完事了  某认不该 只有当门店名称出现时才改写
     console.log(this.lnglat, '<---------------');
-    dd = this.lnglat.shops;
+    this.city = this.lnglat.city;
+    this.value1 = [this.lnglat.shops[0].county, this.lnglat.shops[0].name];
+    // this.value1 = ['昌平区','北京TFS旗舰体验馆'];
+    this.$apply();
+    console.log(this.value1, '===========================');
+    let dd = this.lnglat.shops;
     let sim = [];
     dd.map(d => {
       // console.log(sim);
       // console.log(sim);
       // console.log(typeof _.find(sim, { label: d.add }) != 'undefined', '>>>>', _.find(sim, { label: d.add }));
-
       // if (sim.length) {
       //   console.log(_.find(sim, { label: d.add }), '??????'+d.add+'????????', sim.length);
       // }
       if (
-        typeof _.find(sim, { label: d.county }) != 'undefined' &&
+        typeof _.find(sim, {
+          label: d.county
+        }) != 'undefined' &&
         sim.length > 0
       ) {
         let key = _.findIndex(sim, o => {
@@ -317,7 +333,10 @@ export default class Example extends wepy.page {
         });
         // console.log(sim[key].children, '--------------------');
         // console.log({ label: d.name, value: d.name }, '++++++++++++++++++');
-        sim[key].children.push({ label: d.name, value: d.name });
+        sim[key].children.push({
+          label: d.name,
+          value: d.name
+        });
       } else {
         // console.log('已经是else了');
         // console.log(sim.length > 0);
@@ -327,7 +346,12 @@ export default class Example extends wepy.page {
             {
               label: d.county,
               value: d.county,
-              children: [{ label: d.name, value: d.name }]
+              children: [
+                {
+                  label: d.name,
+                  value: d.name
+                }
+              ]
             }
           ];
         } else {
@@ -335,16 +359,19 @@ export default class Example extends wepy.page {
           sim.push({
             label: d.county,
             value: d.county,
-            children: [{ label: d.name, value: d.name }]
+            children: [
+              {
+                label: d.name,
+                value: d.name
+              }
+            ]
           });
         }
       }
     });
-
     console.log(sim);
     this.options1 = sim;
     this.$apply();
-
     //  [
     //       {
     //         label: '北京',

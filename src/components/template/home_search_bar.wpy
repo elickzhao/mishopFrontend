@@ -11,6 +11,7 @@
         </view>
         <view class="flex-item-2 ">
           <icon wx:if="{{lnglat.distanceInfo != ''}}" class="icon-daohang icon-d"></icon>
+          <!-- 这个还有个问题是 当距离远的话 可能存在距离错误 -->
           <text class="weak xxs" style="font-weight:bold;"> {{lnglat.distanceInfo}}</text>
           <text wx:if="{{lnglat.distanceInfo == ''}}" class="weak xs" style="font-weight:bold;"> TFS环球免税店 </text>
         </view>

@@ -8,7 +8,7 @@ export default class base extends wepy.mixin {
     let that = this;
     wx.chooseAddress({
       success: function(res) {
-        console.log(res);
+        // console.log(res);
         wx.request({
           url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
           data: {
@@ -59,22 +59,28 @@ export default class base extends wepy.mixin {
       fail: res => {
         // this.checkScope();
         console.log(res);
-        that.scopeTip();
+        // that.scopeTip();
+        if (res.errMsg != 'chooseAddress:fail cancel') {
+          that.scopeTip();
+        }
       }
     });
   }
   // 检查权限
   checkScope() {
-    let that = this;
+    // let that = this;
     wx.getSetting({
       success(res) {
         let scope = res.authSetting;
+        // console.log(scope, '***********************');
+        // 这里是取消了权限 才会打开授权页面 而当没有这个授权项时 是不会打开的
         if (scope['scope.address'] == false) {
           wx.openSetting({
             success(res) {
-              if (res.authSetting['scope.address'] == false) {
-                that.scopeTip();
-              }
+              // 取消这个提示 因会造成重复提示的问题
+              // if (res.authSetting['scope.address'] == false) {
+              //   that.scopeTip();
+              // }
             }
           });
         }
@@ -103,7 +109,7 @@ export default class base extends wepy.mixin {
     let that = this;
     wx.chooseAddress({
       success: function(res) {
-        // console.log(res);
+        console.log(res, '<--------------------');
         wx.request({
           url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
           data: {
@@ -154,6 +160,7 @@ export default class base extends wepy.mixin {
       fail: res => {
         // this.checkScope();
         console.log(res);
+        console.log(res.errMsg != 'chooseAddress:fail cancel');
         if (res.errMsg != 'chooseAddress:fail cancel') {
           that.scopeTip();
         }
