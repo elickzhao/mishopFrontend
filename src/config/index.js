@@ -8,4 +8,4 @@ export const imgUrl = hostUrl + '/Data/';
 
 export const minimum = '68';
 
-export const appName = 'TFS环球免税店';
+export const appName = 'TFS+';

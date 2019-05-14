@@ -73,7 +73,7 @@ export default class Category extends wepy.page {
     // let a = { serverCode: 1, message: '我错了' };
     // this.hasError(a);
     // await this.getRootCateTopLevel();
-    this.imgUrl = this.$parent.globalData.imgUrl;
+    this.imgUrl = this.$parent.globalData.appName;
     this.$apply();
   }
   async onShow() {

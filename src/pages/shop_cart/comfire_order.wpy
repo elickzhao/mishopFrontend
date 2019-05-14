@@ -7,7 +7,7 @@
     <view class="spacing"></view>
     <view class="{{is_exit_address ? 'goodsList1' : 'goodsList'}} ">
       <wxc-panel margin="{{false}}">
-        <view class="content1"> <i class="iconfont shopIcon" style="color: #09BB07;">&#xe6df;</i><text space="ensp" style="font-size:16px;color: #666;"> {{ currentShop != '当前无门店' ? currentShop : '环球集市旗舰店' }}</text></view>
+        <view class="content1"> <i class="iconfont shopIcon" style="color: #09BB07;">&#xe6df;</i><text space="ensp" style="font-size:16px;color: #666;"> {{ currentShop != '当前无门店' ? currentShop : appName+'旗舰店' }}</text></view>
       </wxc-panel>
       <!--列表显示2个，绑定数据记得去掉，这里做调试-->
       <repeat for="{{list}}" key="index" index="index" item="item">
@@ -121,6 +121,7 @@ export default class ComfireOrder extends wepy.page {
   };
   mixins = [BaseMixin, CheckLoginMixin, AddressMixin];
   data = {
+    appName: '',
     showCascader: false, // 显示级联
     value: '', // 级联门店初始门店选择
     options: '', // 门店级联选择
@@ -372,6 +373,7 @@ export default class ComfireOrder extends wepy.page {
     await this.getOrderDetailInfo();
     this.getShop();
     this.couponList();
+    this.appName = wepy.$store.getState().cache.setting.appName;
   }
   onShow(option) {
     setTimeout(() => {

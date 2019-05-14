@@ -18,10 +18,10 @@ const IS_DEBUG = false;
 // 超时时间
 const CACHE_TIMEOUT = 5 * 60 * 1000;
 // 嵌套字段，需要拆解缓存
-const NESTED_KEY = ['config', 'cart', 'member', 'coupon'];
+const NESTED_KEY = ['config', 'cart', 'setting', 'member', 'coupon'];
 // 初始化需要加载的字段
 // const INIT_KEY = ['config', 'coupon'];
-const INIT_KEY = ['config', 'cart'];
+const INIT_KEY = ['config', 'cart', 'setting'];
 // 加载状态
 // let isLoading = false;
 // 等待队列
@@ -145,6 +145,8 @@ const fetch = (field) => {
       return config.init();
     case 'cart':
       return config.cart();
+    case 'setting':
+      return config.setting();
       // case 'member' :
       //   return member.info();
       // case 'notices':

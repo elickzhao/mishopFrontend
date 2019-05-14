@@ -113,6 +113,7 @@ export default class Home extends wepy.page {
     this.picUrl = picRandom(
       'https://small.huanqiujishi.com/Data/UploadFiles/logo/jifen.gif'
     );
+    console.log(this.$parent.globalData.hostUrl)
     // 所有等待的都放在下面 要不加载组件时 会出现空白变量 比如上面的imgUrl
     this.swipers = await config.getSwipers();
     this.hotList = await goods.hotList();

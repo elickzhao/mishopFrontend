@@ -6,7 +6,7 @@
 import wepy from 'wepy';
 import 'wepy-async-function';
 import WxUtils from './utils/WxUtils';
-import { baseUrl, hostUrl, imgUrl, minimum } from '@/config';
+import { baseUrl, hostUrl, imgUrl, minimum, appName } from '@/config';
 import { setStore } from 'wepy-redux';
 // import { SAVE } from './store/types';
 import configStore from './store';
@@ -29,7 +29,7 @@ export default class extends wepy.app {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#FF0077',
-      navigationBarTitleText: 'TFS环球免税店',
+      navigationBarTitleText: 'TFS+',
       navigationBarTextStyle: 'white'
     },
     pages: [
@@ -109,7 +109,8 @@ export default class extends wepy.app {
     imgUrl: imgUrl,
     miniNum: minimum,
     searchListView: 'row',
-    shopType: 1
+    shopType: 1,
+    appName: appName
   };
   constructor() {
     super();
@@ -122,6 +123,10 @@ export default class extends wepy.app {
     this.syncStoreConfig('miniNum');
     this.syncStoreConfig('userIDS');
     this.syncStoreConfig('searchListView');
+
+    // wx.setNavigationBarTitle({
+    //   title: this.globalData.appName
+    // });
     // 可以放到redux里不过这些数据好像没那么多高频率 所以先这样
     // store.dispatch({
     //   type: SAVE,

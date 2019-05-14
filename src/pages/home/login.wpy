@@ -5,7 +5,7 @@
     </block>
     <block wx:else>
       <image class="authorize-icon" src="../../images/authorize.png"></image>
-      <view class="auth-item">环球集市申请获取以下权限：</view>
+      <view class="auth-item">{{appName}}申请获取以下权限：</view>
       <view class="auth-item">获取你的公开信息（头像、昵称等）</view>
       <view class="btn-authorize">
         <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
@@ -15,74 +15,83 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import store from '@/store/utils'
-  import AuthorizeMixin from '@/mixins/authorize'
-  import {
-    picRandom
-  } from '@/utils/Common'
-  export default class Login extends wepy.page {
-    config = {
-      navigationBarTitleText: '欢迎回来'
-    };
-    data = {
-      userInfo: '',
-      openid: '',
-      isShow: true,
-      comeStyle: '',
-      picUrl: ''
-    };
-    mixins = [AuthorizeMixin];
-    async onLoad() {
-      store.init()
-      // 如果全局变量有 userinfo就不用登录
-      let res = await wepy.getSetting();
-      if (!wepy.$instance.globalData.userIDS || !res.authSetting['scope.userInfo']) {
-        await this.login()
-      } else {
-        this.showLoading().then(() => {
-          this.jump()
-        })
-      }
-      if (this.isShow) {
-        this.comeStyle = 'background-image: url(' + picRandom('https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg') + ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;'
-      }
-      this.$apply()
+import wepy from 'wepy';
+import store from '@/store/utils';
+import AuthorizeMixin from '@/mixins/authorize';
+import { picRandom } from '@/utils/Common';
+export default class Login extends wepy.page {
+  config = {
+    navigationBarTitleText: '欢迎回来'
+  };
+  data = {
+    appName: '',
+    userInfo: '',
+    openid: '',
+    isShow: true,
+    comeStyle: '',
+    picUrl: ''
+  };
+  mixins = [AuthorizeMixin];
+  async onLoad() {
+    store.init();
+    // 如果全局变量有 userinfo就不用登录
+    let res = await wepy.getSetting();
+    if (
+      !wepy.$instance.globalData.userIDS ||
+      !res.authSetting['scope.userInfo']
+    ) {
+      await this.login();
+    } else {
+      this.showLoading().then(() => {
+        this.jump();
+      });
     }
-    onShow() {}
+    if (this.isShow) {
+      this.comeStyle =
+        'background-image: url(' +
+        picRandom(
+          'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg'
+        ) +
+        ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;';
+    }
+    this.appName = wepy.$store.getState().cache.setting.appName;
+    this.$apply();
   }
+  onShow() {}
+}
 </script>
 <style lang="scss">
-  page {
-    height: 100%;
+page {
+  height: 100%;
+}
+.authorize-contianer {
+  height: 100%;
+  background: #fff;
+  text-align: center;
+  padding-top: 100rpx;
+  .authorize-icon {
+    width: 128rpx;
+    height: 128rpx;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 10rpx;
   }
-  .authorize-contianer {
-    height: 100%;
-    background: #fff;
-    text-align: center;
-    padding-top: 100rpx;
-    .authorize-icon {
-      width: 128rpx;
-      height: 128rpx;
-      display: block;
-      margin: 0 auto;
-      padding-bottom: 10rpx;
-    }
-    .auth-item {
-      padding: 5rpx 0;
-    }
-    .btn-authorize {
-      margin: 100rpx 50rpx;
-    }
-  } // 这个还是不行 编译后就是静态文件了
-  @function randomPic() {
-    $nth: 'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg?random='+random(10000);
-    @return $nth
+  .auth-item {
+    padding: 5rpx 0;
   }
-  .bg-img {
-    background-image: url("#{randomPic()}");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    padding-top: 0rpx;
+  .btn-authorize {
+    margin: 100rpx 50rpx;
   }
+} // 这个还是不行 编译后就是静态文件了
+@function randomPic() {
+  $nth: 'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg?random=' +
+    random(10000);
+  @return $nth;
+}
+.bg-img {
+  background-image: url('#{randomPic()}');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding-top: 0rpx;
+}
 </style>
