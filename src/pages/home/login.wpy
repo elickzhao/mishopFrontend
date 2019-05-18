@@ -54,7 +54,8 @@ export default class Login extends wepy.page {
         ) +
         ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;';
     }
-    this.appName = wepy.$store.getState().cache.setting.appName;
+    // this.appName = wepy.$store.getState().cache.setting.appName;
+    this.appName = this.$parent.globalData.appName;
     this.$apply();
   }
   onShow() {}

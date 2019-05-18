@@ -174,7 +174,7 @@ export default class orderItem extends wepy.component {
 <style lang="less">
 .sh_slt {
   width: 80px;
-  height: 80px;
+  height: 100px; // 这是后来调的 原来为80 是个正方形 但是售罄的图片位置偏下  如果产品图片有问题再改一下
   overflow: hidden;
   border-radius: 5px;
   margin-right: 4%;

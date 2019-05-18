@@ -10,12 +10,16 @@
   <view wx:if="{{isPageEmpty}}" style="height: 600rpx;overflow:hidden;">
     <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
   </view>
+      <!-- 悬浮按钮 -->
+    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
+    <!-- /悬浮按钮 -->
 </template>
 
 <script>
 import wepy from 'wepy';
 import BaseMixin from '@/mixins/base';
 import PaginationMixin from '@/mixins/pagination.wpy';
+import GotopMixin from '@/mixins/gotop_mix';
 import GoodList from '@/components/goods/goods_list';
 import api from '@/api/goods';
 export default class goodsZone extends wepy.page {
@@ -24,6 +28,7 @@ export default class goodsZone extends wepy.page {
     usingComponents: {
       'wxc-price': '../../packages/@minui/wxc-price/dist/index',
       'wxc-abnor': '../../packages/@minui/wxc-abnor/dist/index',
+      'wux-floating-button': '../../packages/floating-button/index',
       'wxc-loadmore': '../../packages/@minui/wxc-loadmore/dist/index'
     }
   };
@@ -31,13 +36,14 @@ export default class goodsZone extends wepy.page {
     GoodList: GoodList
   };
   data = {
+    showCom: 'all',
     keyword: '',
     flag: 0, // 促销分类
     list: [],
     purchasetype: 1,
     special: 1 // 0-正常入库;1-特价专区和换货专区
   };
-  mixins = [BaseMixin, PaginationMixin];
+  mixins = [BaseMixin, PaginationMixin, GotopMixin];
   onAbnorTap() {
     wepy.switchTab({
       url: 'home'

@@ -1,0 +1,118 @@
+<!--  -->
+<template lang="wxml" minapp="wepy">
+  <view class='container'>
+    <!-- <view class="wrapper2">
+          <block wx:for="{{param}}" wx:key="{{item.flag}}">
+            <view class="item{{index+1}}" @tap="jump({{item.title}},{{item.flag}})">{{item.flag}}</view>
+          </block>
+        </view> -->
+    <view class="{{params.layout}}">
+      <block wx:for="{{params.list}}" wx:key="{{item.flag}}">
+        <!-- 这里也可以 根据判断选择图片 或者 其他组件 or 还有个方法在引入组件内进行判断 -->
+        <image class="item{{index+1}} img" @tap="jump({{item.title}},{{item.flag}})" src="{{item.src}}" mode="scaleToFill" />
+      </block>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class GridBox extends wepy.component {
+  props = {
+    params: {}
+  };
+  data = {
+    param: {
+      layout: 'wrapper2',
+      list: [
+        {
+          title: '香港直邮',
+          flag: 3,
+          src: '/images/sg/s1.jpg'
+        },
+        {
+          title: '店内发货',
+          flag: 2,
+          src: '/images/sg/s2.jpg'
+        },
+        {
+          title: '海外直邮',
+          flag: 0,
+          src: '/images/sg/s3.jpg'
+        },
+        {
+          title: '保税发货',
+          flag: 1,
+          src: '/images/sg/s4.jpg'
+        }
+      ]
+    }
+  };
+  components = {};
+  methods = {
+    jump: function(title, flag) {
+      wepy.navigateTo({
+        url: `/pages/home/goods_zone?title=${title}&flag=${flag}`
+      });
+    }
+  };
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
+}
+</script>
+
+<style lang='scss'>
+.wrapper2 {
+  /* 	奇怪在小程序里就可用 */
+  height: 100%;
+  padding: 0 10rpx;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* grid-template-rows: 100px 1fr; */
+  grid-template-rows: 135rpx 135rpx 135rpx 135rpx;
+  grid-gap: 10rpx;
+  grid-template-areas: 'i1 i1 i2 i2 ' 'i1 i1 i2 i2 ' 'i3 i3 i4 i4 ' 'i3 i3 i4 i4 ';
+}
+.box3 {
+  /* 	奇怪在小程序里就可用 */
+  height: 100%;
+  padding: 0 10rpx;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* grid-template-rows: 100px 1fr; */
+  grid-template-rows: 135rpx 135rpx 135rpx 135rpx;
+  grid-gap: 5rpx;
+  grid-template-areas: 'i1 i1 i2 i2 ' 'i1 i1 i2 i2 ' 'i1 i1 i4 i4 ' 'i1 i1 i4 i4 ';
+}
+.item1 {
+  background-color: antiquewhite;
+  grid-area: i1;
+}
+.item2 {
+  background-color: gray;
+  grid-area: i2;
+}
+.item3 {
+  background-color: cornflowerblue;
+  grid-area: i3;
+}
+.item4 {
+  background-color: yellowgreen;
+  grid-area: i4;
+}
+.item5 {
+  background-color: darkorange;
+  grid-area: i5;
+}
+.item6 {
+  background-color: chocolate;
+  grid-area: i6;
+}
+.img {
+  width: 370rpx;
+  height: 285rpx;
+}
+</style>

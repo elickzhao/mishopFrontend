@@ -19,6 +19,8 @@
     </view>
     <!-- /热卖商品 -->
     <view class="h-gap"></view>
+    <GridBox :params.sync="param"></GridBox>
+    <view class="h-gap"></view>
     <!-- 分割图片 -->
     <image src="{{picUrl}}" mode="widthFix" style="width:100%;margin-top:15rpx;"></image>
     <!-- /分割图片 -->
@@ -29,6 +31,7 @@
     <!-- 悬浮按钮 -->
     <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
     <!-- /悬浮按钮 -->
+    <Bombscreen :types.sync="tps" :show.sync="is_show_alert" @callback.user="alertCallback"></Bombscreen>
   </view>
 </template>
 
@@ -44,6 +47,8 @@ import SwiperBar from '../../components/template/swiper_bar';
 import NavList from '../../components/nav_list';
 import ScrollXList from '../../components/scroll_list';
 import GoodsList from '@/components/goods/goods_list';
+import GridBox from '@/components/template/grid_box';
+import Bombscreen from '@/components/bomb_screen';
 // import { connect,getStore } from 'wepy-redux'
 import { picRandom, getBadge } from '@/utils/Common';
 import { connect } from 'wepy-redux';
@@ -65,12 +70,39 @@ export default class Home extends wepy.page {
     }
   };
   data = {
+    tps: 0,
+    is_show_alert: true,
     showCom: 'gotop',
     // 广告列表
     swipers: [],
     hotList: [],
     page: {},
-    picUrl: ''
+    picUrl: '',
+    param: {
+      layout: 'wrapper2',
+      list: [
+        {
+          title: '热卖',
+          flag: 3,
+          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s1.jpg'
+        },
+        {
+          title: '新品',
+          flag: 2,
+          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s2.jpg'
+        },
+        {
+          title: '推荐',
+          flag: 0,
+          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s3.jpg'
+        },
+        {
+          title: '实体券',
+          flag: 1,
+          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s4.jpg'
+        }
+      ]
+    }
   };
   mixins = [BaseMixin, Pagination, GotopMixin];
   components = {
@@ -78,9 +110,18 @@ export default class Home extends wepy.page {
     SwiperBar: SwiperBar,
     NavList: NavList,
     ScrollXList: ScrollXList,
-    GoodsList: GoodsList
+    GoodsList: GoodsList,
+    GridBox: GridBox,
+    Bombscreen: Bombscreen
   };
   methods = {
+    alertCallback() {
+      this.is_show_alert = false;
+      wepy.navigateTo({
+        url: '/pages/personal_center/coupon/coupon_center'
+      });
+      // tip.alert('跳转');
+    }
     // async goToCate(cateId) {
     //   await this.getRootCateTopLevel(cateId);
     //   wepy.switchTab({
@@ -111,9 +152,8 @@ export default class Home extends wepy.page {
     // console.log(store.getState())
     // console.log(wepy.$store.getState()) // 这个必须再app.wepy页面赋值才可以 wepy.$store = store
     this.picUrl = picRandom(
-      'https://small.huanqiujishi.com/Data/UploadFiles/logo/jifen.gif'
+      this.$parent.globalData.imgUrl + 'UploadFiles/logo/jifen.gif'
     );
-    console.log(this.$parent.globalData.hostUrl)
     // 所有等待的都放在下面 要不加载组件时 会出现空白变量 比如上面的imgUrl
     this.swipers = await config.getSwipers();
     this.hotList = await goods.hotList();

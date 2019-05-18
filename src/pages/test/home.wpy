@@ -1,40 +1,11 @@
 <!-- 商城主页 -->
 <template lang="wxml" minapp="wepy">
   <view class='container'>
-    <wux-sticky scrollTop="{{ scrollTop }}">
-      <wux-sticky-item>
-        <view slot="title">小鸡 🐤</view>
-        <view slot="content">
-          <view class="demo-item">你看哪里有个小鸡呦</view>
-          <view class="demo-item">你看那里他有小鸡哟</view>
-          <view class="demo-item">小鸡哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
-        </view>
-      </wux-sticky-item>
-    </wux-sticky>
+    <GridBox :params.sync="params"></GridBox>
     <!-- 这要怎么滚动呢 -->
     我是主页
     <text class="xl cancel">我是主页</text>
     <text class="ll major">我是主页 -- ll</text>
-    <wux-sticky scrollTop="{{ scrollTop }}">
-      <wux-sticky-item>
-        <view slot="title">小鸡 🐤</view>
-        <view slot="content">
-          <view class="demo-item">你看哪里有个小鸡呦</view>
-          <view class="demo-item">你看那里他有小鸡哟</view>
-          <view class="demo-item">小鸡哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔-bi-哟</view>
-          <view class="demo-item">小鸡哔哔哔哔-bi-哟</view>
-        </view>
-      </wux-sticky-item>
-    </wux-sticky>
     <view class="bg-white">
       <div class="row">
         <div class="tab-border">2</div>
@@ -100,55 +71,73 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import {
-    connect
-  } from 'wepy-redux';
-  import store from '@/store/utils';
-  @connect({
-    lnglat: store.get('lnglat')
-  })
-  export default class Example extends wepy.page {
-    config = {
-      navigationBarTitleText: '主页',
-      usingComponents: {
-        'wux-cascader': '../../packages/wux/cascader/index',
-        'wux-sticky': '../../packages/wux/sticky/index',
-        'wux-sticky-item': '../../packages/wux/sticky-item/index'
-      }
-    };
-    data = {
-      scrollTop: 0
-    };
-    components = {};
-    methods = {};
-    events = {};
-    watch = {};
-    computed = {};
-    onLoad() {}
-    onShow() {}
-    onPageScroll(e) {
-      console.log('onPageScroll', e.scrollTop);
-      this.setData({
-        scrollTop: e.scrollTop
-      });
+import wepy from 'wepy';
+import GridBox from '@/components/template/grid_box';
+import { connect } from 'wepy-redux';
+import store from '@/store/utils';
+@connect({
+  lnglat: store.get('lnglat')
+})
+export default class Example extends wepy.page {
+  config = {
+    navigationBarTitleText: '主页',
+    usingComponents: {
+      'wux-cascader': '../../packages/wux/cascader/index'
     }
-  }
+  };
+  data = {
+    scrollTop: 0,
+    params: {
+      layout: 'wrapper2',
+      list: [
+        {
+          title: '香港直邮',
+          flag: 3,
+          value: 1
+        },
+        {
+          title: '店内发货',
+          flag: 2,
+          value: 2
+        },
+        {
+          title: '海外直邮',
+          flag: 0,
+          value: 3
+        },
+        {
+          title: '保税发货',
+          flag: 1,
+          value: 4
+        }
+      ]
+    }
+  };
+  components = {
+    GridBox: GridBox
+  };
+  methods = {};
+  events = {};
+  watch = {};
+  computed = {};
+  onLoad() {}
+  onShow() {}
+}
 </script>
 
 <style lang='scss'>
-  // @import '../../styles/variable';
-  @import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-  @import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
-  text.ll {
-    font-size: $text-ll;
-  }
-  .row-center-wrap {
-    @extend .row-center;
-    flex-wrap: wrap;
-  } // 引入变量 然后修改
-  .weui-footer {
-    padding: 15rpx 0;
-    background-color: $color-bg-body;
-  }
+// @import '../../styles/variable';
+@import '../../styles/base'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+@import '../../styles/weui'; // 只有引入才能使用变量 而且因为base引入了variable所以就不用引入
+text.ll {
+  font-size: $text-ll;
+}
+.row-center-wrap {
+  @extend .row-center;
+  flex-wrap: wrap;
+} // 引入变量 然后修改
+.weui-footer {
+  padding: 15rpx 0;
+  background-color: $color-bg-body;
+}
 </style>
