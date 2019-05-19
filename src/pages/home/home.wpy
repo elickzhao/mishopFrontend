@@ -83,22 +83,22 @@ export default class Home extends wepy.page {
       list: [
         {
           title: '热卖',
-          flag: 3,
+          flag: 5,
           src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s1.jpg'
         },
         {
           title: '新品',
-          flag: 2,
+          flag: 6,
           src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s2.jpg'
         },
         {
           title: '推荐',
-          flag: 0,
+          flag: 7,
           src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s3.jpg'
         },
         {
           title: '实体券',
-          flag: 1,
+          flag: 8,
           src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s4.jpg'
         }
       ]

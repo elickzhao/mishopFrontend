@@ -1,18 +1,22 @@
 <!--现货批发-->
 <template>
-  <image src="../../images/who_{{flag}}.jpg" lazy-load mode="scaleToFill" class="shadow" style="width: 100%">
+  <image src="{{imgUrl}}UploadFiles/who/who_{{flag}}.jpg" lazy-load mode="widthFix" class="shadow" style="width: 100%">
   </image>
+  <!-- <image src="../../images/who_{{flag}}.jpg" lazy-load mode="widthFix" class="shadow" style="width: 100%">
+  </image> -->
+  <!-- 这两种写法效果一致  widthFix 根据宽度高度自动缩放 这样通篇宽度比较适用 如果像首页一行两个 就只能用下面方法了-->
+  <!-- <image src="../../images/who_{{flag}}.jpg" lazy-load mode="aspectFit" class="shadow img"> -->
   <block wx:if="{{!isPageEmpty}}">
     <!--矩阵商品列表模块-->
-    <GoodList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list" ></GoodList>
-    <wxc-loadmore is-end="{{isPageReachBottom}}"  icon="{{true}}"></wxc-loadmore>
+    <GoodList :purchasetype.sync="purchasetype" :special.sync="special" :list.sync="list"></GoodList>
+    <wxc-loadmore is-end="{{isPageReachBottom}}" icon="{{true}}"></wxc-loadmore>
   </block>
   <view wx:if="{{isPageEmpty}}" style="height: 600rpx;overflow:hidden;">
     <wxc-abnor type="DATA" image="https://s10.mogucdn.com/p2/161213/upload_76h1c5hjc8heecjehlfgekjdl2ki0_514x260.png" button="再去逛逛" bind:abnortap="onAbnorTap"></wxc-abnor>
   </view>
-      <!-- 悬浮按钮 -->
-    <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
-    <!-- /悬浮按钮 -->
+  <!-- 悬浮按钮 -->
+  <wux-floating-button id="wux-floating-button" buttons="{{buttons}}" showGoTop="{{showGoTop}}" showCom="{{showCom}}" theme="royal" bind:click="buttonClicked" />
+  <!-- /悬浮按钮 -->
 </template>
 
 <script>
@@ -36,6 +40,7 @@ export default class goodsZone extends wepy.page {
     GoodList: GoodList
   };
   data = {
+    imgUrl: '',
     showCom: 'all',
     keyword: '',
     flag: 0, // 促销分类
@@ -60,6 +65,7 @@ export default class goodsZone extends wepy.page {
   }
   onLoad(options) {
     let that = this;
+    this.imgUrl = this.$parent.globalData.imgUrl;
     that.list = [];
     this.flag = options.flag;
     this.keyword = options.title;
@@ -67,9 +73,19 @@ export default class goodsZone extends wepy.page {
     wepy.setNavigationBarTitle({
       title: options.title
     });
+    this.$apply();
   }
   computed = {};
   methods = {};
   events = {};
 }
 </script>
+<style lang="less">
+.img {
+  // width: 750rpx;
+  // height: 480rpx;
+  width: 750rpx;
+  height: 480rpx;
+}
+</style>
+
