@@ -97,7 +97,7 @@ export default class Home extends wepy.page {
           src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s3.jpg'
         },
         {
-          title: '实体券',
+          title: '同款',
           flag: 8,
           src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s4.jpg'
         }

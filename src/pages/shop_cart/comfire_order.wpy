@@ -471,7 +471,8 @@ export default class ComfireOrder extends wepy.page {
       totalPrice: this.limitPrice // 这个价格是去掉特价商品的总价
     });
     this.hasError(json);
-    // console.log(json);
+    console.log(json);
+    console.log(this.list);
     let dataList = json.list;
     this.coupons = dataList;
     let list = [];

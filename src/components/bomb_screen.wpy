@@ -2,7 +2,7 @@
   <view wx:if="{{show}}">
     <view wx:if="{{types===0}}">
       <view class="pop-alert-box">
-        <image src="{{picUrl}}" class="icon_alert" mode="aspectFit" @tap.stop="callback"></image>
+        <image src="{{picUrl}}" class="icon_alert" mode="widthFix" @tap.stop="callback"></image>
         <i class="iconfont icon-close" @tap.stop="close"></i>
       </view>
     </view>
@@ -101,7 +101,8 @@ export default class bombScreen extends wepy.component {
 }
 .icon_alert {
   width: 100%;
-  height: 600rpx;
+  // width: 470rpx;
+  // height: 600rpx;
 }
 .icon_alert_dialog {
   width: 200rpx;

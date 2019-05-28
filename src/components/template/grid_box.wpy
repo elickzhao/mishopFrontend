@@ -9,7 +9,7 @@
     <view class="{{params.layout}}">
       <block wx:for="{{params.list}}" wx:key="{{item.flag}}">
         <!-- 这里也可以 根据判断选择图片 或者 其他组件 or 还有个方法在引入组件内进行判断 -->
-        <image class="item{{index+1}} img" @tap="jump({{item.title}},{{item.flag}})" src="{{item.src}}" mode="scaleToFill" />
+        <image class="item{{index+1}} img" @tap="jump({{item.title}},{{item.flag}})" src="{{item.src}}" mode="widthFix" />
       </block>
     </view>
   </view>
@@ -68,11 +68,12 @@ export default class GridBox extends wepy.component {
 .wrapper2 {
   /* 	奇怪在小程序里就可用 */
   height: 100%;
-  padding: 0 10rpx;
+  padding: 0 5rpx;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   /* grid-template-rows: 100px 1fr; */
-  grid-template-rows: 135rpx 135rpx 135rpx 135rpx;
+  // grid-template-rows: 135rpx 135rpx 135rpx 135rpx;
+  grid-template-rows: 98rpx 98rpx 98rpx 98rpx;
   grid-gap: 10rpx;
   grid-template-areas: 'i1 i1 i2 i2 ' 'i1 i1 i2 i2 ' 'i3 i3 i4 i4 ' 'i3 i3 i4 i4 ';
 }
@@ -113,6 +114,8 @@ export default class GridBox extends wepy.component {
 }
 .img {
   width: 370rpx;
-  height: 285rpx;
+  // height: 285rpx;
+  // width: 666rpx;
+  // height: 372rpx;
 }
 </style>

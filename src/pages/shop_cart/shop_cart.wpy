@@ -77,5 +77,6 @@ export default class shopCart extends wepy.page {
 <style lang="less">
 .shop_cart {
   background: #f7f7f7;
+  margin-bottom: 120rpx;
 }
 </style>
