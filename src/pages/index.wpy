@@ -31,7 +31,6 @@
       <view class="column-center">
         <image mode="aspectFill" src="../images/nav/mm.png"></image>
         <view class="title">面膜</view>
-        </text>
       </view>
       <view class="column-center">
         <image mode="aspectFill" src="../images/nav/mz.png" />

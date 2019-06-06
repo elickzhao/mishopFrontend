@@ -86,6 +86,48 @@ export default class Example extends wepy.page {
     }
   };
   data = {
+    cardCur: 0,
+    swiperList: [
+      {
+        id: 0,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
+        // url: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/22.mp4' // 看来这个是没法播放视频的
+      },
+      {
+        id: 1,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg'
+      },
+      {
+        id: 2,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big39000.jpg'
+      },
+      {
+        id: 3,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg'
+      },
+      {
+        id: 4,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big25011.jpg'
+      },
+      {
+        id: 5,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big21016.jpg'
+      },
+      {
+        id: 6,
+        type: 'image',
+        url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
+      }
+    ],
+    dotStyle: true,
+    towerStart: 0,
+    direction: '', // 到这里是轮播图
     scrollTop: 0,
     params: {
       layout: 'wrapper2',
@@ -116,11 +158,67 @@ export default class Example extends wepy.page {
   components = {
     GridBox: GridBox
   };
-  methods = {};
+  methods = {
+    cardSwiper(e) {
+      this.cardCur = e.detail.current;
+    },
+
+    // towerSwiper触摸开始
+    TowerStart(e) {
+      this.towerStart = e.touches[0].pageX;
+    },
+
+    // towerSwiper计算方向
+    TowerMove(e) {
+      this.direction =
+        e.touches[0].pageX - this.towerStart > 0 ? 'right' : 'left';
+    },
+
+    // towerSwiper计算滚动
+    TowerEnd(e) {
+      let direction = this.direction;
+      let list = this.swiperList;
+      if (direction == 'right') {
+        let mLeft = list[0].mLeft;
+        let zIndex = list[0].zIndex;
+        for (let i = 1; i < this.swiperList.length; i++) {
+          this.swiperList[i - 1].mLeft = this.swiperList[i].mLeft;
+          this.swiperList[i - 1].zIndex = this.swiperList[i].zIndex;
+        }
+        this.swiperList[list.length - 1].mLeft = mLeft;
+        this.swiperList[list.length - 1].zIndex = zIndex;
+      } else {
+        let mLeft = list[list.length - 1].mLeft;
+        let zIndex = list[list.length - 1].zIndex;
+        for (let i = this.swiperList.length - 1; i > 0; i--) {
+          this.swiperList[i].mLeft = this.swiperList[i - 1].mLeft;
+          this.swiperList[i].zIndex = this.swiperList[i - 1].zIndex;
+        }
+        this.swiperList[0].mLeft = mLeft;
+        this.swiperList[0].zIndex = zIndex;
+      }
+      this.direction = '';
+      this.swiperList = this.swiperList;
+    }
+  };
   events = {};
   watch = {};
   computed = {};
-  onLoad() {}
+
+  TowerSwiper(name) {
+    let list = this[name];
+    for (let i = 0; i < list.length; i++) {
+      list[i].zIndex =
+        parseInt(list.length / 2) + 1 - Math.abs(i - parseInt(list.length / 2));
+      // console.log( parseInt(list.length / 2) + 1 , Math.abs(i - parseInt(list.length / 2)))
+      list[i].mLeft = i - parseInt(list.length / 2);
+    }
+    this.swiperList = list;
+  }
+
+  onLoad() {
+    this.TowerSwiper('swiperList');
+  }
   onShow() {}
 }
 </script>
@@ -139,5 +237,122 @@ text.ll {
 .weui-footer {
   padding: 15rpx 0;
   background-color: $color-bg-body;
+} // ---------------------------
+/* ==================
+                 轮播
+         ==================== */
+swiper {
+  &.square-dot .wx-swiper-dot {
+    background-color: #fff;
+    opacity: 0.4;
+    width: 10rpx;
+    height: 10rpx;
+    border-radius: 20rpx;
+    transition: all 0.3s ease-in-out 0s;
+    &.wx-swiper-dot-active {
+      opacity: 1;
+      width: 30rpx;
+    }
+  }
+  &.round-dot .wx-swiper-dot {
+    width: 10rpx;
+    height: 10rpx;
+    top: -4rpx;
+    transition: all 0.3s ease-in-out 0s;
+    position: relative;
+    &.wx-swiper-dot-active {
+      &::after {
+        content: '';
+        position: absolute;
+        width: 10rpx;
+        height: 10rpx;
+        top: 0rpx;
+        left: 0rpx;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        background-color: #fff;
+        border-radius: 20rpx;
+      }
+      width: 18rpx;
+      height: 18rpx;
+      top: 0rpx;
+    }
+  }
+}
+.screen-swiper {
+  min-height: 414rpx;
+  image,
+  video {
+    width: 100%;
+    display: block;
+    height: 100%;
+    margin: 0;
+    pointer-events: none;
+  }
+}
+.swiper-item {
+  image,
+  video {
+    width: 100%;
+    display: block;
+    height: 100%;
+    margin: 0;
+    pointer-events: none;
+  }
+}
+.card-swiper {
+  height: 420rpx;
+  swiper-item {
+    width: 610rpx !important;
+    left: 70rpx;
+    box-sizing: border-box;
+    padding: 40rpx 0rpx 70rpx;
+    overflow: initial;
+    .swiper-item {
+      width: 100%;
+      display: block;
+      height: 100%;
+      border-radius: 10rpx;
+      transform: scale(0.9);
+      transition: all 0.2s ease-in 0s;
+      overflow: hidden;
+    }
+    &.cur .swiper-item {
+      transform: none;
+      transition: all 0.2s ease-in 0s;
+    }
+  }
+}
+.tower-swiper {
+  height: 420rpx;
+  position: relative;
+  max-width: 750rpx;
+  overflow: hidden;
+  .tower-item {
+    position: absolute;
+    width: 300rpx;
+    height: 380rpx;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin: auto;
+    transition: all 0.2s ease-in 0s;
+    opacity: 1;
+    &.none {
+      opacity: 0;
+    }
+    .swiper-item {
+      width: 100%;
+      height: 100%;
+      border-radius: 6rpx;
+      overflow: hidden;
+    }
+  }
+}
+.tower-swiper .tower-item {
+  transform: scale(calc(0.5 + var(--index) / 10));
+  margin-left: calc(var(--left) * 100rpx - 150rpx);
+  z-index: var(--index);
 }
 </style>
