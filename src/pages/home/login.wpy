@@ -15,84 +15,84 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import store from '@/store/utils';
-import AuthorizeMixin from '@/mixins/authorize';
-import { picRandom } from '@/utils/Common';
-export default class Login extends wepy.page {
-  config = {
-    navigationBarTitleText: '欢迎回来'
-  };
-  data = {
-    appName: '',
-    userInfo: '',
-    openid: '',
-    isShow: true,
-    comeStyle: '',
-    picUrl: ''
-  };
-  mixins = [AuthorizeMixin];
-  async onLoad() {
-    store.init();
-    // 如果全局变量有 userinfo就不用登录
-    let res = await wepy.getSetting();
-    if (
-      !wepy.$instance.globalData.userIDS ||
-      !res.authSetting['scope.userInfo']
-    ) {
-      await this.login();
-    } else {
-      this.showLoading().then(() => {
-        this.jump();
-      });
+  import wepy from 'wepy';
+  import store from '@/store/utils';
+  import AuthorizeMixin from '@/mixins/authorize';
+  import {
+    picRandom
+  } from '@/utils/Common';
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '欢迎回来'
+    };
+    data = {
+      appName: '',
+      userInfo: '',
+      openid: '',
+      isShow: true,
+      comeStyle: '',
+      picUrl: ''
+    };
+    mixins = [AuthorizeMixin];
+    async onLoad() {
+      store.init();
+      // 如果全局变量有 userinfo就不用登录
+      let res = await wepy.getSetting();
+      if (!wepy.$instance.globalData.userIDS ||
+        !res.authSetting['scope.userInfo']
+      ) {
+        await this.login();
+      } else {
+        this.showLoading().then(() => {
+          this.jump();
+        });
+      }
+      if (this.isShow) {
+        this.comeStyle =
+          'background-image: url(' +
+          picRandom(
+            wepy.$instance.globalData.imgUrl + '/UploadFiles/logo/come.jpg'
+          ) +
+          ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;';
+      }
+      // this.appName = wepy.$store.getState().cache.setting.appName;
+      this.appName = this.$parent.globalData.appName;
+      this.$apply();
     }
-    if (this.isShow) {
-      this.comeStyle =
-        'background-image: url(' +
-        picRandom(
-          'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg'
-        ) +
-        ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;';
-    }
-    // this.appName = wepy.$store.getState().cache.setting.appName;
-    this.appName = this.$parent.globalData.appName;
-    this.$apply();
+    onShow() {}
   }
-  onShow() {}
-}
 </script>
 <style lang="scss">
-page {
-  height: 100%;
-}
-.authorize-contianer {
-  height: 100%;
-  background: #fff;
-  text-align: center;
-  padding-top: 100rpx;
-  .authorize-icon {
-    width: 128rpx;
-    height: 128rpx;
-    display: block;
-    margin: 0 auto;
-    padding-bottom: 10rpx;
+  page {
+    height: 100%;
   }
-  .auth-item {
-    padding: 5rpx 0;
+  .authorize-contianer {
+    height: 100%;
+    background: #fff;
+    text-align: center;
+    padding-top: 100rpx;
+    .authorize-icon {
+      width: 128rpx;
+      height: 128rpx;
+      display: block;
+      margin: 0 auto;
+      padding-bottom: 10rpx;
+    }
+    .auth-item {
+      padding: 5rpx 0;
+    }
+    .btn-authorize {
+      margin: 100rpx 50rpx;
+    }
+  } // 这个还是不行 编译后就是静态文件了
+  @function randomPic() {
+    $nth: 'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg?random=' + random(10000);
+    @return $nth;
   }
-  .btn-authorize {
-    margin: 100rpx 50rpx;
+  .bg-img {
+    background-image: url('#{randomPic()}');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding-top: 0rpx;
   }
-} // 这个还是不行 编译后就是静态文件了
-@function randomPic() {
-  $nth: 'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg?random=' +
-    random(10000);
-  @return $nth;
-}
-.bg-img {
-  background-image: url('#{randomPic()}');
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  padding-top: 0rpx;
-}
 </style>

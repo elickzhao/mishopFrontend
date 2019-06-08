@@ -2,7 +2,7 @@
   <!--TODO 自定义高度处理-->
   <swiper  indicator-dots="true" indicator-active-color="#FFF" interval="3000" duration="1000" circular="true" autoplay style="height:{{param.height?param.height:'265rpx'}}">
     <swiper-item class="swiper-box" wx:for="{{param}}" wx:key="index" wx:index="index">
-      <image mode="aspectFit" src="{{item.photo}}" @tap="routeToUrl({{item.link}})"></image>
+      <image mode="aspectFit" src="{{item.photo}}" @tap="routeToUrl({{item.link}})" binderror="onerror" data-index="{{index}}"></image>
     </swiper-item>
   </swiper>
 </template>
@@ -10,6 +10,7 @@
 <script>
 import wepy from 'wepy';
 import router from '@/mixins/router';
+import { hostUrl } from '@/config/index'
 export default class SwiperBar extends wepy.component {
   props = {
     param: []
@@ -21,6 +22,16 @@ export default class SwiperBar extends wepy.component {
         action: 'PAGE_NAVIGATE',
         params: url
       });
+    },
+    onerror(res) {
+      // console.log(res.currentTarget.dataset.index);
+      let key = res.currentTarget.dataset.index
+      console.log(this.param[key].photo, '<---------------')
+      // console.log(hostUrl, '====', hostUrl.length)
+      let newUrl = this.param[key].photo.substr((hostUrl.length - 1))
+      // console.log(newUrl)
+      this.param[key].photo = 'https://small.huanqiujishi.com/' + newUrl
+      this.$apply()
     }
   };
 }
