@@ -13,7 +13,7 @@
       <repeat for="{{list}}" key="index" index="index" item="item">
         <view class="goods-info">
           <view class="img-box">
-            <image src="{{item.photo_x}}" class="img" />
+            <image src="{{item.photo_x}}" class="img" binderror="onerror" data-index="{{index}}" />
           </view>
           <view class="text-box">
             <view class="goods-title">{{item.name}}</view>
@@ -85,6 +85,7 @@
 <script>
 import wepy from 'wepy';
 import api from '@/api/order';
+import { hostUrl } from '@/config/index'
 import addresses from '@/api/addresses';
 import coupon from '@/api/coupon';
 import tip from '@/utils/Tips';
@@ -217,7 +218,7 @@ export default class ComfireOrder extends wepy.page {
       wx.getSetting({
         success(res) {
           let scope = res.authSetting;
-          console.log(scope, '***********************');
+          // console.log(scope, '***********************');
           // 这里是取消了权限 才会打开授权页面 而当没有这个授权项时 是不会打开的
           if (scope['scope.address'] == true) {
             wx.showModal({
@@ -600,6 +601,12 @@ export default class ComfireOrder extends wepy.page {
       wepy.navigateTo({
         url: '/pages/address?type=order'
       });
+    },
+    onerror(res) {
+      let key = res.currentTarget.dataset.index
+      let newUrl = this.list[key].photo_x.substr((hostUrl.length - 1))
+      this.list[key].photo_x = 'https://small.huanqiujishi.com/' + newUrl
+      this.$apply()
     }
   };
   events = {};

@@ -91,7 +91,7 @@
 				<view class="item">
 					<navigator class="scroll-list shadow" url="/pages/goods/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
 						<view class="image_box">
-							<image mode="aspectFit" src="{{imgUrl}}{{item.photo_x}}"></image>
+							<image mode="aspectFit" src="{{imgBaseUrl}}{{item.photo_x}}" binderror="imgError"></image>
 						</view>
 						<view class="goods">
 							<view class="product_info">

@@ -3,7 +3,7 @@
   <repeat for="{{list}}" key="index" index="index" item="item">
     <view class="good_list">
       <view class="image_box">
-        <image src="{{item.photo_x}}" binderror="nopic({{index}})"></image>
+        <image src="{{item.photo_x}}" binderror="onerror" data-index="{{index}}" ></image>
       </view>
       <view class="goods">
         <navigator class="item_content" url="/pages/goods/goods_detail?id={{item.pid}}">
@@ -33,6 +33,7 @@
 import wepy from 'wepy';
 import tip from '@/utils/Tips';
 import api from '@/api/order';
+import { hostUrl } from '@/config/index'
 export default class ShopItemList extends wepy.component {
   props = {
     // 这里的值 不是用props传递的 是用事件传递的
@@ -96,6 +97,12 @@ export default class ShopItemList extends wepy.component {
           }
         }
       });
+    },
+    onerror(res) {
+      let key = res.currentTarget.dataset.index
+      let newUrl = this.list[key].photo_x.substr((hostUrl.length - 1))
+      this.list[key].photo_x = 'https://small.huanqiujishi.com/' + newUrl
+      this.$apply()
     }
   };
   onLoad() {

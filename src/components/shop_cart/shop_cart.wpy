@@ -7,7 +7,7 @@
           <view class="goods-info">
             <icon class="icon_check" type="success" color="{{item.selected?'red':'rgb(153,153,153)'}}" @tap.stop="selectTap" data-index="{{index}}" data-id="{{item.pid}}" size="20" />
             <view class="img-box">
-              <image src="{{item.photo_x}}" class="img" />
+              <image src="{{item.photo_x}}" class="img" binderror="onerror" data-index="{{index}}" />
             </view>
             <view class="text-box">
               <view class="goods-title">
@@ -58,6 +58,7 @@
 import wepy from 'wepy';
 import api from '@/api/shop_cart';
 import tip from '@/utils/Tips';
+import { hostUrl } from '@/config/index'
 import { getCartNum, getBadge } from '@/utils/Common';
 import BaseMixin from '@/mixins/base';
 import CheckLoginMixin from '@/mixins/check_login';
@@ -294,6 +295,16 @@ export default class ShopCart extends wepy.component {
       wepy.switchTab({
         url: '/pages/home/home'
       });
+    },
+    onerror(res) {
+      // console.log(res.currentTarget.dataset.index);
+      let key = res.currentTarget.dataset.index
+      // console.log(this.param[key].photo, '<---------------')
+      // console.log(hostUrl, '====', hostUrl.length)
+      let newUrl = this.list[key].photo_x.substr((hostUrl.length - 1))
+      // console.log(newUrl)
+      this.list[key].photo_x = 'https://small.huanqiujishi.com/' + newUrl
+      this.$apply()
     }
   };
   events = {};

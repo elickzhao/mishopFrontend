@@ -4,9 +4,9 @@ export const hostUrl = 'https://hqjs0004.huanqiujishi.com/';
 
 export const baseUrl = hostUrl + '/index.php';
 
-// export const imgUrl = hostUrl + 'Data/';
+export const imgUrl = hostUrl + 'Data/';
 
-export const imgUrl = 'https://small.huanqiujishi.com/Data/';
+export const imgMainUrl = 'https://small.huanqiujishi.com/Data/';
 
 export const minimum = '68';
 

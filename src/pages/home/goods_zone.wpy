@@ -88,4 +88,3 @@ export default class goodsZone extends wepy.page {
   height: 480rpx;
 }
 </style>
-

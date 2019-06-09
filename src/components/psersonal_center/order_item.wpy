@@ -5,7 +5,7 @@
       <view class="list" wx:key="index">
         <navigator class="item_content" url="/pages/personal_center/order_detail?orderNo={{item.id}}">
           <view class="order_list_top">
-            <image mode="aspectFit" class="sh_slt" src="{{item.photo_x}}" binderror="nopic({{index}})"></image>
+            <image mode="aspectFit" class="sh_slt" src="{{item.photo_x}}" binderror="onerror" data-index="{{index}}" ></image>
             <view class="left">
               <view class="title">商品名称：
                 <text class="order_doc ellip"> {{item.name}} </text>
@@ -66,108 +66,51 @@
 
 <script>
 import wepy from 'wepy';
-// import tip from '@/utils/Tips';
-// import api from '@/api/order';
+import { hostUrl } from '@/config/index'
 import OrderMixin from '@/mixins/order';
 import OrderItemList from '@/components/psersonal_center/order_item_list';
 export default class orderItem extends wepy.component {
   props = {
     orderList: {
+      twoWay: true,
       default: [],
       flag: '',
       orderNo: '',
       list: []
     }
   };
-  // async editOrderInfo(orderNo, flag) {
-  //   // console.log("调用方法");
-  //   let that = this;
-  //   // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-  //   let uid = wepy.$instance.globalData.userIDS.ID;
-  //   const json = await api.editOrderInfo({
-  //     query: {
-  //       id: orderNo,
-  //       flag: flag,
-  //       uid: uid
-  //     }
-  //   });
-  //   if (json.code == 0) {
-  //     this.$emit('refreshOrderList', that.flag);
-  //   } else {
-  //     tip.error(json.data.msg);
-  //   }
-  //   that.$apply();
-  // }
+  data = {
+    loop: false
+  }
   mixins = [OrderMixin];
   components = {
     OrderItemList: OrderItemList
   };
   events = {};
   methods = {
-    async nopic(e) {
-      this.orderList[e].photo_x = '../../images/no.png';
-      this.$apply();
+    // async nopic(e) {
+    //   // let key = res.currentTarget.dataset.index
+    //   let newUrl = this.orderList[e].photo_x.substr((hostUrl.length - 1))
+    //   console.log(newUrl, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------')
+    //   this.orderList[e].photo_x = 'https://small.huanqiujishi.com/' + newUrl
+    //   console.log(this.orderList[e].photo_x, '--------------')
+    //   this.$apply()
+    //   // 没办法 没法判断图片错误了 因为两个地址
+    //   // this.orderList[e].photo_x = '../../images/no.png';
+    //   // this.$apply();
+    // },
+    async onerror(res) {
+      // let key = res.currentTarget.dataset.index
+      // 由于外部多次循环 所以需要阻止 只需要操作一次
+      if (!this.loop) {
+        let newUrl = this.orderList[0].photo_x.substr((hostUrl.length - 1))
+        this.orderList[0].photo_x = 'https://small.huanqiujishi.com/' + newUrl
+        this.loop = true
+        this.$apply()
+      }
     }
-    // async delOrder(e) {
-    //   this.flag = 'cancel';
-    //   this.orderNo = e.currentTarget.dataset.id;
-    //   await tip.confirm('是否取消订单');
-    //   console.log(this.flag);
-    //   this.editOrderInfo(this.orderNo, this.flag);
-    //   console.info('[order_item] 取消订单成功');
-    // },
-    // async completion(e) {
-    //   this.flag = 'receive';
-    //   this.orderNo = e.currentTarget.dataset.id;
-    //   await tip.confirm('是否确认收货');
-    //   this.editOrderInfo(this.orderNo, this.flag);
-    //   console.info('[order_item] 确认收货完成');
-    // },
-    // async payMoney(e) {
-    //   this.orderNo = e.currentTarget.dataset.id;
-    //   let orderSn = e.currentTarget.dataset.ordersn;
-    //   // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    //   let uid = wepy.$instance.globalData.userIDS.ID;
-    //   const pay = await api.toPay({
-    //     query: {
-    //       uid: uid,
-    //       order_sn: orderSn,
-    //       order_id: this.orderNo
-    //     }
-    //   });
-    //   if (pay.data.status == 1) {
-    //     let payData = pay.data.arr;
-    //     // 以下是微信支付
-    //     wx.requestPayment({
-    //       appId: payData.appId,
-    //       timeStamp: payData.timeStamp,
-    //       nonceStr: payData.nonceStr,
-    //       package: payData.package,
-    //       signType: 'MD5',
-    //       paySign: payData.paySign,
-    //       success: function(res) {
-    //         console.log('pay', res);
-    //         setTimeout(() => {
-    //           // 支付成功 关闭loadding 跳转到支付成功页面
-    //           tip.loaded();
-    //           wepy.navigateTo({
-    //             url: '/pages/pay_success?orderNo=' + this.orderNo
-    //           });
-    //         }, 2000);
-    //       },
-    //       fail: function(res) {
-    //         tip.alert('支付失败');
-    //       }
-    //     });
-    //   } else {
-    //     tip.alert('支付失败');
-    //   }
-    // }
   };
-  onLoad() {
-    // console.log("===========lzz返回数据lzz=========")
-    // console.log(this.orderList);
-  }
+  onLoad() {}
 }
 </script>
 

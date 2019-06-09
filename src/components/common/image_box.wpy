@@ -1,22 +1,12 @@
 <template>
   <view class="main-box">
     <scroll-view scroll-y class="goods-box">
-      <!--卡券区域（只在推荐的时候展现）-->
-      <!-- <scroll-view scroll-x	class="coupon-box" wx:if="{{isCoupon && pickCoupons.length > 0}}">
-                            <repeat for="{{pickCoupons}}" key="index" index="index" item="item">
-                              <CouponItem :coupon.sync="item"/>
-                            </repeat>
-                          </scroll-view> -->
-      <!--分类名称-->
-      <!-- <view class="goods-title row">
-                            <text class="weak">{{selectedCategoryName}}</text>
-                          </view> -->
       <!--商品列表-->
       <view class="goods-list">
         <repeat for="{{list}}" key="index" index="index" item="item">
           <!-- XXX 这里应该分裂出去 留着以后再做 -->
           <view class="item column-center" @tap="setCateCode({{item.id}})">
-            <image class="item_image" lazy-load src="{{imgUrl}}/{{item.bz_1}}"></image>
+            <image class="item_image" lazy-load src="{{imgBaseUrl}}/{{item.bz_1}}" binderror="imgError"></image>
             <view class="item_name">{{item.name}}</view>
           </view>
         </repeat>
@@ -28,23 +18,11 @@
 
 <script>
   import wepy from 'wepy';
-  import {
-    connect
-  } from 'wepy-redux';
   import store from '@/store/utils';
-  // import GlobalDataMixins from '@/mixins/globaldata';
-  @connect({
-    rootCate: store.get('rootCate'),
-    imgUrl: state => {
-      return state.globaldata.imgUrl;
-    }
-    // 这两种写法都可以 下面是简写 注意 GlobalDataMixins 提取的也是 state 里的值 所以如果页面写了 @connect 那么GlobalDataMixins就没用了 会覆盖的
-    // imgUrl(state) {
-    //   return state.globaldata.imgUrl;
-    // }
-  })
+  import GlobalDataMixins from '@/mixins/globaldata';
+
   export default class ImageBox extends wepy.component {
-    // mixins = [GlobalDataMixins];
+    mixins = [GlobalDataMixins];
     props = {
       list: {
         twoWay: true

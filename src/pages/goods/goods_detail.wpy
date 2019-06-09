@@ -5,7 +5,7 @@
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#FF5588" indicator-color="#efefef" class="swiper">
       <block wx:for="{{detail.img_arr}}" key="item" item="item" wx:key="key">
         <swiper-item style="background-color:#FFF">
-          <image mode="aspectFit" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
+          <image mode="aspectFit" src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage"  binderror="onerror" data-index="{{index}}"/>
         </swiper-item>
       </block>
     </swiper>
@@ -118,7 +118,7 @@
       <view class="model_content">
         <view class="head_box">
           <view class="img_wrap">
-            <image class="goods_img" src="{{detail.photo_x}}" />
+            <image class="goods_img" src="{{detail.photo_x}}"  binderror="imgError" />
           </view>
           <view class="product_wrap">
             <view class="product_name">{{detail.name}}</view>
@@ -157,6 +157,7 @@
   import api from '@/api/goods';
   import coupon from '@/api/coupon';
   import tip from '@/utils/Tips';
+  import { hostUrl } from '@/config/index'
   import {
     decodeScene
   } from '@/utils/Common';
@@ -321,6 +322,19 @@
         wepy.switchTab({
           url: '/pages/shop_cart/shop_cart'
         });
+      },
+      onerror(res) {
+        // console.log(res.currentTarget.dataset)
+        let key = res.currentTarget.dataset.index
+        // console.log(this.detail.img_arr[key], '+++++++++++++++++++++++')
+        let newUrl = this.detail.img_arr[key].substr((hostUrl.length - 1))
+        this.detail.img_arr[key] = 'https://small.huanqiujishi.com/' + newUrl
+        this.$apply()
+      },
+      imgError() {
+        let newUrl = this.detail.photo_x.substr((hostUrl.length - 1))
+        this.detail.photo_x = 'https://small.huanqiujishi.com/' + newUrl
+        this.$apply()
       }
     };
     events = {
@@ -350,6 +364,7 @@
       this.hasErrorBack(json, back);
       /*  /报错处理  */
       this.detail = json;
+      console.log(json)
       let html = this.detail.content;
       var imgs = html.match(/<img[^>]+>/g);
       if (imgs != null) {
