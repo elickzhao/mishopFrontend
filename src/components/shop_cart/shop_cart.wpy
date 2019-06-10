@@ -66,7 +66,8 @@ import SwipeDelete from '@/components/common/wepy-swipe-delete';
 import { connect } from 'wepy-redux';
 import store from '@/store/utils';
 @connect({
-  cart: store.get('cart')
+  cart: store.get('cart'),
+  setting: store.get('setting')
 })
 export default class ShopCart extends wepy.component {
   mixins = [BaseMixin, CheckLoginMixin];
@@ -230,7 +231,7 @@ export default class ShopCart extends wepy.component {
       var index = parseInt(e.currentTarget.dataset.index);
       var num = this.list[index].num;
       // 如果只有1件了，就不允许再减了
-      if (num > 1) {
+      if (num > this.setting.freight) {
         num--;
       } else {
         this.operating = false;

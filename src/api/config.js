@@ -35,9 +35,11 @@ export default class config extends base {
     let url = `${this.baseUrl}/api/news/miniNum`
     return this.get(url).then(data => {
       // 这里看看把miniNum 保存在 StoreConfig里  考虑下有没有这个必要 (想了下好像也没什么必要)
+      // console.log(data, '...................')
       return {
         setting:{
-          appName: data.name
+          appName: data.name,
+          freight: data.freight
         }
       }
     })

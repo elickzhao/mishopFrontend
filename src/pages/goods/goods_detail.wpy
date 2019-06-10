@@ -171,7 +171,8 @@
   } from 'wepy-redux';
   import store from '@/store/utils';
   @connect({
-    cart: store.get('cart')
+    cart: store.get('cart'),
+    setting: store.get('setting')
   })
   export default class GoodsDetail extends wepy.page {
     config = {
@@ -239,6 +240,9 @@
       this.couponList();
       // 检测用户信息
       //   await this.authorize();
+      // console.log(this.setting, '...............')
+      this.orderNum = this.setting.freight;
+      this.couponList();
     }
     onShow(option) {
       this.goodsIsFavorite();
@@ -301,7 +305,7 @@
       },
       // 商品数量 -
       jianBtnTap() {
-        if (this.orderNum > 1) {
+        if (this.orderNum > this.setting.freight) {
           this.orderNum--;
         }
       },
@@ -364,7 +368,7 @@
       this.hasErrorBack(json, back);
       /*  /报错处理  */
       this.detail = json;
-      console.log(json)
+      // console.log(json)
       let html = this.detail.content;
       var imgs = html.match(/<img[^>]+>/g);
       if (imgs != null) {

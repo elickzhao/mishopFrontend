@@ -372,7 +372,7 @@ export default class ComfireOrder extends wepy.page {
     this.reduce_fee = 0;
     this.operating = false;
     await this.getOrderDetailInfo();
-    this.getShop();
+    // this.getShop();
     this.couponList();
     this.appName = wepy.$store.getState().cache.setting.appName;
   }
