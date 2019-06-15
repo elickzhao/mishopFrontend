@@ -47,6 +47,7 @@ export default class CouponCenter extends wepy.page {
       vid: vid
     });
     this.hasError(json);
+    this.onLoad()
   }
   methods = {
     parentFn(vid) {
@@ -62,8 +63,8 @@ export default class CouponCenter extends wepy.page {
   events = {};
   watch = {};
   computed = {};
-  onLoad() {
-    this.couponList();
+  async onLoad() {
+    await this.couponList();
   }
   onShow() {}
 }

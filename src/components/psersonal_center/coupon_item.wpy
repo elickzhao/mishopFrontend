@@ -6,10 +6,14 @@
       <view class="content">
         <view class="content-title">{{coupon.title}}</view>
         <view class="content-main mt10">
-          <wxc-flex class="wrap" main="between" cross="center">
+          <wxc-flex class="wrap"
+                    main="between"
+                    cross="center">
             <view class="item">
-              <wxc-flex class="wrap" cross="baseline">
-                <view class="price-demo price price__status--" style="">
+              <wxc-flex class="wrap"
+                        cross="baseline">
+                <view class="price-demo price price__status--"
+                      style="">
                   <text class="price__icon price__icon--sup price__icon--">￥</text>
                   <text class="count price__count price__count--">{{coupon.amount}}</text>
                 </view>
@@ -20,24 +24,36 @@
             <view class="item">
               <block wx:if="{{type == 'cen'}}">
                 <block wx:if="{{coupon.status == 0 && (coupon.receive_num < coupon.count)}}">
-                  <button @tap.stop="tap({{coupon.id}})" class="btn-coupon" size="mini">立即领取</button>
+                  <button @tap.stop="tap({{coupon.id}})"
+                          class="btn-coupon"
+                          size="mini">立即领取</button>
                 </block>
                 <block wx:if="{{coupon.status == 1 && (coupon.receive_num < coupon.count)}}">
-                  <image class="status-img" mode="aspectFit" src="../../images/ylq.png"></image>
+                  <image class="status-img"
+                         mode="aspectFit"
+                         src="../../images/ylq.png"></image>
                 </block>
                 <block wx:if="{{ (coupon.receive_num == coupon.count )}}">
-                  <image class="status-img" mode="aspectFit" src="../../images/ylw.png"></image>
+                  <image class="status-img"
+                         mode="aspectFit"
+                         src="../../images/ylw.png"></image>
                 </block>
               </block>
               <block wx:if="{{type == 'cus'}}">
                 <block wx:if="{{coupon.status == 2}}">
-                  <button @tap.stop="tap({{coupon.id}})" class="btn-coupon" size="mini">立即使用</button>
+                  <button @tap.stop="tap({{coupon.id}})"
+                          class="btn-coupon"
+                          size="mini">立即使用</button>
                 </block>
                 <block wx:if="{{coupon.status == 3}}">
-                  <image class="status-img" mode="aspectFit" src="../../images/ysy.png"></image>
+                  <image class="status-img"
+                         mode="aspectFit"
+                         src="../../images/ysy.png"></image>
                 </block>
                 <block wx:if="{{coupon.status == 4}}">
-                  <image class="status-img" mode="aspectFit" src="../../images/yzf.png"></image>
+                  <image class="status-img"
+                         mode="aspectFit"
+                         src="../../images/yzf.png"></image>
                 </block>
               </block>
             </view>
@@ -54,8 +70,10 @@
               <view class="footer-time">
                 <wxc-flex cross="center">
                   <view style="flex-grow: 0;font-size:24rpx">已经领取: {{ m1.perNum(coupon.receive_num,coupon.count)}} % </view>
-                  <view style="flex-grow: 1;margin-left:22rpx;" class="percent-item">
-                    <wxc-progress percent="{{ m1.perNum(coupon.receive_num,coupon.count) }}" active-color="#ac89ff,#ff76a2"></wxc-progress>
+                  <view style="flex-grow: 1;margin-left:22rpx;"
+                        class="percent-item">
+                    <wxc-progress percent="{{ m1.perNum(coupon.receive_num,coupon.count) }}"
+                                  active-color="#ac89ff,#ff76a2"></wxc-progress>
                   </view>
                 </wxc-flex>
               </view>
@@ -84,20 +102,20 @@ export default class couponItem extends wepy.component {
   };
   components = {};
   methods = {
-    tap(id) {
+    tap (id) {
       // console.log('child is clicked'+id)
       // console.log('-------')
-      if (this.coupon.status == 0) {
-        this.coupon.status = 1;
-      }
+      // if (this.coupon.status == 0) {
+      //   this.coupon.status = 1;
+      // }
       this.$emit('childFn', id);
     }
   };
   events = {};
   watch = {};
   computed = {};
-  onLoad() {}
-  onShow() {}
+  onLoad () { }
+  onShow () { }
 }
 </script>
 
@@ -140,7 +158,7 @@ export default class couponItem extends wepy.component {
   display: inline-block;
   line-height: 1;
   color: #ff0077;
-   font-size:40rpx;
+  font-size: 40rpx;
 }
 .sub-desc {
   font-size: 26rpx;
