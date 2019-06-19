@@ -474,7 +474,6 @@ export default class ComfireOrder extends wepy.page {
     console.log(json, 'line 474');
     console.log(this.list);
     let dataList = json.list;
-    this.coupons = dataList;
     let list = [];
     let jifen = this.total_jf_num >= 100;
     let length = json.list.length;
@@ -484,19 +483,6 @@ export default class ComfireOrder extends wepy.page {
     } else if (length < num) {
       num = length;
     }
-    // console.log(dataList, '----', dataList[0].full_money, '========', num)
-    // 因为数组有时穿过来下标不连续 不能用for来写 但是上面的num有点忘记存在的意义了 下面的 for in 可能使上面的失效 num应该是 显示个数 这样可以显示积分优惠券吧 担是现在好像没有了
-    // for (let i = 0; i < num; i++) {
-    //   let fullMoney = dataList[i].full_money
-    //   list.push(
-    //     '满 ' +
-    //       parseInt(fullMoney) +
-    //       ' 减 ' +
-    //       parseInt(dataList[i].amount) +
-    //       ' 元 ' +
-    //       dataList[i].title
-    //   );
-    // }
 
     for (let i in dataList) {
       let fullMoney = dataList[i].full_money
@@ -508,6 +494,7 @@ export default class ComfireOrder extends wepy.page {
           ' 元 ' +
           dataList[i].title
       );
+      this.coupons.push(dataList[i])
     }
 
     this.coupons = {...this.coupons, length: Object.keys(this.coupons).length}
