@@ -1,6 +1,13 @@
-export const appId = 'wx89eb02efdb4ddaaf';
+/*
+ * @Author: elick
+ * @Date: 2020-07-04 11:35:32
+ * @LastEditors: elick
+ * @LastEditTime: 2020-07-07 17:22:24
+ * @Description: by elick
+ */ 
+export const appId = 'wxdbc492836562f041';
 
-export const hostUrl = 'https://small.huanqiujishi.com';
+export const hostUrl = 'https://www.njtfs.com';
 
 export const baseUrl = hostUrl + '/index.php';
 

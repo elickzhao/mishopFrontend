@@ -12,7 +12,7 @@
             <view class="cfff">{{userPoint}}</view>
           </view>
         </view>
-        <view class="btn_jf_rule" @tap="jfRule">签到</view>
+        <!-- <view class="btn_jf_rule" @tap="jfRule">签到</view> -->
       </view>
     </view>
     <view class="jf_detai">

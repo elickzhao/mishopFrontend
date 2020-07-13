@@ -17,6 +17,7 @@
   "author": "elickzhao <xwiwi@foxmail.com>",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^4.1.0",
     "lodash": "^4.17.11",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
@@ -46,7 +47,9 @@
     "eslint-plugin-html": "^2.0.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^2.0.1",
+    "glob": "^7.1.6",
     "less": "^3.8.1",
+    "node-sass": "^4.14.1",
     "redux-logger": "^3.0.6",
     "wepy-compiler-babel": "^1.5.1",
     "wepy-compiler-less": "^1.3.14",

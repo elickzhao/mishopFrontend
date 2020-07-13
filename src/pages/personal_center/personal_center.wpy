@@ -14,7 +14,7 @@
         </view>
       </view>
       <view class="setting" @tap="signIn">
-        <image src="../../images/personal_center/qd.png"></image>
+        <!-- <image src="../../images/personal_center/qd.png"></image> -->
       </view>
     </view>
   </view>
@@ -136,7 +136,7 @@ export default class PsersonalCenter extends wepy.page {
   async getUserPoint() {
     const json = await api.getUserSginInfo({
       uid: wepy.$instance.globalData.userIDS.ID
-    });
+    })
     return json.score;
   }
   async onLoad() {
