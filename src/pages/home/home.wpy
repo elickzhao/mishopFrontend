@@ -84,22 +84,22 @@ export default class Home extends wepy.page {
         {
           title: '热卖',
           flag: 5,
-          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s1.jpg'
+          src: 'http://www.njtfs.com/Data/UploadFiles/adv/20200714/5f0d42ea3b05f.jpg'
         },
         {
           title: '新品',
           flag: 6,
-          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s2.jpg'
+          src: 'http://www.njtfs.com/Data/UploadFiles/adv/20200714/5f0d42f518c45.jpg'
         },
         {
           title: '推荐',
           flag: 7,
-          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s3.jpg'
+          src: 'http://www.njtfs.com/Data/UploadFiles/adv/20200714/5f0d42feaa580.jpg'
         },
         {
           title: '同款',
           flag: 8,
-          src: 'https://small.huanqiujishi.com/Data/UploadFiles/sg/s4.jpg'
+          src: 'http://www.njtfs.com/Data/UploadFiles/adv/20200714/5f0d42ea3b05f.jpg'
         }
       ]
     }

@@ -52,7 +52,7 @@ export default class bombScreen extends wepy.component {
   onLoad() {
     if (this.show) {
       this.picUrl = picRandom(
-        'https://small.huanqiujishi.com/Data/UploadFiles/logo/hongbao.png'
+        'https://www.njtfs.com/Data/UploadFiles/logo/hongbao.png'
       );
     }
     this.$apply();

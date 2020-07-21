@@ -10,7 +10,7 @@ export default class base extends wepy.mixin {
       success: function(res) {
         // console.log(res);
         wx.request({
-          url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
+          url: 'https://www.njtfs.com/index.php/Api/Address/add_adds',
           data: {
             user_id: wepy.$instance.globalData.userIDS.ID,
             receiver: res.userName,
@@ -111,7 +111,7 @@ export default class base extends wepy.mixin {
       success: function(res) {
         console.log(res, '<--------------------');
         wx.request({
-          url: 'https://small.huanqiujishi.com/index.php/Api/Address/add_adds',
+          url: 'https://www.njtfs.com/index.php/Api/Address/add_adds',
           data: {
             user_id: wepy.$instance.globalData.userIDS.ID,
             receiver: res.userName,

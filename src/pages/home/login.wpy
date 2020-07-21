@@ -1,3 +1,10 @@
+<!--
+ * @Author: elick
+ * @Date: 2020-07-04 11:35:32
+ * @LastEditors: elick
+ * @LastEditTime: 2020-07-15 01:01:51
+ * @Description: by elick
+--> 
 <!-- 登录页面 -->
 <template>
   <view class="authorize-contianer " style="{{comeStyle}}">
@@ -50,7 +57,7 @@ export default class Login extends wepy.page {
       this.comeStyle =
         'background-image: url(' +
         picRandom(
-          'https://small.huanqiujishi.com/Data/UploadFiles/logo/come.jpg'
+          'https://www.njtfs.com/Data/UploadFiles/logo/come.jpg'
         ) +
         ');background-repeat: no-repeat;background-size: 100% 100%;padding-top: 0rpx;';
     }
